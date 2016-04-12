@@ -20,6 +20,7 @@ public abstract class Place extends JComponent {
 		this(name, position);
 		this.color = color;
 		setVisible(true);
+		int i = 0;
 	}
 	
 	public String getName(){
