@@ -1,19 +1,18 @@
 package places;
-import javax.swing.JComponent; // kanske ladda allt? alltså -> * 
+import javax.swing.JComponent; // kanske ladda allt? alltsï¿½ -> * 
 
 public abstract class Place extends JComponent {
 
 	private String name;
 	private Position position;
-	private TravelCategory color = TravelCategory.NO_CATEGORY;// kategori - buss, tåg, t-bana
+	private TravelCategory color = TravelCategory.NO_CATEGORY;// kategori - buss, tï¿½g, t-bana
 	private boolean showInfo;
-	//private boolean visible; // behövs ej? JComponent -> setVisible()
+	//private boolean visible; // behï¿½vs ej? JComponent -> setVisible()
 	private boolean marked;
 	
 	public Place(String name, Position position){
 		this.name = name;
 		this.position = position;
-		
 		setVisible(true);
 	}
 	public Place(String name, Position position, TravelCategory color){
@@ -25,8 +24,8 @@ public abstract class Place extends JComponent {
 	
 	public String getName(){
 		return name;
-	} // dessa getMetoder borde inte behövas då den ärever från JComponent och alltså
-	//ska representeras grafiskt som en trekant på kartan.
+	} // dessa getMetoder borde inte behï¿½vas dï¿½ den ï¿½rever frï¿½n JComponent och alltsï¿½
+	//ska representeras grafiskt som en trekant pï¿½ kartan.
 	
 	public Position getPosition(){
 		return position;
