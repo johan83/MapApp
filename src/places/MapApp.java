@@ -32,11 +32,9 @@ import javax.swing.SwingUtilities;
  * TODO:
  * add fileloader logic
  * add places rendering
- * add new places logic  
+ * add new places logic
  * 
  */
-
-
 
 @SuppressWarnings("serial")
 public class MapApp extends JFrame {
@@ -237,6 +235,7 @@ public class MapApp extends JFrame {
 	}
 
 	private class SortedList extends DefaultListModel<String> {
+		@SuppressWarnings("unused")
 		public void addSorted(String s) {
 			int pos = 0;
 
