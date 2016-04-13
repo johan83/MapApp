@@ -7,6 +7,8 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.BoxLayout;
@@ -27,6 +29,17 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
+/*
+ * TODO:
+ * add fileloader logic
+ * add places rendering
+ * add new places logic
+ *   
+ * 
+ */
+
+
+
 @SuppressWarnings("serial")
 public class MapApp extends JFrame {
 	public static final String title = "MapApp";
@@ -37,7 +50,7 @@ public class MapApp extends JFrame {
 	private JTextField searchInput;
 	private SortedList sortedList;
 
-	private ImageIcon img = new ImageIcon("resources/jarvafaltet.png");
+	private ImageIcon img = new ImageIcon("resources/jarvafaltet.png"); //temporary
 
 	private boolean changed;
 
@@ -79,6 +92,7 @@ public class MapApp extends JFrame {
 		file.add(save);
 
 		JMenuItem exit = new JMenuItem("Exit");
+		exit.addActionListener(new ExitListener());
 		file.add(exit);
 
 		return menu;
@@ -215,6 +229,12 @@ public class MapApp extends JFrame {
 		@Override
 		public void windowClosing(WindowEvent wev) {
 			stop();
+		}
+	}
+	private class ExitListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			stop();			
 		}
 	}
 
