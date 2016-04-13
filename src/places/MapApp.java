@@ -1,10 +1,15 @@
 package places;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -31,8 +36,7 @@ public class MapApp extends JFrame {
 	private JComboBox<String> newPlaceChooser;
 	private JTextField searchInput;
 
-	private File workingDirectory = new File("./resources/jarvafaltet.png");
-	private ImageIcon img = new ImageIcon(workingDirectory.getAbsolutePath());
+	private ImageIcon img = new ImageIcon("resources/jarvafaltet.png");
 	
 	private boolean changed;
 
@@ -40,11 +44,9 @@ public class MapApp extends JFrame {
 		super(title);
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new windowHandler());
-		this.add(createMainView(new JPanel()));
+		this.add(populateMainView(new JPanel()));
 		this.pack();
 		this.centerFrameOnDefaultMonitor();
-		System.out.println(workingDirectory.getAbsolutePath());
-		System.out.println(img.getDescription());
 	}
 	
 	private void centerFrameOnDefaultMonitor(){
@@ -56,10 +58,28 @@ public class MapApp extends JFrame {
 		this.setLocation(frameLocationX,frameLocationY);
 	}
 
-	private JPanel createMainView(JPanel panel) {
-		JPanel mainView = panel;
-		mainView.add(createUpperBar(new JPanel()));
-		mainView.add(new Map(img));
+	private JPanel populateMainView(JPanel mainView) {
+		GridBagLayout gbl = new GridBagLayout();
+		mainView.setLayout(gbl);
+		GridBagConstraints cons = new GridBagConstraints();
+		
+		cons.gridx = 0;
+		cons.gridy = 1;
+		cons.weightx = 1;
+		cons.weighty = 1;
+		cons.fill = GridBagConstraints.BOTH;
+		JScrollPane test = new JScrollPane(new Map(img));
+		test.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		test.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		mainView.add(test,cons);
+
+		cons.gridx = 0;
+		cons.gridy = 0;
+		cons.weightx = 0;
+		cons.weighty = 0;
+		cons.insets = new Insets(0,0,0,0);
+		mainView.add(createUpperBar(new JPanel()),cons);
+		
 		return mainView;
 	}
 
@@ -97,13 +117,14 @@ public class MapApp extends JFrame {
 
 		public Map(ImageIcon mapIcon) {
 			map = mapIcon;
+			this.setPreferredSize(new Dimension(map.getIconWidth(),map.getIconHeight()));
 			setLayout(null);
 		}
 
-		@Override
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
-			g.drawImage(map.getImage(), 0, 0, getWidth(), getHeight(), null);
+			g.drawImage(map.getImage(), 0, 0, getWidth(), getHeight(), this);
+			
 		}
 	}
 
