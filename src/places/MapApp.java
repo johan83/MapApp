@@ -33,8 +33,7 @@ import javax.swing.SwingUtilities;
  * TODO:
  * add fileloader logic
  * add places rendering
- * add new places logic
- *   
+ * add new places logic  
  * 
  */
 
@@ -171,22 +170,6 @@ public class MapApp extends JFrame {
 		placeCategoryChooser.add(categoryLabel);
 
 		sortedList = new SortedList();
-		sortedList.addSorted("LOL");
-		sortedList.addSorted("testing");
-		sortedList.addSorted("abc");
-		sortedList.addSorted("adc");
-		sortedList.addSorted("LOL");
-		sortedList.addSorted("testing");
-		sortedList.addSorted("abc");
-		sortedList.addSorted("adc");
-		sortedList.addSorted("LOL");
-		sortedList.addSorted("testing");
-		sortedList.addSorted("abc");
-		sortedList.addSorted("adc");
-		sortedList.addSorted("LOL");
-		sortedList.addSorted("testing");
-		sortedList.addSorted("abc");
-		sortedList.addSorted("adc");
 		JList<String> list = new JList<>(sortedList);
 		list.setFixedCellWidth(20);
 		JScrollPane listScroll = new JScrollPane(list);
