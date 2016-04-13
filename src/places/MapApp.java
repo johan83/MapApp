@@ -1,6 +1,5 @@
 package places;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -8,19 +7,16 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.Insets;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-
-import javax.swing.Icon;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -35,6 +31,7 @@ public class MapApp extends JFrame {
 
 	private JComboBox<String> newPlaceChooser;
 	private JTextField searchInput;
+	private SortedList sortedList;
 
 	private ImageIcon img = new ImageIcon("resources/jarvafaltet.png");
 	
@@ -43,7 +40,7 @@ public class MapApp extends JFrame {
 	public MapApp() {
 		super(title);
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-		this.addWindowListener(new windowHandler());
+		this.addWindowListener(new WindowHandler());
 		this.add(populateMainView(new JPanel()));
 		this.pack();
 		this.centerFrameOnDefaultMonitor();
@@ -62,28 +59,38 @@ public class MapApp extends JFrame {
 		GridBagLayout gbl = new GridBagLayout();
 		mainView.setLayout(gbl);
 		GridBagConstraints cons = new GridBagConstraints();
+
+		cons.gridx = 0;
+		cons.gridy = 0;
+		cons.weightx = 0;
+		cons.weighty = 0;
+		cons.anchor = GridBagConstraints.CENTER;
+		cons.fill = GridBagConstraints.NONE;
+		mainView.add(populateUpperBar(new JPanel()),cons);
 		
 		cons.gridx = 0;
 		cons.gridy = 1;
 		cons.weightx = 1;
 		cons.weighty = 1;
+		cons.anchor = GridBagConstraints.CENTER;
 		cons.fill = GridBagConstraints.BOTH;
 		JScrollPane test = new JScrollPane(new Map(img));
 		test.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		test.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		mainView.add(test,cons);
 
-		cons.gridx = 0;
-		cons.gridy = 0;
+		cons.gridx = 1;
+		cons.gridy = 1;
 		cons.weightx = 0;
 		cons.weighty = 0;
-		cons.insets = new Insets(0,0,0,0);
-		mainView.add(createUpperBar(new JPanel()),cons);
+		cons.anchor = GridBagConstraints.CENTER;
+		cons.fill = GridBagConstraints.NONE;
+		mainView.add(populatePlaceCategoryChooser(new JPanel()), cons);
 		
 		return mainView;
 	}
 
-	private JPanel createUpperBar(JPanel upperBar) {
+	private JPanel populateUpperBar(JPanel upperBar) {
 		FlowLayout layout = new FlowLayout();
 		layout.setAlignment(FlowLayout.TRAILING);
 		upperBar.setLayout(layout);
@@ -127,6 +134,44 @@ public class MapApp extends JFrame {
 			
 		}
 	}
+	
+	private JPanel populatePlaceCategoryChooser(JPanel placeCategoryChooser){
+		BoxLayout layout = new BoxLayout(placeCategoryChooser,BoxLayout.Y_AXIS);
+		placeCategoryChooser.setLayout(layout);		
+		
+		JLabel categoryLabel = new JLabel("Categories");
+		categoryLabel.setAlignmentX(CENTER_ALIGNMENT);
+		placeCategoryChooser.add(categoryLabel);
+		
+		sortedList = new SortedList();
+		sortedList.addSorted("LOL");
+		sortedList.addSorted("testing");
+		sortedList.addSorted("abc");
+		sortedList.addSorted("adc");
+		sortedList.addSorted("LOL");
+		sortedList.addSorted("testing");
+		sortedList.addSorted("abc");
+		sortedList.addSorted("adc");
+		sortedList.addSorted("LOL");
+		sortedList.addSorted("testing");
+		sortedList.addSorted("abc");
+		sortedList.addSorted("adc");
+		sortedList.addSorted("LOL");
+		sortedList.addSorted("testing");
+		sortedList.addSorted("abc");
+		sortedList.addSorted("adc");
+		JList<String> list = new JList<>(sortedList);
+		list.setFixedCellWidth(20);
+		JScrollPane listScroll = new JScrollPane(list);
+		listScroll.setPreferredSize(new Dimension(listScroll.getWidth(),250));
+		placeCategoryChooser.add(listScroll);
+		
+		JButton hideCategories = new JButton("Hide category");
+		hideCategories.setAlignmentX(CENTER_ALIGNMENT);
+		placeCategoryChooser.add(hideCategories);
+		
+		return placeCategoryChooser;		
+	}
 
 	private void start() {
 		this.setVisible(true);
@@ -136,7 +181,7 @@ public class MapApp extends JFrame {
 		System.exit(0);
 	}
 
-	private class windowHandler extends WindowAdapter {
+	private class WindowHandler extends WindowAdapter {
 		@Override
 		public void windowClosing(WindowEvent wev) {
 			if (changed) {
@@ -152,6 +197,16 @@ public class MapApp extends JFrame {
 			if (choice == JOptionPane.OK_OPTION) {
 				exitWithoutSaving();
 			}
+		}
+	}
+	private class SortedList extends DefaultListModel<String>{
+		public void addSorted(String s){
+			int pos = 0;
+			
+			while(pos < getSize() && s.compareToIgnoreCase(get(pos)) > 0){
+				pos++;				
+			}
+			add(pos,s);
 		}
 	}
 
