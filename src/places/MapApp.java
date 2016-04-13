@@ -26,7 +26,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
 /*
@@ -57,7 +56,7 @@ public class MapApp extends JFrame {
 		super(title);
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new WindowHandler());
-		this.setJMenuBar(populateToolBar(new JMenuBar()));
+		this.setJMenuBar(populateMenuBar(new JMenuBar()));
 		this.add(populateMainView(new JPanel()));
 		this.pack();
 		this.centerFrameOnDefaultMonitor();
@@ -77,7 +76,7 @@ public class MapApp extends JFrame {
 		this.setLocation(frameLocationX, frameLocationY);
 	}
 
-	private JMenuBar populateToolBar(JMenuBar menu) {
+	private JMenuBar populateMenuBar(JMenuBar menu) {
 		JMenu file = new JMenu("File");
 		menu.add(file);
 
