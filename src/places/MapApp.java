@@ -17,10 +17,14 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
 @SuppressWarnings("serial")
@@ -34,25 +38,50 @@ public class MapApp extends JFrame {
 	private SortedList sortedList;
 
 	private ImageIcon img = new ImageIcon("resources/jarvafaltet.png");
-	
+
 	private boolean changed;
 
 	public MapApp() {
 		super(title);
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new WindowHandler());
+		this.setJMenuBar(populateToolBar(new JMenuBar()));
 		this.add(populateMainView(new JPanel()));
 		this.pack();
 		this.centerFrameOnDefaultMonitor();
 	}
-	
-	private void centerFrameOnDefaultMonitor(){
+
+	private void centerFrameOnDefaultMonitor() {
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		int width = gd.getDisplayMode().getWidth();
 		int height = gd.getDisplayMode().getHeight();
-		int frameLocationX = (int) ((width - getWidth())/2); //Center the window on the X axis
-		int frameLocationY = (int) ((height - getHeight())/2); //Center the window on the Y axis		
-		this.setLocation(frameLocationX,frameLocationY);
+		int frameLocationX = (int) ((width - getWidth()) / 2); // Center the
+																// window on the
+																// X axis
+		int frameLocationY = (int) ((height - getHeight()) / 2); // Center the
+																	// window on
+																	// the Y
+																	// axis
+		this.setLocation(frameLocationX, frameLocationY);
+	}
+
+	private JMenuBar populateToolBar(JMenuBar menu) {
+		JMenu file = new JMenu("File");
+		menu.add(file);
+
+		JMenuItem map = new JMenuItem("New map");
+		file.add(map);
+
+		JMenuItem places = new JMenuItem("Load places");
+		file.add(places);
+
+		JMenuItem save = new JMenuItem("Save");
+		file.add(save);
+
+		JMenuItem exit = new JMenuItem("Exit");
+		file.add(exit);
+
+		return menu;
 	}
 
 	private JPanel populateMainView(JPanel mainView) {
@@ -66,8 +95,8 @@ public class MapApp extends JFrame {
 		cons.weighty = 0;
 		cons.anchor = GridBagConstraints.CENTER;
 		cons.fill = GridBagConstraints.NONE;
-		mainView.add(populateUpperBar(new JPanel()),cons);
-		
+		mainView.add(populateUpperBar(new JPanel()), cons);
+
 		cons.gridx = 0;
 		cons.gridy = 1;
 		cons.weightx = 1;
@@ -77,7 +106,7 @@ public class MapApp extends JFrame {
 		JScrollPane test = new JScrollPane(new Map(img));
 		test.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		test.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		mainView.add(test,cons);
+		mainView.add(test, cons);
 
 		cons.gridx = 1;
 		cons.gridy = 1;
@@ -86,7 +115,7 @@ public class MapApp extends JFrame {
 		cons.anchor = GridBagConstraints.CENTER;
 		cons.fill = GridBagConstraints.NONE;
 		mainView.add(populatePlaceCategoryChooser(new JPanel()), cons);
-		
+
 		return mainView;
 	}
 
@@ -119,30 +148,14 @@ public class MapApp extends JFrame {
 		return upperBar;
 	}
 
-	private class Map extends JPanel {
-		private ImageIcon map;
+	private JPanel populatePlaceCategoryChooser(JPanel placeCategoryChooser) {
+		BoxLayout layout = new BoxLayout(placeCategoryChooser, BoxLayout.Y_AXIS);
+		placeCategoryChooser.setLayout(layout);
 
-		public Map(ImageIcon mapIcon) {
-			map = mapIcon;
-			this.setPreferredSize(new Dimension(map.getIconWidth(),map.getIconHeight()));
-			setLayout(null);
-		}
-
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			g.drawImage(map.getImage(), 0, 0, getWidth(), getHeight(), this);
-			
-		}
-	}
-	
-	private JPanel populatePlaceCategoryChooser(JPanel placeCategoryChooser){
-		BoxLayout layout = new BoxLayout(placeCategoryChooser,BoxLayout.Y_AXIS);
-		placeCategoryChooser.setLayout(layout);		
-		
 		JLabel categoryLabel = new JLabel("Categories");
 		categoryLabel.setAlignmentX(CENTER_ALIGNMENT);
 		placeCategoryChooser.add(categoryLabel);
-		
+
 		sortedList = new SortedList();
 		sortedList.addSorted("LOL");
 		sortedList.addSorted("testing");
@@ -163,14 +176,14 @@ public class MapApp extends JFrame {
 		JList<String> list = new JList<>(sortedList);
 		list.setFixedCellWidth(20);
 		JScrollPane listScroll = new JScrollPane(list);
-		listScroll.setPreferredSize(new Dimension(listScroll.getWidth(),250));
+		listScroll.setPreferredSize(new Dimension(listScroll.getWidth(), 250));
 		placeCategoryChooser.add(listScroll);
-		
+
 		JButton hideCategories = new JButton("Hide category");
 		hideCategories.setAlignmentX(CENTER_ALIGNMENT);
 		placeCategoryChooser.add(hideCategories);
-		
-		return placeCategoryChooser;		
+
+		return placeCategoryChooser;
 	}
 
 	private void start() {
@@ -181,32 +194,54 @@ public class MapApp extends JFrame {
 		System.exit(0);
 	}
 
+	private void queryChangedExit() {
+		int choice = JOptionPane.showConfirmDialog(MapApp.this, "Unsaved changes, exit anyway?", "Exit",
+				JOptionPane.OK_CANCEL_OPTION);
+		if (choice == JOptionPane.OK_OPTION) {
+			exitWithoutSaving();
+		}
+	}
+
+	private void stop() {
+		if (changed) {
+			queryChangedExit();
+		} else {
+			exitWithoutSaving();
+		}
+
+	}
+
 	private class WindowHandler extends WindowAdapter {
 		@Override
 		public void windowClosing(WindowEvent wev) {
-			if (changed) {
-				queryChangedExit();
-			} else {
-				exitWithoutSaving();
-			}
-		}
-
-		private void queryChangedExit() {
-			int choice = JOptionPane.showConfirmDialog(MapApp.this, "Unsaved changes, exit anyway?", "Exit",
-					JOptionPane.OK_CANCEL_OPTION);
-			if (choice == JOptionPane.OK_OPTION) {
-				exitWithoutSaving();
-			}
+			stop();
 		}
 	}
-	private class SortedList extends DefaultListModel<String>{
-		public void addSorted(String s){
+
+	private class Map extends JPanel {
+		private ImageIcon map;
+
+		public Map(ImageIcon mapIcon) {
+			map = mapIcon;
+			this.setPreferredSize(new Dimension(map.getIconWidth(), map.getIconHeight()));
+			setLayout(null);
+		}
+
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			g.drawImage(map.getImage(), 0, 0, getWidth(), getHeight(), this);
+
+		}
+	}
+
+	private class SortedList extends DefaultListModel<String> {
+		public void addSorted(String s) {
 			int pos = 0;
-			
-			while(pos < getSize() && s.compareToIgnoreCase(get(pos)) > 0){
-				pos++;				
+
+			while (pos < getSize() && s.compareToIgnoreCase(get(pos)) > 0) {
+				pos++;
 			}
-			add(pos,s);
+			add(pos, s);
 		}
 	}
 
