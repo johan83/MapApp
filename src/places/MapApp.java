@@ -11,11 +11,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.util.HashMap;
+import java.util.HashSet;
+
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -45,8 +50,11 @@ public class MapApp extends JFrame {
 	private JComboBox<String> newPlaceChooser;
 	private JTextField searchInput;
 	private SortedList sortedList;
+	private Map map;
+	private JScrollPane mapPane;
 
-	private ImageIcon img = new ImageIcon("resources/jarvafaltet.png"); //temporary
+	private ImageIcon img;
+	private JFileChooser fileChooser;
 
 	private boolean changed;
 
@@ -79,6 +87,7 @@ public class MapApp extends JFrame {
 		menu.add(file);
 
 		JMenuItem map = new JMenuItem("New map");
+		map.addActionListener(new LoadListener());
 		file.add(map);
 
 		JMenuItem places = new JMenuItem("Load places");
@@ -113,10 +122,11 @@ public class MapApp extends JFrame {
 		cons.weighty = 1;
 		cons.anchor = GridBagConstraints.CENTER;
 		cons.fill = GridBagConstraints.BOTH;
-		JScrollPane test = new JScrollPane(new Map(img));
-		test.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		test.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		mainView.add(test, cons);
+		map = new Map();
+		mapPane = new JScrollPane(map,
+				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		mainView.add(mapPane, cons);
 
 		cons.gridx = 1;
 		cons.gridy = 1;
@@ -213,23 +223,51 @@ public class MapApp extends JFrame {
 	}
 	private class ExitListener implements ActionListener{
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent aev) {
 			stop();			
+		}
+	}
+	private class LoadListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent aev) {
+			JMenuItem selected = (JMenuItem) aev.getSource();
+			load(selected);			
+		}
+	}
+	private void load(JMenuItem selected){
+		if(fileChooser == null)
+			fileChooser = new JFileChooser(".");
+		switch(selected.getText()){
+		case "New map":
+				loadNewMap(fileChooser);
+			break;
+		case "Load places":
+			break;
+		}
+	}
+	private void loadNewMap(JFileChooser jfc){
+		if(jfc.showOpenDialog(MapApp.this) == JFileChooser.APPROVE_OPTION){
+			File selected = jfc.getSelectedFile();
+			map.setImage(new ImageIcon(selected.getAbsolutePath()));
 		}
 	}
 
 	private class Map extends JPanel {
 		private ImageIcon map;
-
-		public Map(ImageIcon mapIcon) {
-			map = mapIcon;
-			this.setPreferredSize(new Dimension(map.getIconWidth(), map.getIconHeight()));
+		
+		public Map(){
 			setLayout(null);
 		}
-
+		public void setImage(ImageIcon img){
+			map = img;
+			this.setPreferredSize(new Dimension(map.getIconWidth(),map.getIconHeight()));
+			repaint();
+			mapPane.revalidate();
+		}
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
-			g.drawImage(map.getImage(), 0, 0, getWidth(), getHeight(), this);
+			if(map != null)
+				g.drawImage(map.getImage(), 0, 0, map.getIconWidth(), map.getIconHeight(), this);
 
 		}
 	}
@@ -245,7 +283,6 @@ public class MapApp extends JFrame {
 			add(pos, s);
 		}
 	}
-
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -254,4 +291,5 @@ public class MapApp extends JFrame {
 			}
 		});
 	}
+	
 }
