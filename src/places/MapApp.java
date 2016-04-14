@@ -12,8 +12,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Scanner;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
@@ -32,6 +35,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /*
  * TODO:
@@ -53,8 +58,8 @@ public class MapApp extends JFrame {
 	private Map map;
 	private JScrollPane mapPane;
 
-	private ImageIcon img;
 	private JFileChooser fileChooser;
+	private Places places;
 
 	private boolean changed;
 
@@ -91,6 +96,7 @@ public class MapApp extends JFrame {
 		file.add(map);
 
 		JMenuItem places = new JMenuItem("Load places");
+		places.addActionListener(new LoadListener());
 		file.add(places);
 
 		JMenuItem save = new JMenuItem("Save");
@@ -242,13 +248,62 @@ public class MapApp extends JFrame {
 				loadNewMap(fileChooser);
 			break;
 		case "Load places":
+			loadNewPlaces(fileChooser);
 			break;
 		}
 	}
 	private void loadNewMap(JFileChooser jfc){
+		jfc.setFileFilter(new FileNameExtensionFilter(
+				"Pictures",
+				"png","jpg","jpeg"
+				)); 
 		if(jfc.showOpenDialog(MapApp.this) == JFileChooser.APPROVE_OPTION){
 			File selected = jfc.getSelectedFile();
 			map.setImage(new ImageIcon(selected.getAbsolutePath()));
+		}
+	}
+	private void loadNewPlaces(JFileChooser jfc){
+		jfc.setFileFilter(new FileNameExtensionFilter("Places","places"));
+		if(jfc.showOpenDialog(MapApp.this) == JFileChooser.APPROVE_OPTION){
+			File selected = jfc.getSelectedFile();
+			try(Scanner sc = new Scanner(selected)){
+				
+				addPlacesFromArray(new FileHandler(sc).readFileContent());
+				
+			} catch (FileNotFoundException e) {
+				JOptionPane.showMessageDialog(MapApp.this, "File does not exist");
+			}
+		}
+	}
+	private void addPlacesFromArray(ArrayList<String> fromFile){
+		if(places == null)
+			places = new Places(new HashMap<Position,Place>(), new HashMap<String, ArrayList<Place>>());
+		
+		for(String s : fromFile){
+			String[] values = s.split(",");
+			switch(values[0]){
+			case "Named":
+				String name = values[4];
+				Position pos = new Position(Integer.parseInt(values[2]),Integer.parseInt(values[3]));
+				TravelCategory cat;
+				switch(values[1]){
+				case "Buss":
+					cat = TravelCategory.BUS; break;
+				case "Tåg":
+					cat = TravelCategory.TRAIN; break;
+				case "Tunnelbana":
+					cat = TravelCategory.SUBWAY; break;
+				default:
+					cat = TravelCategory.NO_CATEGORY;
+						
+				}
+				NamedPlace place = new NamedPlace(name, pos, cat);
+				
+				System.out.println(place +" | "+ places.add(place));
+				break;
+			case "Described":
+				break;
+			}
 		}
 	}
 

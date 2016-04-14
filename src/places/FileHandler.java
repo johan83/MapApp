@@ -10,8 +10,7 @@ public class FileHandler {
 	private Scanner sc;
 	private PrintWriter writer;
 	
-	public FileHandler(File fileToLoad, Scanner sc){
-		this.file = fileToLoad;
+	public FileHandler(Scanner sc){
 		this.sc = sc;
 	}
 	public FileHandler(File fileToWrite, PrintWriter writer){
@@ -19,7 +18,7 @@ public class FileHandler {
 		this.writer = writer;
 	}
 	
-	public ArrayList<String> getFileContent(){
+	public ArrayList<String> readFileContent(){
 		ArrayList<String> fileContent = new ArrayList<>();
 		while(sc.hasNextLine()){
 			fileContent.add(sc.nextLine());

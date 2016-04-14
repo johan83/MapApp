@@ -5,21 +5,16 @@ public abstract class Place extends JComponent {
 
 	private String name;
 	private Position position;
-	private TravelCategory color = TravelCategory.NO_CATEGORY;// kategori - buss, t�g, t-bana
+	private TravelCategory color;// kategori - buss, t�g, t-bana
 	private boolean showInfo;
 	//private boolean visible; // beh�vs ej? JComponent -> setVisible()
 	private boolean marked;
 	
-	public Place(String name, Position position){
+	public Place(String name, Position position, TravelCategory color){
 		this.name = name;
 		this.position = position;
-		setVisible(true);
-	}
-	public Place(String name, Position position, TravelCategory color){
-		this(name, position);
 		this.color = color;
 		setVisible(true);
-		int i = 0;
 	}
 	
 	public String getName(){
