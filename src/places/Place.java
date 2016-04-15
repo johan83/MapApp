@@ -3,8 +3,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Polygon;
-import java.awt.Rectangle;
-
 import javax.swing.JComponent; // kanske ladda allt? allts� -> * 
 
 @SuppressWarnings("serial")
@@ -23,6 +21,8 @@ public abstract class Place extends JComponent {
 		this.color = color;
 		this.setBounds(position.getX(),position.getY(),50,50);
 		this.setPreferredSize(new Dimension(50,50));
+		this.setMinimumSize(new Dimension(50,50));
+		this.setMaximumSize(new Dimension(50,50));
 		setVisible(true);
 	}
 	public String getMarkedText(){
@@ -33,8 +33,7 @@ public abstract class Place extends JComponent {
 	
 	public String getName(){
 		return name;
-	} // dessa getMetoder borde inte beh�vas d� den �rever fr�n JComponent och allts�
-	//ska representeras grafiskt som en trekant p� kartan.
+	}
 	
 	public Position getPosition(){
 		return position;

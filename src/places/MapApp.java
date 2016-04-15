@@ -317,6 +317,7 @@ public class MapApp extends JFrame {
 			for(Entry<Position, Place> s : places.getAllPlaces().entrySet()){
 				Place currentPlace = s.getValue();
 				map.add(currentPlace);
+				currentPlace.setVisible(true);
 			}
 		}
 	}
