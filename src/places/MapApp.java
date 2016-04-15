@@ -112,36 +112,16 @@ public class MapApp extends JFrame {
 	}
 
 	private JPanel populateMainView(JPanel mainView) {
-		GridBagLayout gbl = new GridBagLayout();
 		mainView.setLayout(new BorderLayout());
-		GridBagConstraints cons = new GridBagConstraints();
 
-		cons.gridx = 0;
-		cons.gridy = 0;
-		cons.weightx = 0;
-		cons.weighty = 0;
-		cons.anchor = GridBagConstraints.CENTER;
-		cons.fill = GridBagConstraints.NONE;
 		mainView.add(populateUpperBar(new JPanel()), BorderLayout.NORTH);
 
-		cons.gridx = 0;
-		cons.gridy = 1;
-		cons.weightx = 1;
-		cons.weighty = 1;
-		cons.anchor = GridBagConstraints.CENTER;
-		cons.fill = GridBagConstraints.BOTH;
 		map = new Map();
 		mapPane = new JScrollPane(map,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		mainView.add(mapPane, BorderLayout.CENTER);
-
-		cons.gridx = 1;
-		cons.gridy = 1;
-		cons.weightx = 0;
-		cons.weighty = 0;
-		cons.anchor = GridBagConstraints.CENTER;
-		cons.fill = GridBagConstraints.NONE;
+		
 		mainView.add(populatePlaceCategoryChooser(new JPanel()), BorderLayout.EAST);
 
 		return mainView;
