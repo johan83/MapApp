@@ -14,12 +14,16 @@ public abstract class Place extends JComponent {
 	private boolean showInfo;
 	//private boolean visible; // beh�vs ej? JComponent -> setVisible()
 	private boolean marked;
+	private int sizex;
+	private int sizey;
 	
 	public Place(String name, Position position, TravelCategory color){
+		sizex = 24;
+		sizey = 35;
 		this.name = name;
 		this.position = position;
 		this.color = color;
-		this.setBounds(position.getX(),position.getY(),50,50);
+		this.setBounds(position.getX()-sizex/2,position.getY()-sizey,sizex,sizey);
 		this.setPreferredSize(new Dimension(50,50));
 		this.setMinimumSize(new Dimension(50,50));
 		this.setMaximumSize(new Dimension(50,50));
@@ -74,20 +78,13 @@ public abstract class Place extends JComponent {
 		return c;
 	}
 	private Polygon getPolygon(){
-		int sizeXDelta = 12;
-		int sizeYDelta = 25;
-		
-		int[] topLeft = {position.getX()-sizeXDelta,position.getY()-sizeYDelta};
-		int[] topRight = {position.getX()+sizeXDelta,position.getY()-sizeYDelta};
-		int[] tip = {position.getX(),position.getY()};
-		
-		int[] xpoints = {topLeft[0],tip[0],topRight[0]};
-		int[] ypoints = {topLeft[1],tip[1],topRight[1]};
+		int[] xpoints = {0,sizex/2,sizex};
+		int[] ypoints = {0,sizey,0};
 		Polygon gfx = new Polygon(xpoints,ypoints,3);
 		return gfx;
 	}
 	@Override
-	public void paintComponent(Graphics g){
+	protected void paintComponent(Graphics g){
 		super.paintComponent(g);
 		g.setColor(getCategoryColor());
 		g.fillPolygon(getPolygon());
