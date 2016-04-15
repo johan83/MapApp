@@ -1,5 +1,6 @@
 package places;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -112,7 +113,7 @@ public class MapApp extends JFrame {
 
 	private JPanel populateMainView(JPanel mainView) {
 		GridBagLayout gbl = new GridBagLayout();
-		mainView.setLayout(gbl);
+		mainView.setLayout(new BorderLayout());
 		GridBagConstraints cons = new GridBagConstraints();
 
 		cons.gridx = 0;
@@ -121,7 +122,7 @@ public class MapApp extends JFrame {
 		cons.weighty = 0;
 		cons.anchor = GridBagConstraints.CENTER;
 		cons.fill = GridBagConstraints.NONE;
-		mainView.add(populateUpperBar(new JPanel()), cons);
+		mainView.add(populateUpperBar(new JPanel()), BorderLayout.NORTH);
 
 		cons.gridx = 0;
 		cons.gridy = 1;
@@ -133,7 +134,7 @@ public class MapApp extends JFrame {
 		mapPane = new JScrollPane(map,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		mainView.add(mapPane, cons);
+		mainView.add(mapPane, BorderLayout.CENTER);
 
 		cons.gridx = 1;
 		cons.gridy = 1;
@@ -141,7 +142,7 @@ public class MapApp extends JFrame {
 		cons.weighty = 0;
 		cons.anchor = GridBagConstraints.CENTER;
 		cons.fill = GridBagConstraints.NONE;
-		mainView.add(populatePlaceCategoryChooser(new JPanel()), cons);
+		mainView.add(populatePlaceCategoryChooser(new JPanel()), BorderLayout.EAST);
 
 		return mainView;
 	}
