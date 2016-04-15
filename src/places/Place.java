@@ -43,7 +43,7 @@ public abstract class Place extends JComponent {
 	public String toString(){
 		return name +" "+ position +" "+ color;
 	}
-	public Color getCategoryColor(){
+	public Color getCategoryColor(){ //dåligt? bättre om category är ett objekt med String name + Color color ? 
 		Color c;
 		switch(color){
 		case BUS:
