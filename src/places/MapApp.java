@@ -18,6 +18,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.Scanner;
 
 import javax.swing.BoxLayout;
@@ -117,11 +118,11 @@ public class MapApp extends JFrame {
 		mainView.add(populateUpperBar(new JPanel()), BorderLayout.NORTH);
 
 		map = new Map();
-		mapPane = new JScrollPane(map,
+		mapPane = new JScrollPane(map, 
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		mainView.add(mapPane, BorderLayout.CENTER);
-		
+
 		mainView.add(populatePlaceCategoryChooser(new JPanel()), BorderLayout.EAST);
 
 		return mainView;
@@ -209,78 +210,88 @@ public class MapApp extends JFrame {
 			stop();
 		}
 	}
-	private class ExitListener implements ActionListener{
+
+	private class ExitListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent aev) {
-			stop();			
+			stop();
 		}
 	}
-	private class LoadListener implements ActionListener{
+
+	private class LoadListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent aev) {
 			JMenuItem selected = (JMenuItem) aev.getSource();
-			load(selected);			
+			load(selected);
 		}
 	}
-	private void load(JMenuItem selected){
-		if(fileChooser == null)
+
+	private void load(JMenuItem selected) {
+		if (fileChooser == null)
 			fileChooser = new JFileChooser(".");
-		switch(selected.getText()){
+		switch (selected.getText()) {
 		case "New map":
-				loadNewMap(fileChooser);
+			loadNewMap(fileChooser);
 			break;
 		case "Load places":
 			loadNewPlaces(fileChooser);
 			break;
 		}
+		map.repaint();
+		mapPane.revalidate();
 	}
-	private void loadNewMap(JFileChooser jfc){
-		jfc.setFileFilter(new FileNameExtensionFilter(
-				"Pictures",
-				"png","jpg","jpeg"
-				)); 
-		if(jfc.showOpenDialog(MapApp.this) == JFileChooser.APPROVE_OPTION){
+
+	private void loadNewMap(JFileChooser jfc) {
+		jfc.setFileFilter(new FileNameExtensionFilter("Pictures", "png", "jpg", "jpeg"));
+		if (jfc.showOpenDialog(MapApp.this) == JFileChooser.APPROVE_OPTION) {
+			
 			File selected = jfc.getSelectedFile();
 			map.setImage(new ImageIcon(selected.getAbsolutePath()));
+			
 		}
 	}
-	private void loadNewPlaces(JFileChooser jfc){
-		jfc.setFileFilter(new FileNameExtensionFilter("Places","places"));
-		if(jfc.showOpenDialog(MapApp.this) == JFileChooser.APPROVE_OPTION){
+
+	private void loadNewPlaces(JFileChooser jfc) {
+		jfc.setFileFilter(new FileNameExtensionFilter("Places", "places"));
+		if (jfc.showOpenDialog(MapApp.this) == JFileChooser.APPROVE_OPTION) {
+
 			File selected = jfc.getSelectedFile();
-			try(Scanner sc = new Scanner(new FileReader(selected))){
-				
+			try (Scanner sc = new Scanner(new FileReader(selected))) {
 				addPlacesFromArray(new FileHandler(sc).readFileContent());
-				
 			} catch (FileNotFoundException e) {
 				JOptionPane.showMessageDialog(MapApp.this, "File does not exist");
 			}
+
 		}
 	}
-	private void addPlacesFromArray(ArrayList<String> fromFile){
-		if(places == null)
-			places = new Places(new HashMap<Position,Place>(), new HashMap<String, ArrayList<Place>>());
-		
-		for(String s : fromFile){
+
+	private void addPlacesFromArray(ArrayList<String> fromFile) {
+		if (places == null)
+			places = new Places(new HashMap<Position, Place>(), new HashMap<String, ArrayList<Place>>());
+
+		for (String s : fromFile) {
 			String[] values = s.split(",");
-			switch(values[0]){
+			switch (values[0]) {
 			case "Named":
 				String name = values[4];
-				Position pos = new Position(Integer.parseInt(values[2]),Integer.parseInt(values[3]));
+				Position pos = new Position(Integer.parseInt(values[2]), Integer.parseInt(values[3]));
 				TravelCategory cat;
-				switch(values[1]){
+				switch (values[1]) {
 				case "Buss":
-					cat = TravelCategory.BUS; break;
+					cat = TravelCategory.BUS;
+					break;
 				case "Tåg":
-					cat = TravelCategory.TRAIN; break;
+					cat = TravelCategory.TRAIN;
+					break;
 				case "Tunnelbana":
-					cat = TravelCategory.SUBWAY; break;
+					cat = TravelCategory.SUBWAY;
+					break;
 				default:
 					cat = TravelCategory.NO_CATEGORY;
 				}
 				NamedPlace place = new NamedPlace(name, pos, cat);
-				
-				System.out.println(place +" | "+ places.add(place));
+
+				System.out.println(place + " | " + places.add(place));
 				break;
 			case "Described":
 				break;
@@ -290,21 +301,28 @@ public class MapApp extends JFrame {
 
 	private class Map extends JPanel {
 		private ImageIcon map;
-		
-		public Map(){
+
+		public Map() {
 			setLayout(null);
 		}
-		public void setImage(ImageIcon img){
+
+		public void setImage(ImageIcon img) {
 			map = img;
-			this.setPreferredSize(new Dimension(map.getIconWidth(),map.getIconHeight()));
-			repaint();
-			mapPane.revalidate();
+			this.setPreferredSize(new Dimension(map.getIconWidth(), map.getIconHeight()));
 		}
+
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
-			if(map != null)
+			if (map != null){
 				g.drawImage(map.getImage(), 0, 0, map.getIconWidth(), map.getIconHeight(), this);
-
+				
+				if(places != null){
+					for(Entry<Position, Place> s : places.getAllPlaces().entrySet()){
+						g.setColor(s.getValue().getCategoryColor());
+						g.fillPolygon(s.getValue().getPolygon());
+					}
+				}
+			}
 		}
 	}
 
@@ -319,6 +337,7 @@ public class MapApp extends JFrame {
 			add(pos, s);
 		}
 	}
+
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -327,5 +346,5 @@ public class MapApp extends JFrame {
 			}
 		});
 	}
-	
+
 }

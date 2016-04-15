@@ -1,4 +1,8 @@
 package places;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Polygon;
+
 import javax.swing.JComponent; // kanske ladda allt? allts� -> * 
 
 public abstract class Place extends JComponent {
@@ -39,7 +43,35 @@ public abstract class Place extends JComponent {
 	public String toString(){
 		return name +" "+ position +" "+ color;
 	}
-	
-	
-	
+	public Color getCategoryColor(){
+		Color c;
+		switch(color){
+		case BUS:
+			c = Color.RED;
+			break;
+		case TRAIN:
+			c = Color.GREEN;
+			break;
+		case SUBWAY:
+			c = Color.BLUE;
+			break;
+		default:
+			c = Color.BLACK;
+				break;
+		}
+		return c;
+	}
+	public Polygon getPolygon(){
+		int sizeXDelta = 12;
+		int sizeYDelta = 25;
+		
+		int[] topLeft = {position.getX()-sizeXDelta,position.getY()-sizeYDelta};
+		int[] topRight = {position.getX()+sizeXDelta,position.getY()-sizeYDelta};
+		int[] tip = {position.getX(),position.getY()};
+		
+		int[] xpoints = {topLeft[0],tip[0],topRight[0]};
+		int[] ypoints = {topLeft[1],tip[1],topRight[1]};
+		Polygon gfx = new Polygon(xpoints,ypoints,3);
+		return gfx;
+	}
 }

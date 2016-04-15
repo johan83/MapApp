@@ -25,6 +25,9 @@ public class Places {
 		
 		return placesByPosition.put(pos, place);
 	}
+	public HashMap<Position,Place> getAllPlaces(){
+		return placesByPosition;
+	}
 	
 	public Place getPlaceByPosition(Position p){
 		return placesByPosition.get(p);
