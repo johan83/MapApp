@@ -9,4 +9,9 @@ public class DescribedPlace extends Place{
 		this.description = description;
 		
 	}
+
+	@Override
+	String getSpecialText() {
+		return description;
+	}
 }

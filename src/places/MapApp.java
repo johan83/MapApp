@@ -1,15 +1,17 @@
 package places;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -17,7 +19,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
@@ -38,7 +39,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /*
@@ -204,21 +204,35 @@ public class MapApp extends JFrame {
 
 	}
 
-	private class WindowHandler extends WindowAdapter {
+	class WindowHandler extends WindowAdapter {
 		@Override
 		public void windowClosing(WindowEvent wev) {
 			stop();
 		}
 	}
 
-	private class ExitListener implements ActionListener {
+	class ExitListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent aev) {
 			stop();
 		}
 	}
+	class PlaceMarker extends MouseAdapter{
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			switch(e.getButton()){
+			case MouseEvent.BUTTON1:
+				((Place)e.getSource()).setMarked(true);
+				break;
+			case MouseEvent.BUTTON2:
+				((Place)e.getSource()).setMarked(false);
+				break;
+			}
+			map.repaint();
+		}
+	}
 
-	private class LoadListener implements ActionListener {
+	class LoadListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent aev) {
 			JMenuItem selected = (JMenuItem) aev.getSource();
@@ -258,6 +272,7 @@ public class MapApp extends JFrame {
 			File selected = jfc.getSelectedFile();
 			try (Scanner sc = new Scanner(new FileReader(selected))) {
 				addPlacesFromArray(new FileHandler(sc).readFileContent());
+				addPlacesToMap();
 			} catch (FileNotFoundException e) {
 				JOptionPane.showMessageDialog(MapApp.this, "File does not exist");
 			}
@@ -290,16 +305,23 @@ public class MapApp extends JFrame {
 					cat = TravelCategory.NO_CATEGORY;
 				}
 				NamedPlace place = new NamedPlace(name, pos, cat);
-
-				System.out.println(place + " | " + places.add(place));
+				places.add(place);
 				break;
 			case "Described":
 				break;
 			}
 		}
 	}
+	private void addPlacesToMap(){
+		if(places != null){
+			for(Entry<Position, Place> s : places.getAllPlaces().entrySet()){
+				Place currentPlace = s.getValue();
+				map.add(currentPlace);
+			}
+		}
+	}
 
-	private class Map extends JPanel {
+	class Map extends JPanel {
 		private ImageIcon map;
 
 		public Map() {
@@ -315,18 +337,12 @@ public class MapApp extends JFrame {
 			super.paintComponent(g);
 			if (map != null){
 				g.drawImage(map.getImage(), 0, 0, map.getIconWidth(), map.getIconHeight(), this);
-				
-				if(places != null){
-					for(Entry<Position, Place> s : places.getAllPlaces().entrySet()){
-						g.setColor(s.getValue().getCategoryColor());
-						g.fillPolygon(s.getValue().getPolygon());
-					}
-				}
 			}
 		}
 	}
+	
 
-	private class SortedList extends DefaultListModel<String> {
+	class SortedList extends DefaultListModel<String> {
 		@SuppressWarnings("unused")
 		public void addSorted(String s) {
 			int pos = 0;
