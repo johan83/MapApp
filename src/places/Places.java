@@ -18,6 +18,8 @@ public class Places {
 		String name = place.getName();
 		
 		ArrayList<Place> names = placesByName.get(name);
+		if(names == null)
+			names = new ArrayList<Place>();
 		if(!names.contains(place))
 			names.add(place);
 		

@@ -13,6 +13,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -266,7 +267,7 @@ public class MapApp extends JFrame {
 		jfc.setFileFilter(new FileNameExtensionFilter("Places","places"));
 		if(jfc.showOpenDialog(MapApp.this) == JFileChooser.APPROVE_OPTION){
 			File selected = jfc.getSelectedFile();
-			try(Scanner sc = new Scanner(selected)){
+			try(Scanner sc = new Scanner(new FileReader(selected))){
 				
 				addPlacesFromArray(new FileHandler(sc).readFileContent());
 				
@@ -295,7 +296,6 @@ public class MapApp extends JFrame {
 					cat = TravelCategory.SUBWAY; break;
 				default:
 					cat = TravelCategory.NO_CATEGORY;
-						
 				}
 				NamedPlace place = new NamedPlace(name, pos, cat);
 				

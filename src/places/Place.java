@@ -36,6 +36,9 @@ public abstract class Place extends JComponent {
 	public boolean getMarked(){
 		return marked;
 	}
+	public String toString(){
+		return name +" "+ position +" "+ color;
+	}
 	
 	
 	
