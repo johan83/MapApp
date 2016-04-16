@@ -1,4 +1,5 @@
 package places;
+
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -16,87 +17,89 @@ import javax.swing.JLayeredPane;
 @SuppressWarnings("serial")
 public abstract class Place extends JComponent {
 
+	private String type;
 	private String name;
 	private Position position;
 	private TravelCategory color;
 	private boolean showInfo, marked;
 	private int sizeX, sizeY;
 	Font font;
-	
-	public Place(String name, Position position, TravelCategory color){
+
+	public Place(String name, Position position, TravelCategory color,String type) {
 		sizeX = 25;
 		sizeY = 30;
-		font = new Font("TimesRoman",Font.PLAIN,18);
+		font = new Font("TimesRoman", Font.PLAIN, 18);
 		this.name = name;
 		this.position = position;
 		this.color = color;
-		this.setBounds(position.getX()-sizeX/2,position.getY()-sizeY,sizeX,sizeY);
-		this.setPreferredSize(new Dimension(sizeX,sizeY));
+		this.type = type;
+		this.setBounds(position.getX() - sizeX / 2, position.getY() - sizeY, sizeX, sizeY);
+		this.setPreferredSize(new Dimension(sizeX, sizeY));
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		this.addMouseListener(new PlaceMarker());
 		setVisible(true);
 	}
-	private void moveToFront(){
+
+	private void moveToFront() {
 		JLayeredPane parent = (JLayeredPane) this.getParent();
 		parent.moveToFront(this);
 	}
-	class PlaceMarker extends MouseAdapter{
+
+	class PlaceMarker extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			switch(e.getButton()){
+			switch (e.getButton()) {
 			case MouseEvent.BUTTON1:
 				moveToFront();
 				marked = true;
 				break;
 			case MouseEvent.BUTTON3:
-				Place.this.setBounds(position.getX()-sizeX/2,position.getY()-sizeY,sizeX,sizeY);
+				Place.this.setBounds(position.getX() - sizeX / 2, position.getY() - sizeY, sizeX, sizeY);
 				marked = false;
 				break;
 			}
 			repaint();
 		}
 	}
-	@Override 
-	public Dimension getMinimumSize(){
-		return getPreferredSize();		
-	}
-	@Override 
-	public Dimension getMaximumSize(){
-		return getPreferredSize();		
-	}
-	public String getMarkedText(){
+
+	public String getMarkedText() {
 		return name + getSpecialText();
 	}
-	
+
 	abstract String getSpecialText();
-	
-	public String getName(){
+
+	public String getName() {
 		return name;
 	}
-	
-	public Position getPosition(){
+
+	public Position getPosition() {
 		return position;
 	}
-	
-	public TravelCategory getColor(){
+
+	public TravelCategory getColor() {
 		return color;
 	}
-	
-	public boolean getShowInfo(){
+
+	public boolean getShowInfo() {
 		return showInfo;
 	}
-	public boolean getMarked(){
+
+	public boolean getMarked() {
 		return marked;
 	}
-	public void setMarked(boolean bol){
+
+	public void setMarked(boolean bol) {
 		marked = bol;
 	}
-	public String toString(){
-		return name +" "+ position +" "+ color +" "+ getMarkedText();
+
+	public String toString() {
+		return name + " " + position + " " + color + " " + getMarkedText();
 	}
-	private Color getCategoryColor(){ //bad? should category be object(String category, Color c)?
+
+	private Color getCategoryColor() { // bad? should category be object(String
+										// category, Color c)?
 		Color c;
-		switch(color){
+		switch (color) {
 		case BUS:
 			c = Color.RED;
 			break;
@@ -108,62 +111,91 @@ public abstract class Place extends JComponent {
 			break;
 		default:
 			c = Color.BLACK;
-				break;
+			break;
 		}
 		return c;
 	}
-	private Polygon getPolygon(){
-//		points of the polygon in order: top left, tip, top right
-		int[] xpoints = {0,sizeX/2,sizeX};
-		int[] ypoints = {0,sizeY,0};
-		Polygon gfx = new Polygon(xpoints,ypoints,3);
+
+	private Polygon getPolygon() {
+		// points of the polygon in order: top left, tip, top right
+		int[] xpoints = { 0, sizeX / 2, sizeX };
+		int[] ypoints = { 0, sizeY, 0 };
+		Polygon gfx = new Polygon(xpoints, ypoints, 3);
 		return gfx;
 	}
+
 	@Override
-	protected void paintComponent(Graphics g){
+	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		
-		Graphics2D g2d = (Graphics2D)g;
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //use AA
-		
+
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // use
+																									// AA
+
 		g2d.setColor(getCategoryColor());
 		g2d.fillPolygon(getPolygon());
-		if(marked){
-//			draw border on marked place
-			g2d.drawRect(0, 0, sizeX, sizeY-1); 
-			
-//			the text to display split where "\n" is found
+
+		if (marked) {
+			// draw border on marked place
+			g2d.drawRect(0, 0, sizeX, sizeY - 1);
+
+			// the text to display split where "\n" is found
 			String[] textToDisplay = getMarkedText().split("\n");
-			
-//			width = the rendered width of the text _NOT_ number of chars
+
+			// width = the rendered width of the text _NOT_ number of chars
 			int maxStringWidth = 0;
-//			go through the string[] and find the largest string
-			for(String s : textToDisplay){
+			// go through the string[] and find the largest string
+			for (String s : textToDisplay) {
 				int thisStringWidth = g2d.getFontMetrics(font).stringWidth(s);
-				if(thisStringWidth>maxStringWidth)
+				if (thisStringWidth > maxStringWidth)
 					maxStringWidth = thisStringWidth;
 			}
-			int totalWidth = maxStringWidth+sizeX;
+			int totalWidth = maxStringWidth + sizeX;
 			int fontHeight = g2d.getFontMetrics(font).getHeight();
-			
-			int textHeight = fontHeight*textToDisplay.length;
-			if(sizeY>textHeight){
-				this.setBounds(position.getX()-sizeX/2,position.getY()-sizeY,totalWidth,sizeY);
-			}else{
-				this.setBounds(position.getX()-sizeX/2,position.getY()-sizeY,totalWidth,textHeight);
+
+			int textHeight = fontHeight * textToDisplay.length;
+			if (sizeY > textHeight) {
+				this.setBounds(position.getX() - sizeX / 2, position.getY() - sizeY, totalWidth, sizeY);
+			} else {
+				this.setBounds(position.getX() - sizeX / 2, position.getY() - sizeY, totalWidth, textHeight);
 			}
-			
-//			make a white rectangle around the text
+
+			// make a white rectangle around the text
 			g2d.setColor(Color.WHITE);
-			g2d.fillRect(sizeX+1, 0, totalWidth, textHeight);
-			
-//			draw the text to the right of the polygon
+			g2d.fillRect(sizeX + 1, 0, totalWidth, textHeight);
+
+			// draw the text to the right of the polygon
 			g2d.setColor(Color.BLACK);
 			g2d.setFont(font);
 			int y = 0;
-			for(String s : textToDisplay){
-				g2d.drawString(s, sizeX, y+=fontHeight);
+			for (String s : textToDisplay) {
+				g2d.drawString(s, sizeX, y += fontHeight);
 			}
 		}
 	}
+
+	@Override
+	public Dimension getMinimumSize() {
+		return getPreferredSize();
+	}
+
+	@Override
+	public Dimension getMaximumSize() {
+		return getPreferredSize();
+	}
+
+	public String toDb() {
+		String delim = ",";
+		String toDB = type +delim+ color +delim+ position.toDb() +delim+ name;
+		String[] specials = getSpecialsToDb();
+		if(specials!=null){
+			for(String s : specials){
+				toDB += delim+ s;
+			}
+		}
+		return toDB;
+	}
+	abstract String[] getSpecialsToDb();
+		
+	
 }

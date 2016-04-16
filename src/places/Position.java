@@ -42,4 +42,8 @@ public class Position {
 			return false;
 		return true;
 	}
+
+	public String toDb() {		
+		return x +","+ y;
+	}
 }

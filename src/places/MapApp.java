@@ -14,9 +14,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -44,10 +48,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 /*
  * TODO:
- * add fileloader logic
  * add places rendering
  * add new places logic
- * 
+ * make category object so less conversions and interpretations need to be done
  */
 
 @SuppressWarnings("serial")
@@ -104,6 +107,7 @@ public class MapApp extends JFrame {
 		file.add(places);
 
 		JMenuItem save = new JMenuItem("Save");
+		save.addActionListener(new SaveListener());
 		file.add(save);
 
 		JMenuItem exit = new JMenuItem("Exit");
@@ -179,6 +183,29 @@ public class MapApp extends JFrame {
 
 		return placeCategoryChooser;
 	}
+	class SaveListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent aev) {
+			if(MapApp.this.places != null){
+				int choice = MapApp.this.fileChooser.showSaveDialog(MapApp.this);
+				if(choice == JFileChooser.APPROVE_OPTION){
+					savePlaces(MapApp.this.fileChooser.getSelectedFile());
+				}
+			}
+		}
+	}
+	private void savePlaces(File file){ 
+		if(file.exists())
+			file.delete();
+		
+		try(PrintWriter pw = new PrintWriter(new FileWriter(file,true))){
+			FileHandler.writePlaceToFile(places.getAllPlaces().entrySet(), pw);			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+			
+		
+	}
 
 	private void start() {
 		this.setVisible(true);
@@ -187,10 +214,13 @@ public class MapApp extends JFrame {
 	private void exitWithoutSaving() {
 		System.exit(0);
 	}
+	private int showMessage(String message, String title){
+		return JOptionPane.showConfirmDialog(MapApp.this, message, title,
+				JOptionPane.OK_CANCEL_OPTION);
+	}
 
 	private void queryChangedExit() {
-		int choice = JOptionPane.showConfirmDialog(MapApp.this, "Unsaved changes, exit anyway?", "Exit",
-				JOptionPane.OK_CANCEL_OPTION);
+		int choice = showMessage("Unsaved changes, exit anyway?","Exit");
 		if (choice == JOptionPane.OK_OPTION) {
 			exitWithoutSaving();
 		}
@@ -258,7 +288,7 @@ public class MapApp extends JFrame {
 
 			File selected = jfc.getSelectedFile();
 			try (Scanner sc = new Scanner(new FileReader(selected))) {
-				addPlacesFromArray(new FileHandler(sc).readFileContent());
+				addPlacesFromArray(FileHandler.readFileContent(sc));
 				addPlacesToMap();
 			} catch (FileNotFoundException e) {
 				JOptionPane.showMessageDialog(MapApp.this, "File does not exist");
@@ -273,47 +303,32 @@ public class MapApp extends JFrame {
 
 		for (String s : fromFile) {
 			String[] values = s.split(",");
-			String name;
-			Position pos;
+			
+			String name = values[4];
+			Position pos = new Position(Integer.parseInt(values[2]), Integer.parseInt(values[3]));
 			TravelCategory cat;
+			
+			switch (values[1]) {
+			case "Buss":
+				cat = TravelCategory.BUS;
+				break;
+			case "Tåg":
+				cat = TravelCategory.TRAIN;
+				break;
+			case "Tunnelbana":
+				cat = TravelCategory.SUBWAY;
+				break;
+			default:
+				cat = TravelCategory.NO_CATEGORY;
+			}
 			
 			switch (values[0]) {
 			case "Named":
-				name = values[4];
-				pos = new Position(Integer.parseInt(values[2]), Integer.parseInt(values[3]));
-				switch (values[1]) {
-				case "Buss":
-					cat = TravelCategory.BUS;
-					break;
-				case "Tåg":
-					cat = TravelCategory.TRAIN;
-					break;
-				case "Tunnelbana":
-					cat = TravelCategory.SUBWAY;
-					break;
-				default:
-					cat = TravelCategory.NO_CATEGORY;
-				}
 				NamedPlace namedPlace = new NamedPlace(name, pos, cat);
 				places.add(namedPlace);
 				break;
 			case "Described":
-				name = values[4];
-				pos = new Position(Integer.parseInt(values[2]), Integer.parseInt(values[3]));
 				String description = values[5];
-				switch (values[1]) {
-				case "Buss":
-					cat = TravelCategory.BUS;
-					break;
-				case "Tåg":
-					cat = TravelCategory.TRAIN;
-					break;
-				case "Tunnelbana":
-					cat = TravelCategory.SUBWAY;
-					break;
-				default:
-					cat = TravelCategory.NO_CATEGORY;
-				}
 				DescribedPlace descPlace = new DescribedPlace(name, pos, cat, description);
 				places.add(descPlace);				
 				break;

@@ -1,39 +1,25 @@
 package places;
 
-import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Map.Entry;
 import java.util.Scanner;
+import java.util.Set;
 
 public class FileHandler {
-	private File file;
-	private Scanner sc;
-	private PrintWriter writer;
-	
-	public FileHandler(Scanner sc){
-		this.sc = sc;
-	}
-	public FileHandler(File fileToWrite, PrintWriter writer){
-		this.file = fileToWrite;
-		this.writer = writer;
+	public FileHandler(){
 	}
 	
-	public ArrayList<String> readFileContent(){
+	public static ArrayList<String> readFileContent(Scanner sc){
 		ArrayList<String> fileContent = new ArrayList<>();
 		while(sc.hasNextLine()){
 			fileContent.add(sc.nextLine());
 		}
 		return fileContent;
 	}
-	public boolean writeToFile(ArrayList<String> toWrite){
-		if(file.exists() && file.isFile()){
-			file.delete();			
-		}else{
-			for(String s : toWrite){
-				writer.println(s);
-			}
-			return true;
+	public static void writePlaceToFile(Set<Entry<Position, Place>> set , PrintWriter writer){
+		for(Entry<Position,Place> entry : set){
+			writer.println(entry.getValue().toDb());
 		}
-		return false;
 	}
 }
