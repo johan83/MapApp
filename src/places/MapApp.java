@@ -30,6 +30,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -300,15 +301,16 @@ public class MapApp extends JFrame {
 	}
 	private void addPlacesToMap(){
 		if(places != null){
+			int zIndex = 2;
 			for(Entry<Position, Place> s : places.getAllPlaces().entrySet()){
 				Place currentPlace = s.getValue();
-				map.add(currentPlace);
+				map.add(currentPlace,zIndex);
 				currentPlace.setVisible(true);
 			}
 		}
 	}
 
-	class Map extends JPanel {
+	class Map extends JLayeredPane {
 		private ImageIcon map;
 
 		public Map() {

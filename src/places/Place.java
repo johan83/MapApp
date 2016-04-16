@@ -9,6 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
+import javax.swing.JLayeredPane;
 
 @SuppressWarnings("serial")
 public abstract class Place extends JComponent {
@@ -35,16 +36,23 @@ public abstract class Place extends JComponent {
 		this.addMouseListener(new PlaceMarker());
 		setVisible(true);
 	}
-
+	private int setZ(int i){
+		int prevZ = JLayeredPane.getLayer(this);
+		((JLayeredPane) this.getParent()).setLayer(this, i);
+		return prevZ;
+	}
 	class PlaceMarker extends MouseAdapter{
+		int originalZIndex = 1;
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			switch(e.getButton()){
 			case MouseEvent.BUTTON1:
+				originalZIndex = setZ(originalZIndex);
 				marked = true;
 				break;
 			case MouseEvent.BUTTON3:
 				Place.this.setBounds(position.getX()-sizex/2,position.getY()-sizey,sizex,sizey);
+				originalZIndex = setZ(originalZIndex);
 				marked = false;
 				break;
 			}
