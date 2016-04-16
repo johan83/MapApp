@@ -111,15 +111,22 @@ public abstract class Place extends JComponent {
 		g.setColor(getCategoryColor());
 		g.fillPolygon(getPolygon());
 		if(marked){
-			g.drawRect(0, 0, sizex, sizey-1);
+			// draw border on marked place
+			g.drawRect(0, 0, sizex, sizey-1); 
 			
+			//determine the size of the text to be displayed and increase bounds to compensate
+			String textToDisplay = getMarkedText();
+			int width = g.getFontMetrics(font).stringWidth(textToDisplay) + sizex;
+			int height = g.getFontMetrics(font).getHeight();
+			this.setBounds(position.getX()-sizex/2,position.getY()-sizey,width,sizey);
+			
+			//make a white rectangle around the text
+			g.setColor(Color.WHITE);
+			g.fillRect(sizex+1, 0, width, height);
+			
+			//draw the text to the right of the polygon
 			g.setColor(Color.BLACK);
 			g.setFont(font);
-			String textToDisplay = getMarkedText();
-			System.out.println(textToDisplay);
-			int width = (int) g.getFontMetrics().stringWidth(textToDisplay)+45;
-			System.out.println(width +"");
-			this.setBounds(position.getX()-sizex/2,position.getY()-sizey,(sizex+width),sizey);
 			g.drawString(textToDisplay, sizex, font.getSize());
 		}
 	}
