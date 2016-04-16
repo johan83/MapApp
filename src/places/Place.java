@@ -14,9 +14,9 @@ import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
 
-@SuppressWarnings("serial")
-public abstract class Place extends JComponent {
 
+@SuppressWarnings("serial")
+public abstract class Place extends JComponent{
 	private String type;
 	private String name;
 	private Position position;
@@ -100,13 +100,13 @@ public abstract class Place extends JComponent {
 										// category, Color c)?
 		Color c;
 		switch (color) {
-		case BUS:
+		case Buss:
 			c = Color.RED;
 			break;
-		case TRAIN:
+		case Tåg:
 			c = Color.GREEN;
 			break;
-		case SUBWAY:
+		case Tunnelbana:
 			c = Color.BLUE;
 			break;
 		default:

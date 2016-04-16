@@ -1,7 +1,6 @@
 package places;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -9,12 +8,8 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -307,20 +302,7 @@ public class MapApp extends JFrame {
 			String name = values[4];
 			Position pos = new Position(Integer.parseInt(values[2]), Integer.parseInt(values[3]));
 			TravelCategory cat;
-			
-			switch (values[1]) {
-			case "Buss":
-				cat = TravelCategory.BUS;
-				break;
-			case "Tåg":
-				cat = TravelCategory.TRAIN;
-				break;
-			case "Tunnelbana":
-				cat = TravelCategory.SUBWAY;
-				break;
-			default:
-				cat = TravelCategory.NO_CATEGORY;
-			}
+			cat = TravelCategory.valueOf(values[1]);
 			
 			switch (values[0]) {
 			case "Named":
@@ -367,7 +349,6 @@ public class MapApp extends JFrame {
 	
 
 	class SortedList extends DefaultListModel<String> {
-		@SuppressWarnings("unused")
 		public void addSorted(String s) {
 			int pos = 0;
 

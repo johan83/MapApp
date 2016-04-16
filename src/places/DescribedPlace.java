@@ -1,5 +1,6 @@
 package places;
 
+@SuppressWarnings("serial")
 public class DescribedPlace extends Place{
 
 	private String description;
