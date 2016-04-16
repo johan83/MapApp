@@ -10,6 +10,6 @@ public class NamedPlace extends Place{
 
 	@Override
 	String getSpecialText() {
-		return null;
+		return "";
 	}
 }

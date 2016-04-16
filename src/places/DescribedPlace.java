@@ -12,6 +12,6 @@ public class DescribedPlace extends Place{
 
 	@Override
 	String getSpecialText() {
-		return description;
+		return "\n"+description;
 	}
 }

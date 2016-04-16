@@ -2,6 +2,7 @@ package places;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Polygon;
 import java.awt.event.MouseAdapter;
@@ -16,11 +17,13 @@ public abstract class Place extends JComponent {
 	private Position position;
 	private TravelCategory color;
 	private boolean showInfo, marked;
-	private int sizex, sizey;
+	private int sizex, sizey, fontSize;
+	Font font;
 	
 	public Place(String name, Position position, TravelCategory color){
 		sizex = 25;
 		sizey = 30;
+		font = new Font("TimesRoman",Font.PLAIN,18);
 		this.name = name;
 		this.position = position;
 		this.color = color;
@@ -38,7 +41,6 @@ public abstract class Place extends JComponent {
 		public void mouseClicked(MouseEvent e) {
 			switch(e.getButton()){
 			case MouseEvent.BUTTON1:
-				Place.this.setBounds(position.getX()-sizex/2,position.getY()-sizey,200,200);
 				marked = true;
 				break;
 			case MouseEvent.BUTTON3:
@@ -46,12 +48,11 @@ public abstract class Place extends JComponent {
 				marked = false;
 				break;
 			}
-			System.out.println(marked);
 			repaint();
 		}
 	}
 	public String getMarkedText(){
-		return name +"\n"+getSpecialText();
+		return name + getSpecialText();
 	}
 	
 	abstract String getSpecialText();
@@ -110,9 +111,16 @@ public abstract class Place extends JComponent {
 		g.setColor(getCategoryColor());
 		g.fillPolygon(getPolygon());
 		if(marked){
+			g.drawRect(0, 0, sizex, sizey-1);
+			
 			g.setColor(Color.BLACK);
-			g.drawString("test", sizex, 0);
-			System.out.println("drawing");
+			g.setFont(font);
+			String textToDisplay = getMarkedText();
+			System.out.println(textToDisplay);
+			int width = (int) g.getFontMetrics().stringWidth(textToDisplay)+45;
+			System.out.println(width +"");
+			this.setBounds(position.getX()-sizex/2,position.getY()-sizey,(sizex+width),sizey);
+			g.drawString(textToDisplay, sizex, font.getSize());
 		}
 	}
 }
