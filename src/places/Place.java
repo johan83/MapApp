@@ -36,7 +36,7 @@ public abstract class Place extends JComponent {
 		this.addMouseListener(new PlaceMarker());
 		setVisible(true);
 	}
-	private void setZ(){ //FIXME works but not optimal
+	private void setZ(){
 		JLayeredPane parent = (JLayeredPane) this.getParent();
 		parent.moveToFront(this);
 	}
