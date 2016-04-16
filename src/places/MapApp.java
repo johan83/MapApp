@@ -217,20 +217,6 @@ public class MapApp extends JFrame {
 			stop();
 		}
 	}
-	class PlaceMarker extends MouseAdapter{
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			switch(e.getButton()){
-			case MouseEvent.BUTTON1:
-				((Place)e.getSource()).setMarked(true);
-				break;
-			case MouseEvent.BUTTON2:
-				((Place)e.getSource()).setMarked(false);
-				break;
-			}
-			map.repaint();
-		}
-	}
 
 	class LoadListener implements ActionListener {
 		@Override
