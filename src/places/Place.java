@@ -36,7 +36,7 @@ public abstract class Place extends JComponent {
 		this.addMouseListener(new PlaceMarker());
 		setVisible(true);
 	}
-	private void setZ(){
+	private void moveToFront(){
 		JLayeredPane parent = (JLayeredPane) this.getParent();
 		parent.moveToFront(this);
 	}
@@ -45,7 +45,7 @@ public abstract class Place extends JComponent {
 		public void mouseClicked(MouseEvent e) {
 			switch(e.getButton()){
 			case MouseEvent.BUTTON1:
-				setZ();
+				moveToFront();
 				marked = true;
 				break;
 			case MouseEvent.BUTTON3:
