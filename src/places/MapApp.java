@@ -301,10 +301,9 @@ public class MapApp extends JFrame {
 	}
 	private void addPlacesToMap(){
 		if(places != null){
-			int zIndex = 2;
 			for(Entry<Position, Place> s : places.getAllPlaces().entrySet()){
 				Place currentPlace = s.getValue();
-				map.add(currentPlace,zIndex);
+				map.add(currentPlace);
 				currentPlace.setVisible(true);
 			}
 		}

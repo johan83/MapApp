@@ -36,23 +36,20 @@ public abstract class Place extends JComponent {
 		this.addMouseListener(new PlaceMarker());
 		setVisible(true);
 	}
-	private int setZ(int i){ //FIXME works but not optimal
-		int prevZ = JLayeredPane.getLayer(this);
-		((JLayeredPane) this.getParent()).setLayer(this, i);
-		return prevZ;
+	private void setZ(){ //FIXME works but not optimal
+		JLayeredPane parent = (JLayeredPane) this.getParent();
+		parent.moveToFront(this);
 	}
 	class PlaceMarker extends MouseAdapter{
-		int originalZIndex = 1;
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			switch(e.getButton()){
 			case MouseEvent.BUTTON1:
-				originalZIndex = setZ(originalZIndex);
+				setZ();
 				marked = true;
 				break;
 			case MouseEvent.BUTTON3:
 				Place.this.setBounds(position.getX()-sizex/2,position.getY()-sizey,sizex,sizey);
-				originalZIndex = setZ(originalZIndex);
 				marked = false;
 				break;
 			}
