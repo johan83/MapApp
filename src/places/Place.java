@@ -20,18 +20,18 @@ public abstract class Place extends JComponent {
 	private Position position;
 	private TravelCategory color;
 	private boolean showInfo, marked;
-	private int sizex, sizey;
+	private int sizeX, sizeY;
 	Font font;
 	
 	public Place(String name, Position position, TravelCategory color){
-		sizex = 25;
-		sizey = 30;
+		sizeX = 25;
+		sizeY = 30;
 		font = new Font("TimesRoman",Font.PLAIN,18);
 		this.name = name;
 		this.position = position;
 		this.color = color;
-		this.setBounds(position.getX()-sizex/2,position.getY()-sizey,sizex,sizey);
-		this.setPreferredSize(new Dimension(sizex,sizey));
+		this.setBounds(position.getX()-sizeX/2,position.getY()-sizeY,sizeX,sizeY);
+		this.setPreferredSize(new Dimension(sizeX,sizeY));
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		this.addMouseListener(new PlaceMarker());
 		setVisible(true);
@@ -49,7 +49,7 @@ public abstract class Place extends JComponent {
 				marked = true;
 				break;
 			case MouseEvent.BUTTON3:
-				Place.this.setBounds(position.getX()-sizex/2,position.getY()-sizey,sizex,sizey);
+				Place.this.setBounds(position.getX()-sizeX/2,position.getY()-sizeY,sizeX,sizeY);
 				marked = false;
 				break;
 			}
@@ -94,7 +94,7 @@ public abstract class Place extends JComponent {
 	public String toString(){
 		return name +" "+ position +" "+ color +" "+ getMarkedText();
 	}
-	private Color getCategoryColor(){ //dåligt? bättre om category är ett objekt med String name + Color color ? 
+	private Color getCategoryColor(){ //bad? should category be object(String category, Color c)?
 		Color c;
 		switch(color){
 		case BUS:
@@ -113,9 +113,9 @@ public abstract class Place extends JComponent {
 		return c;
 	}
 	private Polygon getPolygon(){
-//		points of the poly in order: top left, tip, top right
-		int[] xpoints = {0,sizex/2,sizex};
-		int[] ypoints = {0,sizey,0};
+//		points of the polygon in order: top left, tip, top right
+		int[] xpoints = {0,sizeX/2,sizeX};
+		int[] ypoints = {0,sizeY,0};
 		Polygon gfx = new Polygon(xpoints,ypoints,3);
 		return gfx;
 	}
@@ -130,7 +130,7 @@ public abstract class Place extends JComponent {
 		g2d.fillPolygon(getPolygon());
 		if(marked){
 //			draw border on marked place
-			g2d.drawRect(0, 0, sizex, sizey-1); 
+			g2d.drawRect(0, 0, sizeX, sizeY-1); 
 			
 //			the text to display split where "\n" is found
 			String[] textToDisplay = getMarkedText().split("\n");
@@ -143,31 +143,26 @@ public abstract class Place extends JComponent {
 				if(thisStringWidth>maxStringWidth)
 					maxStringWidth = thisStringWidth;
 			}
-//			add the width of the polygon to the max string width to get total width
-			int totalWidth = maxStringWidth+sizex;
-//			the standard height of the font
+			int totalWidth = maxStringWidth+sizeX;
 			int fontHeight = g2d.getFontMetrics(font).getHeight();
-//			height is the standard font height * the number of strings(lines)
-			int height = fontHeight*textToDisplay.length;
-//			check if sizey is larger than the string height
-			if(sizey>height){
-//				if it is the height of bounds should be sizey
-				this.setBounds(position.getX()-sizex/2,position.getY()-sizey,totalWidth,sizey);
+			
+			int textHeight = fontHeight*textToDisplay.length;
+			if(sizeY>textHeight){
+				this.setBounds(position.getX()-sizeX/2,position.getY()-sizeY,totalWidth,sizeY);
 			}else{
-//				else it should be height
-				this.setBounds(position.getX()-sizex/2,position.getY()-sizey,totalWidth,height);
+				this.setBounds(position.getX()-sizeX/2,position.getY()-sizeY,totalWidth,textHeight);
 			}
 			
 //			make a white rectangle around the text
 			g2d.setColor(Color.WHITE);
-			g2d.fillRect(sizex+1, 0, totalWidth, height);
+			g2d.fillRect(sizeX+1, 0, totalWidth, textHeight);
 			
 //			draw the text to the right of the polygon
 			g2d.setColor(Color.BLACK);
 			g2d.setFont(font);
 			int y = 0;
 			for(String s : textToDisplay){
-				g2d.drawString(s, sizex, y+=fontHeight);
+				g2d.drawString(s, sizeX, y+=fontHeight);
 			}
 		}
 	}
