@@ -273,11 +273,14 @@ public class MapApp extends JFrame {
 
 		for (String s : fromFile) {
 			String[] values = s.split(",");
+			String name;
+			Position pos;
+			TravelCategory cat;
+			
 			switch (values[0]) {
 			case "Named":
-				String name = values[4];
-				Position pos = new Position(Integer.parseInt(values[2]), Integer.parseInt(values[3]));
-				TravelCategory cat;
+				name = values[4];
+				pos = new Position(Integer.parseInt(values[2]), Integer.parseInt(values[3]));
 				switch (values[1]) {
 				case "Buss":
 					cat = TravelCategory.BUS;
@@ -291,10 +294,28 @@ public class MapApp extends JFrame {
 				default:
 					cat = TravelCategory.NO_CATEGORY;
 				}
-				NamedPlace place = new NamedPlace(name, pos, cat);
-				places.add(place);
+				NamedPlace namedPlace = new NamedPlace(name, pos, cat);
+				places.add(namedPlace);
 				break;
 			case "Described":
+				name = values[4];
+				pos = new Position(Integer.parseInt(values[2]), Integer.parseInt(values[3]));
+				String description = values[5];
+				switch (values[1]) {
+				case "Buss":
+					cat = TravelCategory.BUS;
+					break;
+				case "Tåg":
+					cat = TravelCategory.TRAIN;
+					break;
+				case "Tunnelbana":
+					cat = TravelCategory.SUBWAY;
+					break;
+				default:
+					cat = TravelCategory.NO_CATEGORY;
+				}
+				DescribedPlace descPlace = new DescribedPlace(name, pos, cat, description);
+				places.add(descPlace);				
 				break;
 			}
 		}
