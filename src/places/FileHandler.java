@@ -9,8 +9,6 @@ import java.util.Scanner;
 import java.util.Set;
 
 public class FileHandler {
-	public FileHandler(){
-	}
 	
 	public static ArrayList<String> readFileContent(Scanner sc){
 		ArrayList<String> fileContent = new ArrayList<>();
