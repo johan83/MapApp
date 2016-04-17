@@ -139,24 +139,24 @@ public class MapApp extends JFrame {
 	class WhatIsHereMapListener extends MouseAdapter{
 		@Override
 		public void mouseClicked(MouseEvent e){
-			if(MapApp.this.places != null){
-				if(MapApp.this.WISListener.isActive()){
-					MapApp.this.WISListener.deActivate();
+			if(MapApp.this.WISListener.isActive()){
+				MapApp.this.WISListener.deActivate();
+				if(MapApp.this.places != null){
 					
 					int gridsize = MapApp.WHAT_IS_HERE_GRID_SIZE;
-					int startX = e.getX() - gridsize/2;
+					int startX = (int) (e.getX() - Math.ceil(gridsize/2));
 					int endX = startX + gridsize;
-					int startY = e.getY() - gridsize/2;
+					int startY = (int) (e.getY() - Math.ceil(gridsize/2));
 					int endY = startY + gridsize;
+					System.out.println("Mid "+e.getX()+","+e.getY());
 					System.out.println("Start "+startX+","+startY);
 					System.out.println("End "+endX+","+endY);
 					
-					for(int x = startX; x<endX;x++){
-						for(int y = startY; y<endY;y++){
+					for(int x = startX; x<=endX;x++){
+						for(int y = startY; y<=endY;y++){
 							MapApp.this.places.setVisibilityByPosition(new Position(x,y));
 						}
-					}
-					
+					}					
 				}
 			}
 		}
