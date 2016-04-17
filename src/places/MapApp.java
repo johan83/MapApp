@@ -148,9 +148,6 @@ public class MapApp extends JFrame {
 					int endX = startX + gridsize;
 					int startY = (int) (e.getY() - Math.ceil(gridsize/2));
 					int endY = startY + gridsize;
-					System.out.println("Mid "+e.getX()+","+e.getY());
-					System.out.println("Start "+startX+","+startY);
-					System.out.println("End "+endX+","+endY);
 					
 					for(int x = startX; x<=endX;x++){
 						for(int y = startY; y<=endY;y++){
