@@ -22,7 +22,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
@@ -57,7 +56,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class MapApp extends JFrame {
 	public static final String title = "MapApp";
 
-	public static final String[] ALLOWED_PLACE_TYPES = { "Named", "Described" };
+	private static final String[] ALLOWED_PLACE_TYPES = { "Named", "Described" };
+	private static final int WHAT_IS_HERE_GRID_SIZE = 21;
 
 	private JComboBox<String> newPlaceChooser;
 	private JTextField searchInput;
@@ -125,7 +125,7 @@ public class MapApp extends JFrame {
 		mainView.add(populateUpperBar(new JPanel()), BorderLayout.NORTH);
 
 		map = new Map();
-		map.addMouseListener(new WISMapCursorResetListener());
+		map.addMouseListener(new WhatIsHereMapListener());
 		
 		mapPane = new JScrollPane(map, 
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -136,11 +136,28 @@ public class MapApp extends JFrame {
 
 		return mainView;
 	}
-	class WISMapCursorResetListener extends MouseAdapter{
+	class WhatIsHereMapListener extends MouseAdapter{
 		@Override
 		public void mouseClicked(MouseEvent e){
-			if(MapApp.this.WISListener.isActive()){
-				((Map)e.getSource()).setCursor(Cursor.getDefaultCursor());
+			if(MapApp.this.places != null){
+				if(MapApp.this.WISListener.isActive()){
+					MapApp.this.WISListener.deActivate();
+					
+					int gridsize = MapApp.WHAT_IS_HERE_GRID_SIZE;
+					int startX = e.getX() - gridsize/2;
+					int endX = startX + gridsize;
+					int startY = e.getY() - gridsize/2;
+					int endY = startY + gridsize;
+					System.out.println("Start "+startX+","+startY);
+					System.out.println("End "+endX+","+endY);
+					
+					for(int x = startX; x<endX;x++){
+						for(int y = startY; y<endY;y++){
+							MapApp.this.places.setVisibilityByPosition(new Position(x,y));
+						}
+					}
+					
+				}
 			}
 		}
 	}
@@ -188,6 +205,10 @@ public class MapApp extends JFrame {
 		}
 		public boolean isActive(){
 			return active;
+		}
+		public void deActivate(){
+			active = false;
+			MapApp.this.map.setCursor(Cursor.getDefaultCursor());
 		}
 	}
 	class SearchPlaceListener implements ActionListener{

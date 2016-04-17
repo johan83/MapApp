@@ -111,6 +111,11 @@ public class Places {
 	public void setVisibilityByPlace(Place p,boolean visible){
 		p.setVisible(visible);
 	}
+	public void setVisibilityByPosition(Position pos){
+		Place place = getPlaceByPosition(pos);
+		if(place != null)
+			place.setVisible(true);
+	}
 	public Place getPlaceByPosition(Position p){
 		return placesByPosition.get(p);
 	}
