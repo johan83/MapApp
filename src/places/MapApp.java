@@ -8,6 +8,8 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -141,9 +143,11 @@ public class MapApp extends JFrame {
 		upperBar.add(newPlaceChooser);
 
 		searchInput = new JTextField("Search", 10);
+		searchInput.addFocusListener(new SearchTextListener());
 		upperBar.add(searchInput);
 
 		JButton searchButton = new JButton("Search");
+		searchButton.addActionListener(new SearchPlaceListener());
 		upperBar.add(searchButton);
 
 		JButton hideButton = new JButton("Hide");
@@ -159,6 +163,36 @@ public class MapApp extends JFrame {
 
 		return upperBar;
 	}
+	class SearchPlaceListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+			Places places = MapApp.this.places;
+			if(places != null){
+				places.unMarkAll();
+				ArrayList<Place> placesByName = places.getPlacesByName(MapApp.this.searchInput.getText());
+				if(placesByName != null){
+					for(Place p : placesByName){
+						places.setMarked(p,true);
+					}
+					MapApp.this.map.repaint();
+				}
+			}
+		}
+	}
+	class SearchTextListener implements FocusListener{
+		@Override
+		public void focusGained(FocusEvent fe) {
+			String currentText = ((JTextField)fe.getComponent()).getText();
+			if(currentText.equals("Search"))
+				((JTextField)fe.getComponent()).setText("");
+		}
+		@Override
+		public void focusLost(FocusEvent fe) {
+			String currentText = ((JTextField)fe.getComponent()).getText();
+			if(currentText == null || currentText.isEmpty())	
+				((JTextField)fe.getComponent()).setText("Search");				
+		}
+	}
 	class HideListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -169,16 +203,21 @@ public class MapApp extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Place[] toRemove = removeMarked();
-			for(Place p : toRemove)
-				MapApp.this.map.remove(p);
-			MapApp.this.map.repaint();
+			if(toRemove!=null){
+				for(Place p : toRemove)
+					MapApp.this.map.remove(p);
+				MapApp.this.map.repaint();
+			}
 		}
 	}
 	private Place[] removeMarked(){
-		return places.removeMarked();
+		if(places!=null)
+			return places.removeMarked();
+		return null;
 	}
 	private void hideMarked(){
-		places.hideMarked();
+		if(places!=null)
+			places.hideMarked();
 	}
 	private JPanel populatePlaceCategoryChooser(JPanel placeCategoryChooser) {
 		BoxLayout layout = new BoxLayout(placeCategoryChooser, BoxLayout.Y_AXIS);

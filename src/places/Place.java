@@ -53,8 +53,7 @@ public abstract class Place extends JComponent{
 		public void mouseClicked(MouseEvent e) {
 			switch (e.getButton()) {
 			case MouseEvent.BUTTON1:
-				marked = !marked;
-				places.setMarked(Place.this,marked);
+				places.setMarked(Place.this,!marked);
 				break;
 			case MouseEvent.BUTTON3:
 				if(showInfo){

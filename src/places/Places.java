@@ -84,12 +84,22 @@ public class Places {
 		if(marked)
 			markedPlaces.add(place);
 		else
-			markedPlaces.remove(place);	
+			markedPlaces.remove(place);
+		place.setMarked(marked);	
+	}
+	public void unMarkAll(){
+		if(markedPlaces != null && markedPlaces.size()>0){
+			for(Place p : markedPlaces)
+				p.setMarked(false);		
+			}
 	}
 	public void hideMarked(){
-		for(Place p : markedPlaces){
-			setVisibilityByPlace(p,false);
-			p.setMarked(false);
+		if(markedPlaces != null && markedPlaces.size()>0){
+			System.out.println(markedPlaces);
+			for(Place p : markedPlaces){
+				setVisibilityByPlace(p,false);
+				p.setMarked(false);
+			}
 		}
 	}
 	public void setVisiblityByName(String name,boolean visible){
@@ -104,7 +114,7 @@ public class Places {
 	public Place getPlaceByPosition(Position p){
 		return placesByPosition.get(p);
 	}
-	public ArrayList<Place> getPlaceByName(String s){
+	public ArrayList<Place> getPlacesByName(String s){
 		return placesByName.get(s);		
 	}
 }
