@@ -151,6 +151,7 @@ public class MapApp extends JFrame {
 		upperBar.add(hideButton);
 
 		JButton removeButton = new JButton("Remove");
+		removeButton.addActionListener(new RemoveListener());
 		upperBar.add(removeButton);
 
 		JButton whatIsHereButton = new JButton("What is here?");
@@ -163,6 +164,18 @@ public class MapApp extends JFrame {
 		public void actionPerformed(ActionEvent arg0) {
 			hideMarked();
 		}
+	}
+	class RemoveListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			Place[] toRemove = removeMarked();
+			for(Place p : toRemove)
+				MapApp.this.map.remove(p);
+			MapApp.this.map.repaint();
+		}
+	}
+	private Place[] removeMarked(){
+		return places.removeMarked();
 	}
 	private void hideMarked(){
 		places.hideMarked();

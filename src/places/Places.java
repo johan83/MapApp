@@ -3,6 +3,7 @@ package places;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 
 public class Places {
 	
@@ -39,6 +40,36 @@ public class Places {
 		placesByCategory.put(cat, cats);
 				
 		return placesByPosition.put(pos, place);
+	}
+	public void remove(Place place){
+		Position pos = place.getPosition();
+		String name = place.getName();
+		TravelCategory cat = place.getColor();
+		
+		placesByPosition.remove(pos);
+		ArrayList<Place> names = placesByName.get(name);
+		names.remove(place);		
+		ArrayList<Place> cats = placesByCategory.get(cat);
+		cats.remove(place);		
+		markedPlaces.remove(place);		
+	}
+	public Place[] removeMarked(){
+		Place[] toReturn = markedPlaces.toArray(new Place[markedPlaces.size()]);
+		Iterator<Place> i = markedPlaces.iterator();
+		while(i.hasNext()){
+			Place place = i.next();
+			Position pos = place.getPosition();
+			String name = place.getName();
+			TravelCategory cat = place.getColor();
+			
+			placesByPosition.remove(pos);
+			ArrayList<Place> names = placesByName.get(name);
+			names.remove(place);		
+			ArrayList<Place> cats = placesByCategory.get(cat);
+			cats.remove(place);		
+			i.remove();
+		}
+		return toReturn;
 	}
 	public HashMap<Position,Place> getAllPlaces(){
 		return placesByPosition;
