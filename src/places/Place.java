@@ -23,6 +23,7 @@ public abstract class Place extends JComponent{
 	private TravelCategory color;
 	private boolean showInfo, marked;
 	private int sizeX, sizeY;
+	private Places places;
 	Font font;
 
 	public Place(String name, Position position, TravelCategory color,String type) {
@@ -44,13 +45,16 @@ public abstract class Place extends JComponent{
 		JLayeredPane parent = (JLayeredPane) this.getParent();
 		parent.moveToFront(this);
 	}
-
+	public void setPlaces(Places places){
+		this.places = places;
+	}
 	class PlaceMarker extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			switch (e.getButton()) {
 			case MouseEvent.BUTTON1:
 				marked = !marked;
+				places.setMarked(Place.this,marked);
 				break;
 			case MouseEvent.BUTTON3:
 				if(showInfo){

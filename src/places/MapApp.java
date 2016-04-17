@@ -147,6 +147,7 @@ public class MapApp extends JFrame {
 		upperBar.add(searchButton);
 
 		JButton hideButton = new JButton("Hide");
+		hideButton.addActionListener(new HideListener());
 		upperBar.add(hideButton);
 
 		JButton removeButton = new JButton("Remove");
@@ -157,7 +158,15 @@ public class MapApp extends JFrame {
 
 		return upperBar;
 	}
-
+	class HideListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			hideMarked();
+		}
+	}
+	private void hideMarked(){
+		places.hideMarked();
+	}
 	private JPanel populatePlaceCategoryChooser(JPanel placeCategoryChooser) {
 		BoxLayout layout = new BoxLayout(placeCategoryChooser, BoxLayout.Y_AXIS);
 		placeCategoryChooser.setLayout(layout);
@@ -176,7 +185,7 @@ public class MapApp extends JFrame {
 		placeCategoryChooser.add(listScroll);
 
 		JButton hideCategories = new JButton("Hide category");
-		hideCategories.addActionListener(new HideListener());
+		hideCategories.addActionListener(new HideCategoryListener());
 		hideCategories.setAlignmentX(CENTER_ALIGNMENT);
 		placeCategoryChooser.add(hideCategories);
 
@@ -186,7 +195,7 @@ public class MapApp extends JFrame {
 		for(TravelCategory c : TravelCategory.values())
 			 list.addSorted(c.toString());
 	}
-	class HideListener implements ActionListener{
+	class HideCategoryListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			if(MapApp.this.places != null){
@@ -312,7 +321,7 @@ public class MapApp extends JFrame {
 
 	private void addPlacesFromArray(ArrayList<String> fromFile) {
 		if (places == null)
-			places = new Places(new HashMap<Position, Place>(), new HashMap<String, ArrayList<Place>>(), new HashMap<TravelCategory,ArrayList<Place>>());
+			places = new Places();
 
 		for (String s : fromFile) {
 			String[] values = s.split(",");
