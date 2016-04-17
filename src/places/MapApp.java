@@ -59,6 +59,7 @@ public class MapApp extends JFrame {
 	private SortedList sortedList;
 	private Map map;
 	private JScrollPane mapPane;
+	private JList<String> list;
 
 	private JFileChooser fileChooser;
 	private Places places;
@@ -166,17 +167,34 @@ public class MapApp extends JFrame {
 		placeCategoryChooser.add(categoryLabel);
 
 		sortedList = new SortedList();
-		JList<String> list = new JList<>(sortedList);
+		list = new JList<>(sortedList);
+		populateListWithCategories(sortedList);
+		
 		list.setFixedCellWidth(20);
 		JScrollPane listScroll = new JScrollPane(list);
 		listScroll.setPreferredSize(new Dimension(listScroll.getWidth(), 250));
 		placeCategoryChooser.add(listScroll);
 
 		JButton hideCategories = new JButton("Hide category");
+		hideCategories.addActionListener(new HideListener());
 		hideCategories.setAlignmentX(CENTER_ALIGNMENT);
 		placeCategoryChooser.add(hideCategories);
 
 		return placeCategoryChooser;
+	}
+	private void populateListWithCategories(SortedList list){
+		for(TravelCategory c : TravelCategory.values())
+			 list.addSorted(c.toString());
+	}
+	class HideListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			if(MapApp.this.places != null){
+				for(String s : MapApp.this.list.getSelectedValuesList()){
+					places.setVisibleByCategory(TravelCategory.valueOf(s), false);				
+				}	
+			}		
+		}
 	}
 	class SaveListener implements ActionListener{
 		@Override
@@ -294,7 +312,7 @@ public class MapApp extends JFrame {
 
 	private void addPlacesFromArray(ArrayList<String> fromFile) {
 		if (places == null)
-			places = new Places(new HashMap<Position, Place>(), new HashMap<String, ArrayList<Place>>());
+			places = new Places(new HashMap<Position, Place>(), new HashMap<String, ArrayList<Place>>(), new HashMap<TravelCategory,ArrayList<Place>>());
 
 		for (String s : fromFile) {
 			String[] values = s.split(",");

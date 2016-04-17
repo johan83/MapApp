@@ -50,14 +50,16 @@ public abstract class Place extends JComponent{
 		public void mouseClicked(MouseEvent e) {
 			switch (e.getButton()) {
 			case MouseEvent.BUTTON1:
-				moveToFront();
-				marked = true;
+				marked = !marked;
 				break;
 			case MouseEvent.BUTTON3:
-				Place.this.setBounds(position.getX() - sizeX / 2, position.getY() - sizeY, sizeX, sizeY);
-				marked = false;
+				if(showInfo){
+					Place.this.setBounds(position.getX() - sizeX / 2, position.getY() - sizeY, sizeX, sizeY);
+				}
+				showInfo = !showInfo;
 				break;
 			}
+			moveToFront();
 			repaint();
 		}
 	}
@@ -129,22 +131,18 @@ public abstract class Place extends JComponent{
 		super.paintComponent(g);
 
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // use
-																									// AA
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
 		g2d.setColor(getCategoryColor());
 		g2d.fillPolygon(getPolygon());
 
 		if (marked) {
-			// draw border on marked place
-			g2d.drawRect(0, 0, sizeX, sizeY - 1);
-
-			// the text to display split where "\n" is found
+			g2d.drawRect(0, 0, sizeX - 1, sizeY - 1);
+		}
+		if(showInfo){
 			String[] textToDisplay = getMarkedText().split("\n");
 
-			// width = the rendered width of the text _NOT_ number of chars
-			int maxStringWidth = 0;
-			// go through the string[] and find the largest string
+			int maxStringWidth = 0; // width = the rendered width of the text _NOT_ number of chars
 			for (String s : textToDisplay) {
 				int thisStringWidth = g2d.getFontMetrics(font).stringWidth(s);
 				if (thisStringWidth > maxStringWidth)
@@ -170,7 +168,7 @@ public abstract class Place extends JComponent{
 			int y = 0;
 			for (String s : textToDisplay) {
 				g2d.drawString(s, sizeX, y += fontHeight);
-			}
+			}	
 		}
 	}
 
