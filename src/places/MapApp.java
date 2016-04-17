@@ -1,6 +1,7 @@
 package places;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -10,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -62,6 +65,7 @@ public class MapApp extends JFrame {
 	private Map map;
 	private JScrollPane mapPane;
 	private JList<String> list;
+	private WhatIsHereListener WISListener;
 
 	private JFileChooser fileChooser;
 	private Places places;
@@ -121,6 +125,8 @@ public class MapApp extends JFrame {
 		mainView.add(populateUpperBar(new JPanel()), BorderLayout.NORTH);
 
 		map = new Map();
+		map.addMouseListener(new WISMapCursorResetListener());
+		
 		mapPane = new JScrollPane(map, 
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -129,6 +135,14 @@ public class MapApp extends JFrame {
 		mainView.add(populatePlaceCategoryChooser(new JPanel()), BorderLayout.EAST);
 
 		return mainView;
+	}
+	class WISMapCursorResetListener extends MouseAdapter{
+		@Override
+		public void mouseClicked(MouseEvent e){
+			if(MapApp.this.WISListener.isActive()){
+				((Map)e.getSource()).setCursor(Cursor.getDefaultCursor());
+			}
+		}
 	}
 
 	private JPanel populateUpperBar(JPanel upperBar) {
@@ -159,9 +173,22 @@ public class MapApp extends JFrame {
 		upperBar.add(removeButton);
 
 		JButton whatIsHereButton = new JButton("What is here?");
+		WISListener = new WhatIsHereListener();
+		whatIsHereButton.addActionListener(WISListener);
 		upperBar.add(whatIsHereButton);
 
 		return upperBar;
+	}
+	class WhatIsHereListener implements ActionListener{
+		boolean active;
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+			active = true;
+			MapApp.this.map.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+		}
+		public boolean isActive(){
+			return active;
+		}
 	}
 	class SearchPlaceListener implements ActionListener{
 		@Override
@@ -207,6 +234,7 @@ public class MapApp extends JFrame {
 				for(Place p : toRemove)
 					MapApp.this.map.remove(p);
 				MapApp.this.map.repaint();
+				MapApp.this.changed = true;
 			}
 		}
 	}
