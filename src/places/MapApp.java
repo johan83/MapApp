@@ -70,6 +70,9 @@ public class MapApp extends JFrame {
 	
 	private WhatIsHereListener WISListener;
 	private NewPlaceListener comboListener;
+	
+	private FileNameExtensionFilter pictureFilter = new FileNameExtensionFilter("Pictures", "png", "jpg", "jpeg");
+	private FileNameExtensionFilter placeFilter = new FileNameExtensionFilter("Places", "places");
 
 	private JFileChooser fileChooser;
 	private Places places;
@@ -373,10 +376,10 @@ public class MapApp extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent aev) {
 			if(places != null){
+				fileChooser.setFileFilter(placeFilter);
 				int choice = fileChooser.showSaveDialog(MapApp.this);
-				if(choice == JFileChooser.APPROVE_OPTION){
-					savePlaces(fileChooser.getSelectedFile());
-				}
+				if(choice == JFileChooser.APPROVE_OPTION)
+					savePlaces(fileChooser.getSelectedFile());				
 			}
 		}
 	}
@@ -385,7 +388,7 @@ public class MapApp extends JFrame {
 			file.delete();
 		
 		try(PrintWriter pw = new PrintWriter(new FileWriter(file,true))){
-			FileHandler.writePlaceToFile(places.getAllPlaces().entrySet(), pw);			
+			FileHandler.writePlacesToFile(places.getAllPlaces().entrySet(), pw);			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}finally{
@@ -463,7 +466,7 @@ public class MapApp extends JFrame {
 	}
 
 	private void loadNewMap(JFileChooser jfc) {
-		jfc.setFileFilter(new FileNameExtensionFilter("Pictures", "png", "jpg", "jpeg"));
+		jfc.setFileFilter(pictureFilter);
 		if (jfc.showOpenDialog(MapApp.this) == JFileChooser.APPROVE_OPTION) {
 			
 			File selected = jfc.getSelectedFile();
@@ -473,7 +476,7 @@ public class MapApp extends JFrame {
 	}
 
 	private void loadNewPlaces(JFileChooser jfc) {
-		jfc.setFileFilter(new FileNameExtensionFilter("Places", "places"));
+		jfc.setFileFilter(placeFilter);
 		if (jfc.showOpenDialog(MapApp.this) == JFileChooser.APPROVE_OPTION) {
 
 			File selected = jfc.getSelectedFile();

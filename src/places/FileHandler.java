@@ -17,7 +17,7 @@ public class FileHandler {
 		}
 		return fileContent;
 	}
-	public static void writePlaceToFile(Set<Entry<Position, Place>> set , PrintWriter writer) throws FileNotFoundException, IOException{
+	public static void writePlacesToFile(Set<Entry<Position, Place>> set , PrintWriter writer) throws FileNotFoundException, IOException{
 		for(Entry<Position,Place> entry : set){
 			writer.println(entry.getValue().toDb());
 		}
