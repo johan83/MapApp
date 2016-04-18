@@ -10,7 +10,7 @@ import places.Place.TravelCategory;
 public class Places {
 	
 	private HashMap<Position,Place> placesByPosition;
-	private HashMap<String,ArrayList<Place>> placesByName; //Förmodligen så nära O(1) man kan komma för namn
+	private HashMap<String,ArrayList<Place>> placesByName;
 	private HashMap<TravelCategory,ArrayList<Place>> placesByCategory;
 	private HashSet<Place> markedPlaces;
 	

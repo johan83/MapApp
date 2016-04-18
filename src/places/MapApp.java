@@ -140,7 +140,6 @@ public class MapApp extends JFrame {
 	class NewPlaceMapListener extends MouseAdapter{
 		@Override
 		public void mouseClicked(MouseEvent e){
-			System.out.println("1");
 			if(!comboListener.isActive())
 				return;
 			comboListener.deActivate();
@@ -148,8 +147,6 @@ public class MapApp extends JFrame {
 				return;
 			if(places == null)
 				places = new Places();
-			
-			System.out.println("2");
 			
 			Position pos = new Position(e.getX(),e.getY());
 			TravelCategory cat = TravelCategory.None;
