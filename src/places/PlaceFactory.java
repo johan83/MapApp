@@ -52,7 +52,7 @@ public class PlaceFactory {
 		}
 		
 	}
-	public static NamedPlace createQueriedNamedPlace(Component parent, Position pos, TravelCategory cat){
+	private static NamedPlace createQueriedNamedPlace(Component parent, Position pos, TravelCategory cat){
 		NamedPlace place = null;
 		try{
 			JLabel[] labels = {new JLabel("Name:")};
@@ -71,7 +71,7 @@ public class PlaceFactory {
 		
 		return place;		
 	}
-	public static DescribedPlace createQueriedDescribedPlace(Component parent, Position pos, TravelCategory cat){
+	private static DescribedPlace createQueriedDescribedPlace(Component parent, Position pos, TravelCategory cat){
 		DescribedPlace place = null;
 		try{
 			JLabel[] labels = {new JLabel("Name:"),new JLabel("Description:")};
