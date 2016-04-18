@@ -322,9 +322,9 @@ public class MapApp extends JFrame {
 			FileHandler.writePlaceToFile(places.getAllPlaces().entrySet(), pw);			
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-			
-		
+		}finally{
+			changed = false;
+		}	
 	}
 
 	private void start() {
@@ -373,6 +373,10 @@ public class MapApp extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent aev) {
 			JMenuItem selected = (JMenuItem) aev.getSource();
+			if(changed){
+				if(showMessage("Unsaved changes, load new anyway?","Load") != JOptionPane.OK_OPTION)
+					return;
+			}
 			load(selected);
 		}
 	}
@@ -412,6 +416,8 @@ public class MapApp extends JFrame {
 				addPlacesToMap();
 			} catch (FileNotFoundException e) {
 				JOptionPane.showMessageDialog(MapApp.this, "File does not exist");
+			}finally{
+				changed = false;
 			}
 
 		}
