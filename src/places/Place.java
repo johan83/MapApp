@@ -20,19 +20,23 @@ public abstract class Place extends JComponent{
 	private String type;
 	private String name;
 	private Position position;
-	private TravelCategory color;
+	private TravelCategory category;
 	private boolean showInfo, marked;
 	private int sizeX, sizeY;
 	private Places places;
 	Font font;
 
-	public Place(String name, Position position, TravelCategory color,String type) {
+	public Place(String name, Position position, TravelCategory category,String type) {
+//		if(!(name instanceof String))
+//			throw new IllegalArgumentException();
+//		if(!(position instanceof Position))
+//		if(!(category instanceof TravelCategory))
 		sizeX = 25;
 		sizeY = 30;
 		font = new Font("TimesRoman", Font.PLAIN, 18);
 		this.name = name;
 		this.position = position;
-		this.color = color;
+		this.category = category;
 		this.type = type;
 		this.setBounds(position.getX() - sizeX / 2, position.getY() - sizeY, sizeX, sizeY);
 		this.setPreferredSize(new Dimension(sizeX, sizeY));
@@ -82,7 +86,7 @@ public abstract class Place extends JComponent{
 	}
 
 	public TravelCategory getColor() {
-		return color;
+		return category;
 	}
 
 	public boolean getShowInfo() {
@@ -98,13 +102,13 @@ public abstract class Place extends JComponent{
 	}
 
 	public String toString() {
-		return name + " " + position + " " + color + " " + getMarkedText();
+		return name + " " + position + " " + category + " " + getMarkedText();
 	}
 
 	private Color getCategoryColor() { // bad? should category be object(String
 										// category, Color c)?
 		Color c;
-		switch (color) {
+		switch (category) {
 		case Buss:
 			c = Color.RED;
 			break;
@@ -187,7 +191,7 @@ public abstract class Place extends JComponent{
 
 	public String toDb() {
 		String delim = ",";
-		String toDB = type +delim+ color +delim+ position.toDb() +delim+ name;
+		String toDB = type +delim+ category +delim+ position.toDb() +delim+ name;
 		String[] specials = getSpecialsToDb();
 		if(specials!=null){
 			for(String s : specials){

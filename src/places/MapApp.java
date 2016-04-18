@@ -22,7 +22,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Map.Entry;
 import java.util.Scanner;
 
 import javax.swing.BoxLayout;
@@ -90,13 +89,8 @@ public class MapApp extends JFrame {
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		int width = gd.getDisplayMode().getWidth();
 		int height = gd.getDisplayMode().getHeight();
-		int frameLocationX = (int) ((width - getWidth()) / 2); // Center the
-																// window on the
-																// X axis
-		int frameLocationY = (int) ((height - getHeight()) / 2); // Center the
-																	// window on
-																	// the Y
-																	// axis
+		int frameLocationX = (int) ((width - getWidth()) / 2); // Center the window on the X axis
+		int frameLocationY = (int) ((height - getHeight()) / 2); // Center the window on the Y axis
 		this.setLocation(frameLocationX, frameLocationY);
 	}
 
@@ -515,11 +509,11 @@ public class MapApp extends JFrame {
 			Place place = null;
 			switch (values[0]) {
 			case "Named":
-				place = new NamedPlace(name, pos, cat);
+				place = PlaceFactory.createSafeNamedPlace(name, pos, cat);
 				break;
 			case "Described":
 				String description = values[5];
-				place = new DescribedPlace(name, pos, cat, description);			
+				place = PlaceFactory.createSafeDescribedPlace(name, pos, cat, description);			
 				break;
 			}
 			if(place != null)

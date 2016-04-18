@@ -11,6 +11,33 @@ import javax.swing.JTextField;
 
 public class PlaceFactory {
 	
+	public static NamedPlace createSafeNamedPlace(String name, Position pos, TravelCategory cat){
+		NamedPlace place = null;
+		
+		try{
+			place = new NamedPlace(name,pos,cat);
+		}catch(IllegalArgumentException e){
+			e.printStackTrace();			
+		}catch(NullPointerException e){
+			e.printStackTrace();			
+		}
+		
+		return place;
+	}
+	
+	public static DescribedPlace createSafeDescribedPlace(String name, Position pos, TravelCategory cat, String desc){
+		DescribedPlace place = null;
+		
+		try{
+			place = new DescribedPlace(name,pos,cat,desc);
+		}catch(IllegalArgumentException e){
+			e.printStackTrace();			
+		}catch(NullPointerException e){
+			e.printStackTrace();					
+		}
+		
+		return place;
+	}
 	public static NamedPlace queryNewNamedPlace(Component parent, Position pos, TravelCategory cat){
 		NamedPlace place = null;
 		try{
