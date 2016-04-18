@@ -78,8 +78,10 @@ public class Places {
 	}
 	public void setVisibleByCategory(TravelCategory cat, boolean visible){
 		ArrayList<Place> places = placesByCategory.get(cat);
-		for(Place p : places){
-			setVisibilityByPlace(p,visible);
+		if(places != null){
+			for(Place p : places){
+				setVisibilityByPlace(p,visible);
+			}
 		}
 	}
 	public void setMarked(Place place,boolean marked){
