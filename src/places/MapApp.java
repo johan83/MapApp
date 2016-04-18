@@ -142,7 +142,7 @@ public class MapApp extends JFrame {
 			if(!comboListener.isActive())
 				return;
 			comboListener.deActivate();
-			if(map == null)
+			if(!map.hasImage())
 				return;
 			if(places == null)
 				places = new Places();
