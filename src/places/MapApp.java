@@ -165,8 +165,14 @@ public class MapApp extends JFrame {
 				break;
 			}
 			if(place != null)
-				places.add(place);
+				addPlace(place);
+			
+			map.repaint();
 		}
+	}
+	private void addPlace(Place p){
+		places.add(p);
+		map.add(p);
 	}
 	class WhatIsHereMapListener extends MouseAdapter{
 		@Override
@@ -458,7 +464,6 @@ public class MapApp extends JFrame {
 			File selected = jfc.getSelectedFile();
 			try (Scanner sc = new Scanner(new FileReader(selected))) {
 				addPlacesFromArray(FileHandler.readFileContent(sc));
-				addPlacesToMap();
 			} catch (FileNotFoundException e) {
 				JOptionPane.showMessageDialog(MapApp.this, "File does not exist");
 			}
@@ -478,33 +483,29 @@ public class MapApp extends JFrame {
 			TravelCategory cat;
 			cat = TravelCategory.valueOf(values[1]);
 			
+			Place place = null;
 			switch (values[0]) {
 			case "Named":
-				NamedPlace namedPlace = new NamedPlace(name, pos, cat);
-				places.add(namedPlace);
+				place = new NamedPlace(name, pos, cat);
 				break;
 			case "Described":
 				String description = values[5];
-				DescribedPlace descPlace = new DescribedPlace(name, pos, cat, description);
-				places.add(descPlace);				
+				place = new DescribedPlace(name, pos, cat, description);			
 				break;
 			}
-		}
-	}
-	private void addPlacesToMap(){
-		if(places != null){
-			for(Entry<Position, Place> s : places.getAllPlaces().entrySet()){
-				Place currentPlace = s.getValue();
-				map.add(currentPlace);
-				currentPlace.setVisible(true);
-			}
+			if(place != null)
+				addPlace(place);
 		}
 	}
 
 	class Map extends JLayeredPane {
 		private ImageIcon map;
-
-		public Map() {
+		
+		public Map(){
+			setLayout(null);
+		}
+		public Map(ImageIcon img) {
+			setImage(img);
 			setLayout(null);
 		}
 
