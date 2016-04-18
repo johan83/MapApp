@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
@@ -32,7 +31,6 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -142,6 +140,7 @@ public class MapApp extends JFrame {
 	class NewPlaceMapListener extends MouseAdapter{
 		@Override
 		public void mouseClicked(MouseEvent e){
+			System.out.println("1");
 			if(!comboListener.isActive())
 				return;
 			comboListener.deActivate();
@@ -149,6 +148,8 @@ public class MapApp extends JFrame {
 				return;
 			if(places == null)
 				places = new Places();
+			
+			System.out.println("2");
 			
 			Position pos = new Position(e.getX(),e.getY());
 			TravelCategory cat = TravelCategory.None;
@@ -515,33 +516,6 @@ public class MapApp extends JFrame {
 			}
 			if(place != null)
 				addPlace(place);
-		}
-	}
-
-	class Map extends JLayeredPane {
-		private ImageIcon map;
-		
-		public Map(){
-			setLayout(null);
-		}
-		public Map(ImageIcon img) {
-			setImage(img);
-			setLayout(null);
-		}
-
-		public void setImage(ImageIcon img) {
-			map = img;
-			this.setPreferredSize(new Dimension(map.getIconWidth(), map.getIconHeight()));
-		}
-		public boolean hasImage(){
-			return map == null;
-		}
-
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			if (map != null){
-				g.drawImage(map.getImage(), 0, 0, map.getIconWidth(), map.getIconHeight(), this);
-			}
 		}
 	}
 	
