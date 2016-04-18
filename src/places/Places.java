@@ -95,7 +95,6 @@ public class Places {
 	}
 	public void hideMarked(){
 		if(markedPlaces != null && markedPlaces.size()>0){
-			System.out.println(markedPlaces);
 			for(Place p : markedPlaces){
 				setVisibilityByPlace(p,false);
 				p.setMarked(false);
