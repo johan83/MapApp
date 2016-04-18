@@ -46,6 +46,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import places.Place.TravelCategory;
+import places.PlaceFactory.PlaceType;
+
 /*
  * TODO:
  * add places rendering
@@ -152,14 +155,15 @@ public class MapApp extends JFrame {
 				cat = TravelCategory.valueOf(list.getSelectedValue());
 			
 			Place place = null;
-			switch(newPlaceChooser.getSelectedItem().toString()){
-			case "Named":	
-				place = PlaceFactory.createQueriedNamedPlace(MapApp.this, pos, cat);		
-				break;
-			case "Described":
-				place = PlaceFactory.createQueriedDescribedPlace(MapApp.this, pos, cat);
-				break;
-			}
+//			switch(newPlaceChooser.getSelectedItem().toString()){
+//			case "Named":	
+//				place = PlaceFactory.createQueriedNamedPlace(MapApp.this, pos, cat);		
+//				break;
+//			case "Described":
+//				place = PlaceFactory.createQueriedDescribedPlace(MapApp.this, pos, cat);
+//				break;
+//			}
+			place = PlaceFactory.createQueriedPlace(PlaceType.valueOf(newPlaceChooser.getSelectedItem().toString()), MapApp.this, pos, cat);
 			if(place != null)
 				addPlace(place);
 			

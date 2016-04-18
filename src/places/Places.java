@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import places.Place.TravelCategory;
+
 public class Places {
 	
 	private HashMap<Position,Place> placesByPosition;

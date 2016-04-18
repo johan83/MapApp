@@ -14,9 +14,10 @@ import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
 
-
 @SuppressWarnings("serial")
 public abstract class Place extends JComponent{
+	public enum TravelCategory {Buss,Tåg,Tunnelbana,None};
+
 	private String type;
 	private String name;
 	private Position position;

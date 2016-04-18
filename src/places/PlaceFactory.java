@@ -9,7 +9,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import places.Place.TravelCategory;
+
 public class PlaceFactory {
+	public enum PlaceType{
+		Named,Described
+	}
 	
 	public static NamedPlace createSafeNamedPlace(String name, Position pos, TravelCategory cat){
 		NamedPlace place = null;
@@ -37,6 +42,17 @@ public class PlaceFactory {
 		}
 		
 		return place;
+	}
+	public static Place createQueriedPlace(PlaceType type, Component parent, Position pos, TravelCategory cat){
+		switch(type){
+		case Named:
+			return createQueriedNamedPlace(parent,pos,cat);
+		case Described:
+			return createQueriedDescribedPlace(parent,pos,cat);
+		default:
+			return null;
+		}
+		
 	}
 	public static NamedPlace createQueriedNamedPlace(Component parent, Position pos, TravelCategory cat){
 		NamedPlace place = null;
