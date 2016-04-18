@@ -69,26 +69,4 @@ public class PlaceFactory {
 		
 		return panel;				
 	}
-//	public Place(String name, Position position, TravelCategory color,String type) {
-//		sizeX = 25;
-//		sizeY = 30;
-//		font = new Font("TimesRoman", Font.PLAIN, 18);
-//		this.name = name;
-//		this.position = position;
-//		this.color = color;
-//		this.type = type;
-//		this.setBounds(position.getX() - sizeX / 2, position.getY() - sizeY, sizeX, sizeY);
-//		this.setPreferredSize(new Dimension(sizeX, sizeY));
-//		this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-//		this.addMouseListener(new PlaceMarker());
-//		setVisible(true);
-//	}
-//	public DescribedPlace(String name, Position position, TravelCategory color, String description){
-//		super(name, position, color,"Described");
-//		this.description = description;
-//	}
-//	public NamedPlace(String name, Position position, TravelCategory color){
-//		super(name, position, color,"Named");
-//		
-//	}
 }
