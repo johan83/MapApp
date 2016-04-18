@@ -154,10 +154,10 @@ public class MapApp extends JFrame {
 			Place place = null;
 			switch(newPlaceChooser.getSelectedItem().toString()){
 			case "Named":	
-				place = PlaceFactory.queryNewNamedPlace(MapApp.this, pos, cat);		
+				place = PlaceFactory.createQueriedNamedPlace(MapApp.this, pos, cat);		
 				break;
 			case "Described":
-				place = PlaceFactory.queryNewDescribedPlace(MapApp.this, pos, cat);
+				place = PlaceFactory.createQueriedDescribedPlace(MapApp.this, pos, cat);
 				break;
 			}
 			if(place != null)
