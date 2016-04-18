@@ -43,6 +43,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /*
@@ -218,6 +220,7 @@ public class MapApp extends JFrame {
 				if(placesByName != null){
 					for(Place p : placesByName){
 						places.setMarked(p,true);
+						p.setVisible(true);
 					}
 					MapApp.this.map.repaint();
 				}
@@ -242,6 +245,7 @@ public class MapApp extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			hideMarked();
+			clearMarked();
 		}
 	}
 	class RemoveListener implements ActionListener{
@@ -256,14 +260,19 @@ public class MapApp extends JFrame {
 			}
 		}
 	}
+	private void clearMarked(){
+		if(places != null)
+			places.unMarkAll();
+	}
 	private Place[] removeMarked(){
 		if(places!=null)
 			return places.removeMarked();
 		return null;
 	}
 	private void hideMarked(){
-		if(places!=null)
+		if(places!=null){
 			places.hideMarked();
+		}
 	}
 	private JPanel populatePlaceCategoryChooser(JPanel placeCategoryChooser) {
 		BoxLayout layout = new BoxLayout(placeCategoryChooser, BoxLayout.Y_AXIS);
@@ -275,6 +284,7 @@ public class MapApp extends JFrame {
 
 		sortedList = new SortedList();
 		list = new JList<>(sortedList);
+		list.addListSelectionListener(new CategoryListListener());
 		populateListWithCategories(sortedList);
 		
 		list.setFixedCellWidth(20);
@@ -289,6 +299,19 @@ public class MapApp extends JFrame {
 
 		return placeCategoryChooser;
 	}
+	class CategoryListListener implements ListSelectionListener{
+		@SuppressWarnings("unchecked")
+		@Override
+		public void valueChanged(ListSelectionEvent lse) {
+			if(places != null){
+				if(lse.getValueIsAdjusting() == false){
+					for(String s : ((JList<String>)lse.getSource()).getSelectedValuesList()){
+						places.setVisibleByCategory(TravelCategory.valueOf(s), true);
+					}
+				}
+			}
+		}
+	}
 	private void populateListWithCategories(SortedList list){
 		for(TravelCategory c : TravelCategory.values())
 			 list.addSorted(c.toString());
@@ -296,7 +319,7 @@ public class MapApp extends JFrame {
 	class HideCategoryListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			if(MapApp.this.places != null){
+			if(places != null){
 				for(String s : MapApp.this.list.getSelectedValuesList()){
 					places.setVisibleByCategory(TravelCategory.valueOf(s), false);				
 				}	
@@ -306,10 +329,10 @@ public class MapApp extends JFrame {
 	class SaveListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent aev) {
-			if(MapApp.this.places != null){
-				int choice = MapApp.this.fileChooser.showSaveDialog(MapApp.this);
+			if(places != null){
+				int choice = fileChooser.showSaveDialog(MapApp.this);
 				if(choice == JFileChooser.APPROVE_OPTION){
-					savePlaces(MapApp.this.fileChooser.getSelectedFile());
+					savePlaces(fileChooser.getSelectedFile());
 				}
 			}
 		}

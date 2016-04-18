@@ -90,7 +90,8 @@ public class Places {
 	public void unMarkAll(){
 		if(markedPlaces != null && markedPlaces.size()>0){
 			for(Place p : markedPlaces)
-				p.setMarked(false);		
+				p.setMarked(false);
+			markedPlaces.clear();
 			}
 	}
 	public void hideMarked(){
