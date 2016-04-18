@@ -17,6 +17,7 @@ import javax.swing.JLayeredPane;
 @SuppressWarnings("serial")
 public abstract class Place extends JComponent{
 	public enum TravelCategory {Buss,Tåg,Tunnelbana,None};
+	public enum PlaceType{Named,Described};
 
 	private String type;
 	private String name;

@@ -46,8 +46,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import places.Place.PlaceType;
 import places.Place.TravelCategory;
-import places.PlaceFactory.PlaceType;
 
 /*
  * TODO:
@@ -59,11 +59,9 @@ import places.PlaceFactory.PlaceType;
 @SuppressWarnings("serial")
 public class MapApp extends JFrame {
 	public static final String title = "MapApp";
-
-	private static final String[] ALLOWED_PLACE_TYPES = { "Named", "Described" };
 	private static final int WHAT_IS_HERE_GRID_SIZE = 21;
 
-	private JComboBox<String> newPlaceChooser;
+	private JComboBox<PlaceType> newPlaceChooser;
 	private JTextField searchInput;
 	private SortedList sortedList;
 	private Map map;
@@ -154,16 +152,8 @@ public class MapApp extends JFrame {
 			if(list.getSelectedValue() != null)
 				cat = TravelCategory.valueOf(list.getSelectedValue());
 			
-			Place place = null;
-//			switch(newPlaceChooser.getSelectedItem().toString()){
-//			case "Named":	
-//				place = PlaceFactory.createQueriedNamedPlace(MapApp.this, pos, cat);		
-//				break;
-//			case "Described":
-//				place = PlaceFactory.createQueriedDescribedPlace(MapApp.this, pos, cat);
-//				break;
-//			}
-			place = PlaceFactory.createQueriedPlace(PlaceType.valueOf(newPlaceChooser.getSelectedItem().toString()), MapApp.this, pos, cat);
+			PlaceType type = (PlaceType) newPlaceChooser.getSelectedItem();
+			Place place = PlaceFactory.createQueriedPlace(type, MapApp.this, pos, cat);
 			if(place != null)
 				addPlace(place);
 			
@@ -205,7 +195,7 @@ public class MapApp extends JFrame {
 		JLabel newComboLabel = new JLabel("New:");
 		upperBar.add(newComboLabel);
 
-		newPlaceChooser = new JComboBox<>(ALLOWED_PLACE_TYPES);
+		newPlaceChooser = new JComboBox<>(PlaceType.values());
 		comboListener = new NewPlaceListener();
 		newPlaceChooser.addActionListener(comboListener);
 		upperBar.add(newPlaceChooser);
@@ -539,6 +529,9 @@ public class MapApp extends JFrame {
 		public void setImage(ImageIcon img) {
 			map = img;
 			this.setPreferredSize(new Dimension(map.getIconWidth(), map.getIconHeight()));
+		}
+		public boolean hasImage(){
+			return map == null;
 		}
 
 		protected void paintComponent(Graphics g) {
