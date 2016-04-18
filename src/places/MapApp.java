@@ -65,7 +65,9 @@ public class MapApp extends JFrame {
 	private Map map;
 	private JScrollPane mapPane;
 	private JList<String> list;
+	
 	private WhatIsHereListener WISListener;
+	private NewPlaceListener comboListener;
 
 	private JFileChooser fileChooser;
 	private Places places;
@@ -126,6 +128,7 @@ public class MapApp extends JFrame {
 
 		map = new Map();
 		map.addMouseListener(new WhatIsHereMapListener());
+		map.addMouseListener(new NewPlaceMapListener());
 		
 		mapPane = new JScrollPane(map, 
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -135,6 +138,35 @@ public class MapApp extends JFrame {
 		mainView.add(populatePlaceCategoryChooser(new JPanel()), BorderLayout.EAST);
 
 		return mainView;
+	}
+	class NewPlaceMapListener extends MouseAdapter{
+		@Override
+		public void mouseClicked(MouseEvent e){
+			if(!comboListener.isActive())
+				return;
+			comboListener.deActivate();
+			if(map == null)
+				return;
+			if(places == null)
+				places = new Places();
+			
+			Position pos = new Position(e.getX(),e.getY());
+			TravelCategory cat = TravelCategory.None;
+			if(list.getSelectedValue() != null)
+				cat = TravelCategory.valueOf(list.getSelectedValue());
+			
+			Place place = null;
+			switch(newPlaceChooser.getSelectedItem().toString()){
+			case "Named":	
+				place = PlaceFactory.queryNewNamedPlace(MapApp.this, pos, cat);		
+				break;
+			case "Described":
+				place = PlaceFactory.queryNewDescribedPlace(MapApp.this, pos, cat);
+				break;
+			}
+			if(place != null)
+				places.add(place);
+		}
 	}
 	class WhatIsHereMapListener extends MouseAdapter{
 		@Override
@@ -168,6 +200,8 @@ public class MapApp extends JFrame {
 		upperBar.add(newComboLabel);
 
 		newPlaceChooser = new JComboBox<>(ALLOWED_PLACE_TYPES);
+		comboListener = new NewPlaceListener();
+		newPlaceChooser.addActionListener(comboListener);
 		upperBar.add(newPlaceChooser);
 
 		searchInput = new JTextField("Search", 10);
@@ -192,6 +226,21 @@ public class MapApp extends JFrame {
 		upperBar.add(whatIsHereButton);
 
 		return upperBar;
+	}
+	class NewPlaceListener implements ActionListener{
+		boolean active;
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+			active = true;
+			map.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+		}
+		public boolean isActive(){
+			return active;
+		}
+		public void deActivate(){
+			active = false;
+			map.setCursor(Cursor.getDefaultCursor());
+		}
 	}
 	class WhatIsHereListener implements ActionListener{
 		boolean active;
