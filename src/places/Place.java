@@ -19,7 +19,7 @@ public abstract class Place extends JComponent{
 	public enum TravelCategory {Buss,Tåg,Tunnelbana,None};
 	public enum PlaceType{Named,Described};
 
-	private String type;
+	private PlaceType type;
 	private String name;
 	private Position position;
 	private TravelCategory category;
@@ -28,11 +28,7 @@ public abstract class Place extends JComponent{
 	private Places places;
 	Font font;
 
-	public Place(String name, Position position, TravelCategory category,String type) {
-//		if(!(name instanceof String))
-//			throw new IllegalArgumentException();
-//		if(!(position instanceof Position))
-//		if(!(category instanceof TravelCategory))
+	public Place(String name, Position position, TravelCategory category,PlaceType type) {
 		sizeX = 25;
 		sizeY = 30;
 		font = new Font("TimesRoman", Font.PLAIN, 18);
