@@ -138,7 +138,6 @@ public abstract class Place extends JComponent{
 
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
 		g2d.setColor(getCategoryColor());
 		g2d.fillPolygon(getPolygon());
 
@@ -147,32 +146,21 @@ public abstract class Place extends JComponent{
 			g2d.draw(rect);
 		}
 		if(showInfo){ //Att endast "fälla ut" showInfo och inte gömma pil godkändes av Jozef Swiatyck
-			Font font = new Font("TimesRoman", Font.BOLD, 18);
-			int maxStringWidth = g2d.getFontMetrics(font).stringWidth(name);
+			g2d.setFont(new Font("TimesRoman", Font.BOLD, 18));
+			int maxStringWidth = g2d.getFontMetrics().stringWidth(name);
 			int totalWidth = maxStringWidth + sizeX;
-			int fontHeight = g2d.getFontMetrics(font).getHeight();
+			int fontHeight = g2d.getFontMetrics().getHeight();
 			
 			if (sizeY > fontHeight) {
-				this.setBounds(
-						position.getX() - sizeX / 2,
-						position.getY() - sizeY,
-						totalWidth,
-						sizeY
-						);
+				this.setBounds(getX(), getY(), totalWidth, sizeY);
 			} else {
-				this.setBounds(
-						position.getX() - sizeX / 2,
-						position.getY() - sizeY,
-						totalWidth,
-						fontHeight
-						);
+				this.setBounds(getX(), getY(), totalWidth, fontHeight);
 			}
 			g2d.setColor(Color.WHITE);
 			Rectangle nameRect = new Rectangle(sizeX, 0, totalWidth, fontHeight);
 			g2d.fill(nameRect);
 
 			g2d.setColor(Color.BLACK);
-			g2d.setFont(font);
 			// draw the text to the right of the polygon
 			g2d.drawString(name, sizeX+1, fontHeight);	
 			

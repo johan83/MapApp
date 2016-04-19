@@ -5,6 +5,9 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.font.GlyphVector;
+import java.awt.geom.Rectangle2D;
 
 @SuppressWarnings("serial")
 public class DescribedPlace extends Place{
@@ -27,10 +30,12 @@ public class DescribedPlace extends Place{
 		Graphics2D g2d = (Graphics2D) g;
 		String[] textToDisplay = description.split("\n");
 		Font font = new Font("TimesRoman", Font.PLAIN, 18);
+		g2d.setFont(font);
 
 		int maxStringWidth = 0; // width = the rendered width of the text _NOT_ number of chars
 		for (String s : textToDisplay) {
-			int thisStringWidth = g2d.getFontMetrics(font).stringWidth(s);
+			Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(s, g2d);
+			int thisStringWidth = (int) bounds.getWidth();
 			if (thisStringWidth > maxStringWidth)
 				maxStringWidth = thisStringWidth;
 		}
@@ -46,19 +51,18 @@ public class DescribedPlace extends Place{
 		
 		if (getSizeY() < totalHeight)
 			this.setBounds(
-					getPosition().getX() - getSizeX() / 2,
-					getPosition().getY() - getSizeY(),
+					getX(),
+					getY(),
 					maxBoundsWidth,
 					totalHeight
 					);
 		
 		// make a white rectangle around the text
 		g2d.setColor(Color.WHITE);
-		g2d.fillRect(getSizeX() + 1, nameRect.height, totalWidth, textHeight);
+		g2d.fillRect(getSizeX(), nameRect.height, totalWidth, textHeight);
 
 		// draw the text to the right of the polygon
 		g2d.setColor(Color.BLACK);
-		g2d.setFont(font);
 		int y = (int) nameRect.getMaxY();
 		for (String s : textToDisplay) {
 			g2d.drawString(s, getSizeX(), y += fontHeight);
