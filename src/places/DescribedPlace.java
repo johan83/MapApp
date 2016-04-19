@@ -39,11 +39,16 @@ public class DescribedPlace extends Place{
 
 		int textHeight = fontHeight * textToDisplay.length;
 		int totalHeight = textHeight + nameRect.height;
+		
+		int maxBoundsWidth = nameRect.width;
+		if(nameRect.width<maxStringWidth)
+			maxBoundsWidth = maxStringWidth;
+		
 		if (getSizeY() < totalHeight)
 			this.setBounds(
 					getPosition().getX() - getSizeX() / 2,
 					getPosition().getY() - getSizeY(),
-					totalWidth,
+					maxBoundsWidth,
 					totalHeight
 					);
 		

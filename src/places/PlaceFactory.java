@@ -13,9 +13,9 @@ import javax.swing.JTextField;
 import places.Place.PlaceType;
 import places.Place.TravelCategory;
 
-public class PlaceFactory {
+public class PlaceFactory implements PlaceFactoryImp{
 	
-	public static NamedPlace createSafeNamedPlace(String name, Position pos, TravelCategory cat){
+	public NamedPlace createSafeNamedPlace(String name, Position pos, TravelCategory cat){
 		NamedPlace place = null;
 		
 		try{
@@ -29,7 +29,7 @@ public class PlaceFactory {
 		return place;
 	}
 	
-	public static DescribedPlace createSafeDescribedPlace(String name, Position pos, TravelCategory cat, String desc){
+	public DescribedPlace createSafeDescribedPlace(String name, Position pos, TravelCategory cat, String desc){
 		DescribedPlace place = null;
 		
 		try{
@@ -42,7 +42,7 @@ public class PlaceFactory {
 		
 		return place;
 	}
-	public static Place createQueriedPlace(PlaceType type, Component parent, Position pos, TravelCategory cat){
+	public Place createQueriedPlace(PlaceType type, Component parent, Position pos, TravelCategory cat){
 		switch(type){
 		case Named:
 			return createQueriedNamedPlace(parent,pos,cat);

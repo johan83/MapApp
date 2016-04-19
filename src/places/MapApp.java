@@ -58,6 +58,8 @@ import places.Place.TravelCategory;
 public class MapApp extends JFrame {
 	public static final String title = "MapApp";
 	private static final int WHAT_IS_HERE_GRID_SIZE = 21;
+	
+	PlaceFactoryImp placeFactory;
 
 	private JComboBox<PlaceType> newPlaceChooser;
 	private JTextField searchInput;
@@ -79,6 +81,7 @@ public class MapApp extends JFrame {
 
 	public MapApp() {
 		super(title);
+		placeFactory = new PlaceFactory();
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new WindowHandler());
 		this.setJMenuBar(populateMenuBar(new JMenuBar()));
@@ -154,7 +157,7 @@ public class MapApp extends JFrame {
 				cat = TravelCategory.valueOf(list.getSelectedValue());
 			
 			PlaceType type = (PlaceType) newPlaceChooser.getSelectedItem();
-			Place place = PlaceFactory.createQueriedPlace(type, MapApp.this, pos, cat);
+			Place place = placeFactory.createQueriedPlace(type, MapApp.this, pos, cat);
 			if(place != null){
 				addPlace(place);
 				changed = true;
@@ -507,11 +510,11 @@ public class MapApp extends JFrame {
 			Place place = null;
 			switch (values[0]) {
 			case "Named":
-				place = PlaceFactory.createSafeNamedPlace(name, pos, cat);
+				place = placeFactory.createSafeNamedPlace(name, pos, cat);
 				break;
 			case "Described":
 				String description = values[5];
-				place = PlaceFactory.createSafeDescribedPlace(name, pos, cat, description);			
+				place = placeFactory.createSafeDescribedPlace(name, pos, cat, description);			
 				break;
 			}
 			if(place != null)
