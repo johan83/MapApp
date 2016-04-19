@@ -228,6 +228,8 @@ public class MapApp extends JFrame {
 		boolean active;
 		@Override
 		public void actionPerformed(ActionEvent ae) {
+			if(!map.hasImage())
+				return;
 			active = true;
 			map.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 		}
