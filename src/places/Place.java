@@ -146,7 +146,7 @@ public abstract class Place extends JComponent{
 			g2d.draw(rect);
 		}
 		if(showInfo){ //Att endast "fälla ut" showInfo och inte gömma pil godkändes av Jozef Swiatyck
-			g2d.setFont(new Font("TimesRoman", Font.BOLD, 18));
+			g2d.setFont(new Font("TimesRoman", Font.PLAIN, 18));
 			int maxStringWidth = g2d.getFontMetrics().stringWidth(name);
 			int totalWidth = maxStringWidth + sizeX;
 			int fontHeight = g2d.getFontMetrics().getHeight();
@@ -162,7 +162,7 @@ public abstract class Place extends JComponent{
 
 			g2d.setColor(Color.BLACK);
 			// draw the text to the right of the polygon
-			g2d.drawString(name, sizeX+1, fontHeight);	
+			g2d.drawString(name, sizeX, fontHeight);	
 			
 			drawSpecial(g,nameRect);
 		}

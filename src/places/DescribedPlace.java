@@ -1,12 +1,9 @@
 package places;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.font.GlyphVector;
 import java.awt.geom.Rectangle2D;
 
 @SuppressWarnings("serial")
@@ -29,8 +26,6 @@ public class DescribedPlace extends Place{
 	protected void drawSpecial(Graphics g, Rectangle nameRect) {
 		Graphics2D g2d = (Graphics2D) g;
 		String[] textToDisplay = description.split("\n");
-		Font font = new Font("TimesRoman", Font.PLAIN, 18);
-		g2d.setFont(font);
 
 		int maxStringWidth = 0; // width = the rendered width of the text _NOT_ number of chars
 		for (String s : textToDisplay) {
@@ -40,22 +35,16 @@ public class DescribedPlace extends Place{
 				maxStringWidth = thisStringWidth;
 		}
 		int totalWidth = maxStringWidth + getSizeX();
-		int fontHeight = g2d.getFontMetrics(font).getHeight();
-
+		int fontHeight = g2d.getFontMetrics().getHeight();
 		int textHeight = fontHeight * textToDisplay.length;
 		int totalHeight = textHeight + nameRect.height;
 		
 		int maxBoundsWidth = nameRect.width;
-		if(nameRect.width<maxStringWidth)
-			maxBoundsWidth = maxStringWidth;
+		if(totalWidth > nameRect.width )
+			maxBoundsWidth = totalWidth;
 		
-		if (getSizeY() < totalHeight)
-			this.setBounds(
-					getX(),
-					getY(),
-					maxBoundsWidth,
-					totalHeight
-					);
+		if (totalHeight > getSizeY())
+			this.setBounds(getX(), getY(), maxBoundsWidth, totalHeight);
 		
 		// make a white rectangle around the text
 		g2d.setColor(Color.WHITE);
