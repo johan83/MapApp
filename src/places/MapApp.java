@@ -480,8 +480,7 @@ public class MapApp extends JFrame {
 		jfc.setFileFilter(placeFilter);
 		if (jfc.showOpenDialog(MapApp.this) == JFileChooser.APPROVE_OPTION) {
 
-			places = new Places();
-			map.removeAll();
+			removeAllPlaces();
 			File selected = jfc.getSelectedFile();
 			try (Scanner sc = new Scanner(new FileReader(selected))) {
 				addPlacesFromArray(FileHandler.readFileContent(sc));
@@ -490,6 +489,10 @@ public class MapApp extends JFrame {
 			}
 			changed = false;
 		}
+	}
+	private void removeAllPlaces(){
+		places = new Places();
+		map.removeAll();
 	}
 
 	private void addPlacesFromArray(ArrayList<String> fromFile) {
