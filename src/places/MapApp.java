@@ -155,8 +155,10 @@ public class MapApp extends JFrame {
 			
 			PlaceType type = (PlaceType) newPlaceChooser.getSelectedItem();
 			Place place = PlaceFactory.createQueriedPlace(type, MapApp.this, pos, cat);
-			if(place != null)
+			if(place != null){
 				addPlace(place);
+				changed = true;
+			}
 			
 			map.repaint();
 		}
@@ -442,10 +444,9 @@ public class MapApp extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent aev) {
 			JMenuItem selected = (JMenuItem) aev.getSource();
-			if(changed){
-				if(showMessage("Unsaved changes, load new anyway?","Load") != JOptionPane.OK_OPTION)
-					return;
-			}
+			if(changed && showMessage("Unsaved changes, load new anyway?","Load") != JOptionPane.OK_OPTION)
+				return;
+			
 			load(selected);
 		}
 	}
@@ -479,22 +480,19 @@ public class MapApp extends JFrame {
 		jfc.setFileFilter(placeFilter);
 		if (jfc.showOpenDialog(MapApp.this) == JFileChooser.APPROVE_OPTION) {
 
+			places = new Places();
+			map.removeAll();
 			File selected = jfc.getSelectedFile();
 			try (Scanner sc = new Scanner(new FileReader(selected))) {
 				addPlacesFromArray(FileHandler.readFileContent(sc));
 			} catch (FileNotFoundException e) {
 				JOptionPane.showMessageDialog(MapApp.this, "File does not exist");
-			}finally{
-				changed = false;
 			}
-
+			changed = false;
 		}
 	}
 
 	private void addPlacesFromArray(ArrayList<String> fromFile) {
-		if (places == null)
-			places = new Places();
-
 		for (String s : fromFile) {
 			String[] values = s.split(",");
 			
