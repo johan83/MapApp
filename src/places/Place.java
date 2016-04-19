@@ -170,12 +170,12 @@ public abstract class Place extends JComponent{
 						);
 			}
 			g2d.setColor(Color.WHITE);
-			Rectangle nameRect = new Rectangle(sizeX + 1, 0, totalWidth, fontHeight);
+			Rectangle nameRect = new Rectangle(sizeX, 0, totalWidth, fontHeight);
 			g2d.fill(nameRect);
 
-			// draw the text to the right of the polygon
 			g2d.setColor(Color.BLACK);
 			g2d.setFont(font);
+			// draw the text to the right of the polygon
 			g2d.drawString(name, sizeX+1, fontHeight);	
 			
 			drawSpecial(g,nameRect);

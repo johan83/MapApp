@@ -37,22 +37,14 @@ public class DescribedPlace extends Place{
 
 		int textHeight = fontHeight * textToDisplay.length;
 		int totalHeight = textHeight + nameRect.height;
-		if (getSizeY() > totalHeight) {
-			this.setBounds(
-					getPosition().getX() - getSizeX() / 2,
-					getPosition().getY() - getSizeY(),
-					totalWidth,
-					getSizeY()
-					);
-		} else {
+		if (getSizeY() < totalHeight)
 			this.setBounds(
 					getPosition().getX() - getSizeX() / 2,
 					getPosition().getY() - getSizeY(),
 					totalWidth,
 					totalHeight
 					);
-		}
-
+		
 		// make a white rectangle around the text
 		g2d.setColor(Color.WHITE);
 		g2d.fillRect(getSizeX() + 1, nameRect.height, totalWidth, textHeight);
