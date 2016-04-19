@@ -155,9 +155,19 @@ public abstract class Place extends JComponent{
 			int fontHeight = g2d.getFontMetrics(font).getHeight();
 			
 			if (sizeY > fontHeight) {
-				this.setBounds(position.getX() - sizeX / 2, position.getY() - sizeY, totalWidth, sizeY);
+				this.setBounds(
+						position.getX() - sizeX / 2,
+						position.getY() - sizeY,
+						totalWidth,
+						sizeY
+						);
 			} else {
-				this.setBounds(position.getX() - sizeX / 2, position.getY() - sizeY, totalWidth, fontHeight);
+				this.setBounds(
+						position.getX() - sizeX / 2,
+						position.getY() - sizeY,
+						totalWidth,
+						fontHeight
+						);
 			}
 			g2d.setColor(Color.WHITE);
 			Rectangle nameRect = new Rectangle(sizeX + 1, 0, totalWidth, fontHeight);
