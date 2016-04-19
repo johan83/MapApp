@@ -1,5 +1,8 @@
 package places;
 
+import java.awt.Graphics;
+import java.awt.Rectangle;
+
 @SuppressWarnings("serial")
 public class NamedPlace extends Place{
 	
@@ -8,12 +11,16 @@ public class NamedPlace extends Place{
 	}
 
 	@Override
+	String[] getSpecialsToDb() {
+		return null;
+	}
+
+	@Override
+	protected void drawSpecial(Graphics g, Rectangle nameRect) {}
+
+	@Override
 	String getSpecialText() {
 		return "";
 	}
 
-	@Override
-	String[] getSpecialsToDb() {
-		return null;
-	}
 }

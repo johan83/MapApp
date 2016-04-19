@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -68,9 +69,11 @@ public abstract class Place extends JComponent{
 			repaint();
 		}
 	}
-
-	public String getMarkedText() {
-		return name + getSpecialText();
+	public int getSizeX(){
+		return sizeX;
+	}
+	public int getSizeY(){
+		return sizeY;
 	}
 
 	abstract String getSpecialText();
@@ -100,7 +103,7 @@ public abstract class Place extends JComponent{
 	}
 
 	public String toString() {
-		return name + " " + position + " " + category + " " + getMarkedText();
+		return name + " " + position + " " + category + " " + getSpecialText();
 	}
 
 	private Color getCategoryColor() { // bad? should category be object(String
@@ -132,7 +135,7 @@ public abstract class Place extends JComponent{
 	}
 
 	@Override
-	protected void paintComponent(Graphics g) {
+	protected void paintComponent(Graphics g) { //FIXME description should be abstract method(Graphics g)
 		super.paintComponent(g);
 
 		Graphics2D g2d = (Graphics2D) g;
@@ -142,40 +145,33 @@ public abstract class Place extends JComponent{
 		g2d.fillPolygon(getPolygon());
 
 		if (marked) {
-			g2d.drawRect(0, 0, sizeX - 1, sizeY - 1);
+			Rectangle rect = new Rectangle(0, 0, sizeX - 1, sizeY - 1);
+			g2d.draw(rect);
 		}
-		if(showInfo){
-			String[] textToDisplay = getMarkedText().split("\n");
+		if(showInfo){ //Att endast "fälla ut" showInfo och inte gömma pil godkändes av Jozef Swiatyck
 
-			int maxStringWidth = 0; // width = the rendered width of the text _NOT_ number of chars
-			for (String s : textToDisplay) {
-				int thisStringWidth = g2d.getFontMetrics(font).stringWidth(s);
-				if (thisStringWidth > maxStringWidth)
-					maxStringWidth = thisStringWidth;
-			}
+			int maxStringWidth = g2d.getFontMetrics(font).stringWidth(name);
 			int totalWidth = maxStringWidth + sizeX;
 			int fontHeight = g2d.getFontMetrics(font).getHeight();
-
-			int textHeight = fontHeight * textToDisplay.length;
-			if (sizeY > textHeight) {
+			
+			if (sizeY > fontHeight) {
 				this.setBounds(position.getX() - sizeX / 2, position.getY() - sizeY, totalWidth, sizeY);
 			} else {
-				this.setBounds(position.getX() - sizeX / 2, position.getY() - sizeY, totalWidth, textHeight);
+				this.setBounds(position.getX() - sizeX / 2, position.getY() - sizeY, totalWidth, fontHeight);
 			}
-
-			// make a white rectangle around the text
 			g2d.setColor(Color.WHITE);
-			g2d.fillRect(sizeX + 1, 0, totalWidth, textHeight);
+			Rectangle nameRect = new Rectangle(sizeX + 1, 0, totalWidth, fontHeight);
+			g2d.fill(nameRect);
 
 			// draw the text to the right of the polygon
 			g2d.setColor(Color.BLACK);
 			g2d.setFont(font);
-			int y = 0;
-			for (String s : textToDisplay) {
-				g2d.drawString(s, sizeX, y += fontHeight);
-			}	
+			g2d.drawString(name, sizeX+1, fontHeight);	
+			
+			drawSpecial(g,nameRect);
 		}
 	}
+	abstract protected void drawSpecial(Graphics g,Rectangle nameRect);
 
 	@Override
 	public Dimension getMinimumSize() {
