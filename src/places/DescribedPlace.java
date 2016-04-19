@@ -1,6 +1,7 @@
 package places;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -25,6 +26,7 @@ public class DescribedPlace extends Place{
 	protected void drawSpecial(Graphics g, Rectangle nameRect) {
 		Graphics2D g2d = (Graphics2D) g;
 		String[] textToDisplay = description.split("\n");
+		Font font = new Font("TimesRoman", Font.PLAIN, 18);
 
 		int maxStringWidth = 0; // width = the rendered width of the text _NOT_ number of chars
 		for (String s : textToDisplay) {

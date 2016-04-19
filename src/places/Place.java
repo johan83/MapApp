@@ -27,12 +27,10 @@ public abstract class Place extends JComponent{
 	private boolean showInfo, marked;
 	private int sizeX, sizeY;
 	private Places places;
-	Font font;
 
 	public Place(String name, Position position, TravelCategory category,PlaceType type) {
 		sizeX = 25;
 		sizeY = 30;
-		font = new Font("TimesRoman", Font.BOLD, 18);
 		this.name = name;
 		this.position = position;
 		this.category = category;
@@ -149,7 +147,7 @@ public abstract class Place extends JComponent{
 			g2d.draw(rect);
 		}
 		if(showInfo){ //Att endast "fälla ut" showInfo och inte gömma pil godkändes av Jozef Swiatyck
-
+			Font font = new Font("TimesRoman", Font.BOLD, 18);
 			int maxStringWidth = g2d.getFontMetrics(font).stringWidth(name);
 			int totalWidth = maxStringWidth + sizeX;
 			int fontHeight = g2d.getFontMetrics(font).getHeight();
