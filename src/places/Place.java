@@ -32,7 +32,7 @@ public abstract class Place extends JComponent{
 	public Place(String name, Position position, TravelCategory category,PlaceType type) {
 		sizeX = 25;
 		sizeY = 30;
-		font = new Font("TimesRoman", Font.PLAIN, 18);
+		font = new Font("TimesRoman", Font.BOLD, 18);
 		this.name = name;
 		this.position = position;
 		this.category = category;

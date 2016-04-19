@@ -327,7 +327,7 @@ public class MapApp extends JFrame {
 		placeCategoryChooser.setLayout(layout);
 
 		JLabel categoryLabel = new JLabel("Categories");
-		categoryLabel.setAlignmentX(CENTER_ALIGNMENT);
+		categoryLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		placeCategoryChooser.add(categoryLabel);
 
 		sortedList = new SortedList();
@@ -342,7 +342,7 @@ public class MapApp extends JFrame {
 
 		JButton hideCategories = new JButton("Hide category");
 		hideCategories.addActionListener(new HideCategoryListener());
-		hideCategories.setAlignmentX(CENTER_ALIGNMENT);
+		hideCategories.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		placeCategoryChooser.add(hideCategories);
 
 		return placeCategoryChooser;
