@@ -110,9 +110,11 @@ public class MapGUI extends JFrame
 	public class MapPanel extends JPanel
 	{
 		private JScrollPane mapScrollbar = new JScrollPane();
+		private ImageIcon mapImage;
 		
 		public MapPanel()
 		{
+			setLayout(null);
 			add(mapScrollbar);
 		}
 	}
