@@ -8,8 +8,8 @@ import java.awt.event.*;
 
 public class ProgramTest extends JFrame{
 
-	private boolean nyInfo = true; // best‰mmer st‰ng eller ej.
-	private ImageIcon bild = new ImageIcon("jarvafaltet.png"); // ska inte ˆppnas fˆr‰n man ˆppnar fil. Flytta ut ur konstruktor!?
+	private boolean nyInfo = true; // bestÔøΩmmer stÔøΩng eller ej.
+	private ImageIcon bild = new ImageIcon("jarvafaltet.png"); // ska inte ÔøΩppnas fÔøΩrÔøΩn man ÔøΩppnar fil. Flytta ut ur konstruktor!?
 	private JLabel imageLabel = new JLabel(bild); // SE BILD
 	
 	private JMenuBar menu = new JMenuBar();
@@ -73,7 +73,7 @@ public class ProgramTest extends JFrame{
 		add(eastPanel, BorderLayout.EAST);
 		eastPanel.setLayout(new BoxLayout(eastPanel,BoxLayout.Y_AXIS));
 		eastPanel.add(categoriesLabel);
-		categoryList.setAlignmentX(LEFT_ALIGNMENT); //Alignement (verkar bugga -> v‰nster blir hˆger) 
+		categoryList.setAlignmentX(LEFT_ALIGNMENT); //Alignement (verkar bugga -> v√§nster blir h√∂ger) 
 		eastPanel.add(categoryList);
 		categoryList.setFixedCellWidth(150);
 		hideCategoryButton.setAlignmentX(LEFT_ALIGNMENT); //Alignment
@@ -89,6 +89,21 @@ public class ProgramTest extends JFrame{
 		
 		
 	}
+	
+	private void avsluta(){
+		int ok = JOptionPane.OK_OPTION;
+		if(!nyInfo){
+			System.exit(0);
+		}else{
+			int svar = JOptionPane.showConfirmDialog(null,"Vill du avsluta √§nd√•?","Osparade √§ndringar",
+					JOptionPane.OK_CANCEL_OPTION);
+			
+			if(svar == ok){
+				System.exit(0);
+			}
+		}
+	}
+	
 	
 	class NewMapLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave){
@@ -111,34 +126,17 @@ public class ProgramTest extends JFrame{
 	
 	class ExitLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave){
-			int ok = JOptionPane.OK_OPTION;
-			if(!nyInfo){
-				System.exit(0);
-			}else{
-				int svar = JOptionPane.showConfirmDialog(null,"Vill du avsluta ‰ndÂ?","Osparade ‰ndringar",
-						JOptionPane.OK_CANCEL_OPTION);
-				
-				if(svar == ok){
-					System.exit(0);
-				}
-			}
+			avsluta();
 		}
 	}
 	
 	public class Exit extends WindowAdapter{
 		@Override
 		public void windowClosing(WindowEvent wev){
-			if(!nyInfo){
-				System.exit(0);
-			}else{
-				int svar = JOptionPane.showConfirmDialog(null, "Vill du avsluta ‰ndÂ?", "Osparade ‰ndringar",
-						JOptionPane.OK_CANCEL_OPTION);
-				if(svar == JOptionPane.OK_OPTION){
-					System.exit(0);
-				}
-			}
+			avsluta();
 		}
 	}
+	
 	
 	public static void main(String []args){
 		ProgramTest program = new ProgramTest();
