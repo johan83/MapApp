@@ -35,6 +35,7 @@ public class MapGUI extends JFrame
 		
 		mainPanel.add(new PlacePanel(), BorderLayout.NORTH);
 		mainPanel.add(new CategoryPanel(), BorderLayout.EAST);
+		mainPanel.add(new MapPanel(), BorderLayout.SOUTH);
 		
 		add(mainPanel);
 		
@@ -96,6 +97,9 @@ public class MapGUI extends JFrame
 			String[] cats = {"Buss", "Tunnelbana", "Tåg	"};
 			categoryList = new JList(cats);
 			categoryList.setFixedCellWidth(100);
+			
+			categoryList.setAlignmentX(LEFT_ALIGNMENT);
+			hideCategoryButton.setAlignmentX(LEFT_ALIGNMENT);
 			
 			add(categoriesLabel);
 			add(categoryList);
