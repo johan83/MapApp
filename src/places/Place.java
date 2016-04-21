@@ -57,9 +57,8 @@ public abstract class Place extends JComponent{
 				places.setMarked(Place.this,!marked);
 				break;
 			case MouseEvent.BUTTON3:
-				if(showInfo){
-					Place.this.setBounds(position.getX() - sizeX / 2, position.getY() - sizeY, sizeX, sizeY);
-				}
+				if(showInfo)
+					Place.this.setBounds(position.getX() - sizeX / 2, position.getY() - sizeY, sizeX, sizeY);				
 				showInfo = !showInfo;
 				break;
 			}
@@ -104,8 +103,7 @@ public abstract class Place extends JComponent{
 		return name + " " + position + " " + category + " " + getSpecialText();
 	}
 
-	private Color getCategoryColor() { // bad? should category be object(String
-										// category, Color c)?
+	private Color getCategoryColor() { // bad? should category be object(String category, Color c)?
 		Color c;
 		switch (category) {
 		case Buss:
@@ -133,7 +131,7 @@ public abstract class Place extends JComponent{
 	}
 
 	@Override
-	protected void paintComponent(Graphics g) { //FIXME description should be abstract method(Graphics g)
+	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
 		Graphics2D g2d = (Graphics2D) g;

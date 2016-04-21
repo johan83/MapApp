@@ -10,8 +10,11 @@ import javax.swing.JLayeredPane;
 class Map extends JLayeredPane {
 	private ImageIcon map;
 	
-	public Map(){
+	private Map(){
 		setLayout(null);
+	}
+	public static Map createMap(){
+		return new Map();
 	}
 	public Map(ImageIcon img) {
 		setImage(img);

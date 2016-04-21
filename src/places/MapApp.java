@@ -66,7 +66,7 @@ public class MapApp extends JFrame {
 	private SortedList sortedList;
 	private Map map;
 	private JScrollPane mapPane;
-	private JList<String> list;
+	private JList<TravelCategory> list;
 	
 	private WhatIsHereListener WISListener;
 	private NewPlaceListener comboListener;
@@ -92,10 +92,10 @@ public class MapApp extends JFrame {
 
 	private void centerFrameOnDefaultMonitor() {
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		int width = gd.getDisplayMode().getWidth();
-		int height = gd.getDisplayMode().getHeight();
-		int frameLocationX = (int) ((width - getWidth()) / 2); // Center the window on the X axis
-		int frameLocationY = (int) ((height - getHeight()) / 2); // Center the window on the Y axis
+		int displayWidth = gd.getDisplayMode().getWidth();
+		int displayHeight = gd.getDisplayMode().getHeight();
+		int frameLocationX = (int) (displayWidth - getWidth()) /2; // Center the window on the X axis
+		int frameLocationY = (int) (displayHeight - getHeight()) /2; // Center the window on the Y axis
 		this.setLocation(frameLocationX, frameLocationY);
 	}
 
@@ -127,7 +127,7 @@ public class MapApp extends JFrame {
 
 		mainView.add(populateUpperBar(new JPanel()), BorderLayout.NORTH);
 
-		map = new Map();
+		map = Map.createMap();
 		map.addMouseListener(new WhatIsHereMapListener());
 		map.addMouseListener(new NewPlaceMapListener());
 		
@@ -149,12 +149,16 @@ public class MapApp extends JFrame {
 			if(!map.hasImage())
 				return;
 			if(places == null)
-				places = new Places();
+				places = Places.createPlaces();
 			
 			Position pos = new Position(e.getX(),e.getY());
+			Dimension mapSize = map.getPreferredSize();
+			if(mapSize.width < pos.getX() || mapSize.height < pos.getY())
+				return;
+			
 			TravelCategory cat = TravelCategory.None;
 			if(list.getSelectedValue() != null)
-				cat = TravelCategory.valueOf(list.getSelectedValue());
+				cat = list.getSelectedValue();
 			
 			PlaceType type = (PlaceType) newPlaceChooser.getSelectedItem();
 			Place place = placeFactory.createQueriedPlace(type, MapApp.this, pos, cat);
@@ -162,7 +166,6 @@ public class MapApp extends JFrame {
 				addPlace(place);
 				changed = true;
 			}
-			
 			map.repaint();
 		}
 	}
@@ -173,22 +176,22 @@ public class MapApp extends JFrame {
 	class WhatIsHereMapListener extends MouseAdapter{
 		@Override
 		public void mouseClicked(MouseEvent e){
-			if(MapApp.this.WISListener.isActive()){
-				MapApp.this.WISListener.deActivate();
-				if(MapApp.this.places != null){
-					
-					int gridsize = MapApp.WHAT_IS_HERE_GRID_SIZE;
-					int startX = (int) (e.getX() - Math.ceil(gridsize/2));
-					int endX = startX + gridsize;
-					int startY = (int) (e.getY() - Math.ceil(gridsize/2));
-					int endY = startY + gridsize;
-					
-					for(int x = startX; x<=endX;x++){
-						for(int y = startY; y<=endY;y++){
-							MapApp.this.places.setVisibilityByPosition(new Position(x,y));
-						}
-					}					
-				}
+			if(!WISListener.isActive())
+				return;
+			WISListener.deActivate();
+			if(places == null)
+				return;
+			
+			//this will search for pixels outside of the map border but nothing _should_ be there anyway
+			int gridsize = WHAT_IS_HERE_GRID_SIZE;
+			int startX = (int) (e.getX() - Math.ceil(gridsize/2));
+			int endX = startX + gridsize;
+			int startY = (int) (e.getY() - Math.ceil(gridsize/2));
+			int endY = startY + gridsize;
+			
+			for(int x = startX; x<=endX;x++){
+				for(int y = startY; y<=endY;y++)
+					places.setVisibilityByPosition(new Position(x,y));				
 			}
 		}
 	}
@@ -235,6 +238,7 @@ public class MapApp extends JFrame {
 		public void actionPerformed(ActionEvent ae) {
 			if(!map.hasImage())
 				return;
+			
 			active = true;
 			map.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 		}
@@ -264,18 +268,19 @@ public class MapApp extends JFrame {
 	class SearchPlaceListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent ae) {
-			Places places = MapApp.this.places;
-			if(places != null){
-				places.unMarkAll();
-				ArrayList<Place> placesByName = places.getPlacesByName(MapApp.this.searchInput.getText());
-				if(placesByName != null){
-					for(Place p : placesByName){
-						places.setMarked(p,true);
-						p.setVisible(true);
-					}
-					MapApp.this.map.repaint();
-				}
+			if(places == null)
+				return;
+			
+			places.unMarkAll();
+			ArrayList<Place> placesByName = places.getPlacesByName(searchInput.getText());
+			if(placesByName == null)
+				return;
+			
+			for(Place p : placesByName){
+				places.setMarked(p,true);
+				p.setVisible(true);
 			}
+			map.repaint();
 		}
 	}
 	class SearchTextListener implements FocusListener{
@@ -303,12 +308,13 @@ public class MapApp extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Place[] toRemove = removeMarked();
-			if(toRemove!=null){
-				for(Place p : toRemove)
-					MapApp.this.map.remove(p);
-				MapApp.this.map.repaint();
-				MapApp.this.changed = true;
-			}
+			if(toRemove == null)
+				return;
+			for(Place p : toRemove)
+				map.remove(p);
+			
+			map.repaint();
+			changed = true;
 		}
 	}
 	private void clearMarked(){
@@ -321,9 +327,8 @@ public class MapApp extends JFrame {
 		return null;
 	}
 	private void hideMarked(){
-		if(places!=null){
-			places.hideMarked();
-		}
+		if(places!=null)
+			places.hideMarked();		
 	}
 	private JPanel populatePlaceCategoryChooser(JPanel placeCategoryChooser) {
 		BoxLayout layout = new BoxLayout(placeCategoryChooser, BoxLayout.Y_AXIS);
@@ -354,38 +359,37 @@ public class MapApp extends JFrame {
 		@SuppressWarnings("unchecked")
 		@Override
 		public void valueChanged(ListSelectionEvent lse) {
-			if(places != null){
-				if(lse.getValueIsAdjusting() == false){
-					for(String s : ((JList<String>)lse.getSource()).getSelectedValuesList()){
-						places.setVisibleByCategory(TravelCategory.valueOf(s), true);
-					}
-				}
-			}
+			if(places == null)
+				return;
+			if(lse.getValueIsAdjusting() != false)
+				return;
+			
+			for(TravelCategory s : ((JList<TravelCategory>)lse.getSource()).getSelectedValuesList())
+				places.setVisibleByCategory(s, true);	
 		}
 	}
 	private void populateListWithCategories(SortedList list){
 		for(TravelCategory c : TravelCategory.values())
-			 list.addSorted(c.toString());
+			 list.addSorted(c);
 	}
 	class HideCategoryListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			if(places != null){
-				for(String s : MapApp.this.list.getSelectedValuesList()){
-					places.setVisibleByCategory(TravelCategory.valueOf(s), false);				
-				}	
-			}		
+			if(places == null)
+				return;
+			for(TravelCategory cat : list.getSelectedValuesList())
+				places.setVisibleByCategory(cat, false);					
 		}
 	}
 	class SaveListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent aev) {
-			if(places != null){
-				fileChooser.setFileFilter(placeFilter);
-				int choice = fileChooser.showSaveDialog(MapApp.this);
-				if(choice == JFileChooser.APPROVE_OPTION)
-					savePlaces(fileChooser.getSelectedFile());				
-			}
+			if(places == null)
+				return;
+			fileChooser.setFileFilter(placeFilter);
+			int choice = fileChooser.showSaveDialog(MapApp.this);
+			if(choice == JFileChooser.APPROVE_OPTION)
+				savePlaces(fileChooser.getSelectedFile());		
 		}
 	}
 	private void savePlaces(File file){ 
@@ -393,12 +397,11 @@ public class MapApp extends JFrame {
 			file.delete();
 		
 		try(PrintWriter pw = new PrintWriter(new FileWriter(file,true))){
-			FileHandler.writePlacesToFile(places.getAllPlaces().entrySet(), pw);			
+			FileHandler.writePlacesToFile(places.getAllPlaces().entrySet(), pw);
+			changed = false;
 		} catch (IOException e) {
 			e.printStackTrace();
-		}finally{
-			changed = false;
-		}	
+		}
 	}
 
 	private void start() {
@@ -409,8 +412,7 @@ public class MapApp extends JFrame {
 		System.exit(0);
 	}
 	private int showMessage(String message, String title){
-		return JOptionPane.showConfirmDialog(MapApp.this, message, title,
-				JOptionPane.OK_CANCEL_OPTION);
+		return JOptionPane.showConfirmDialog(this, message, title, JOptionPane.OK_CANCEL_OPTION);
 	}
 
 	private void queryChangedExit() {
@@ -420,26 +422,24 @@ public class MapApp extends JFrame {
 		}
 	}
 
-	private void stop() {
-		if (changed) {
+	private void checkedStop() {
+		if (changed)
 			queryChangedExit();
-		} else {
+		else 
 			exitWithoutSaving();
-		}
-
 	}
 
 	class WindowHandler extends WindowAdapter {
 		@Override
 		public void windowClosing(WindowEvent wev) {
-			stop();
+			checkedStop();
 		}
 	}
 
 	class ExitListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent aev) {
-			stop();
+			checkedStop();
 		}
 	}
 
@@ -449,7 +449,6 @@ public class MapApp extends JFrame {
 			JMenuItem selected = (JMenuItem) aev.getSource();
 			if(changed && showMessage("Unsaved changes, load new anyway?","Load") != JOptionPane.OK_OPTION)
 				return;
-			
 			load(selected);
 		}
 	}
@@ -471,66 +470,70 @@ public class MapApp extends JFrame {
 
 	private void loadNewMap(JFileChooser jfc) {
 		jfc.setFileFilter(pictureFilter);
-		if (jfc.showOpenDialog(MapApp.this) == JFileChooser.APPROVE_OPTION) {
-			
+		if (jfc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			File selected = jfc.getSelectedFile();
 			map.setImage(new ImageIcon(selected.getAbsolutePath()));
-			
 		}
 	}
 
 	private void loadNewPlaces(JFileChooser jfc) {
 		jfc.setFileFilter(placeFilter);
-		if (jfc.showOpenDialog(MapApp.this) == JFileChooser.APPROVE_OPTION) {
+		if (jfc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 
 			removeAllPlaces();
 			File selected = jfc.getSelectedFile();
 			try (Scanner sc = new Scanner(new FileReader(selected))) {
 				addPlacesFromArray(FileHandler.readFileContent(sc));
+				changed = false;
 			} catch (FileNotFoundException e) {
-				JOptionPane.showMessageDialog(MapApp.this, "File does not exist");
+				JOptionPane.showMessageDialog(this, "File does not exist");
 			}
-			changed = false;
 		}
 	}
 	private void removeAllPlaces(){
-		places = new Places();
+		places = Places.createPlaces();
 		map.removeAll();
 	}
 
 	private void addPlacesFromArray(ArrayList<String> fromFile) {
 		for (String s : fromFile) {
-			String[] values = s.split(",");
-			
-			String name = values[4];
-			Position pos = new Position(Integer.parseInt(values[2]), Integer.parseInt(values[3]));
-			TravelCategory cat;
-			cat = TravelCategory.valueOf(values[1]);
-			
-			Place place = null;
-			switch (values[0]) {
-			case "Named":
-				place = placeFactory.createSafeNamedPlace(name, pos, cat);
-				break;
-			case "Described":
-				String description = values[5];
-				place = placeFactory.createSafeDescribedPlace(name, pos, cat, description);			
-				break;
+			try{
+				String[] placeValues = s.split(",");
+				
+				String name = placeValues[4];
+				Position pos = new Position(Integer.parseInt(placeValues[2]), Integer.parseInt(placeValues[3]));
+				TravelCategory cat;
+				cat = TravelCategory.valueOf(placeValues[1]);
+				
+				Place place = null;
+				switch (placeValues[0]) {
+				case "Named":
+					place = placeFactory.createSafeNamedPlace(name, pos, cat);
+					break;
+				case "Described":
+					String description = placeValues[5];
+					place = placeFactory.createSafeDescribedPlace(name, pos, cat, description);			
+					break;
+				}
+				if(place != null)
+					addPlace(place);
+			}catch(NumberFormatException nfe){
+				System.out.println("Position value not an int\n" + nfe.getMessage());
+			}catch(IllegalArgumentException iae){
+				System.out.println("Category not allowed\n" + iae.getMessage());
+			}catch(NullPointerException npe){
+				System.out.println("Category cannot be null\n" + npe.getMessage());
 			}
-			if(place != null)
-				addPlace(place);
 		}
 	}
-	
 
-	class SortedList extends DefaultListModel<String> {
-		public void addSorted(String s) {
-			int pos = 0;
-
-			while (pos < getSize() && s.compareToIgnoreCase(get(pos)) > 0) {
+	class SortedList extends DefaultListModel<TravelCategory> {
+		public void addSorted(TravelCategory cat) {
+			int pos = 0;			
+			while (pos < getSize() && cat.toString().compareToIgnoreCase(get(pos).toString()) > 0)
 				pos++;
-			}
-			add(pos, s);
+			
+			add(pos, cat);
 		}
 	}
 

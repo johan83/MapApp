@@ -27,7 +27,7 @@ public class DescribedPlace extends Place{
 		Graphics2D g2d = (Graphics2D) g;
 		String[] textToDisplay = description.split("\n");
 
-		int maxStringWidth = 0; // width = the rendered width of the text _NOT_ number of chars
+		int maxStringWidth = 0; // width = the rendered width of the text _NOT_ length
 		for (String s : textToDisplay) {
 			Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(s, g2d);
 			int thisStringWidth = (int) bounds.getWidth();
@@ -36,7 +36,7 @@ public class DescribedPlace extends Place{
 		}
 		int totalWidth = maxStringWidth + getSizeX();
 		int fontHeight = g2d.getFontMetrics().getHeight();
-		int textHeight = fontHeight * textToDisplay.length;
+		int textHeight = fontHeight * textToDisplay.length; //height of all rows
 		int totalHeight = textHeight + nameRect.height;
 		
 		int maxBoundsWidth = nameRect.width;
@@ -55,8 +55,7 @@ public class DescribedPlace extends Place{
 		int y = (int) nameRect.getMaxY();
 		for (String s : textToDisplay) {
 			g2d.drawString(s, getSizeX(), y += fontHeight);
-		}
-		
+		}	
 	}
 
 	@Override

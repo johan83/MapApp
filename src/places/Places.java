@@ -14,11 +14,14 @@ public class Places {
 	private HashMap<TravelCategory,ArrayList<Place>> placesByCategory;
 	private HashSet<Place> markedPlaces;
 	
-	public Places(){
-		this.placesByPosition = new HashMap<>();
-		this.placesByName = new HashMap<>();
-		this.placesByCategory = new HashMap<>();
-		this.markedPlaces = new HashSet<>();
+	private Places(HashMap<Position, Place> placesByPosition, HashMap<String,ArrayList<Place>> placesByName, HashMap<TravelCategory,ArrayList<Place>> placesByCategory, HashSet<Place> markedPlaces){
+		this.placesByPosition = placesByPosition;
+		this.placesByName = placesByName;
+		this.placesByCategory = placesByCategory;
+		this.markedPlaces = markedPlaces;
+	}
+	public static Places createPlaces(){
+		return new Places(new HashMap<>(),new HashMap<>(),new HashMap<>(),new HashSet<>());
 	}
 	
 	public Place add(Place place){
