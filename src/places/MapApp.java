@@ -151,7 +151,7 @@ public class MapApp extends JFrame {
 			if(places == null)
 				places = Places.createPlaces();
 			
-			Position pos = new Position(e.getX(),e.getY());
+			Position pos = Position.createPosition(e.getX(),e.getY());
 			Dimension mapSize = map.getPreferredSize();
 			if(mapSize.width < pos.getX() || mapSize.height < pos.getY())
 				return;
@@ -191,7 +191,7 @@ public class MapApp extends JFrame {
 			
 			for(int x = startX; x<=endX;x++){
 				for(int y = startY; y<=endY;y++)
-					places.setVisibilityByPosition(new Position(x,y));				
+					places.setVisibilityByPosition(Position.createPosition(x,y));				
 			}
 		}
 	}
@@ -501,7 +501,7 @@ public class MapApp extends JFrame {
 				String[] placeValues = s.split(",");
 				
 				String name = placeValues[4];
-				Position pos = new Position(Integer.parseInt(placeValues[2]), Integer.parseInt(placeValues[3]));
+				Position pos = Position.createPosition(Integer.parseInt(placeValues[2]), Integer.parseInt(placeValues[3]));
 				TravelCategory cat;
 				cat = TravelCategory.valueOf(placeValues[1]);
 				

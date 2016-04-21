@@ -4,9 +4,12 @@ public class Position {
 	private int x;
 	private int y;
 	
-	public Position(int x, int y){
+	private Position(int x, int y){
 		this.x = x;
 		this.y = y;
+	}
+	public static Position createPosition(int x, int y){
+		return new Position(x,y);		
 	}
 	
 	public int getX(){
