@@ -19,4 +19,25 @@ public class Position
 	{
 		return yPosition;
 	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if(o instanceof Position)
+		{
+			Position compare = (Position)o;
+			
+			return xPosition == compare.getXPosition() && yPosition == compare.getYPosition();
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return (xPosition * 10000) + yPosition;
+	}
 }
