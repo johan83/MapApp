@@ -8,6 +8,10 @@ public class MapGUI extends JFrame
 {
 	private JMenuBar menuBar = new JMenuBar();
 	private JMenu archiveMenu = new JMenu("Archive");
+	private JMenuItem newMap = new JMenuItem("New Map");
+	private JMenuItem loadPlaces = new JMenuItem("Load Places");
+	private JMenuItem save = new JMenuItem("Save");
+	private JMenuItem exit = new JMenuItem("Exit");
 	
 	public static void main(String[] args)
 	{
@@ -20,6 +24,11 @@ public class MapGUI extends JFrame
 		
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
+		
+		archiveMenu.add(newMap);
+		archiveMenu.add(loadPlaces);
+		archiveMenu.add(save);
+		archiveMenu.add(exit);
 		
 		menuBar.add(archiveMenu);
 		setJMenuBar(menuBar);
