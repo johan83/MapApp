@@ -3,23 +3,29 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 
 
 
 public class ProgramTest extends JFrame{
 
-	private boolean nyInfo = true; // best�mmer st�ng eller ej.
-	private ImageIcon bild = new ImageIcon("jarvafaltet.png"); // ska inte �ppnas f�r�n man �ppnar fil. Flytta ut ur konstruktor!?
-	private JLabel imageLabel = new JLabel(bild); // SE BILD
+	private boolean nyInfo = true; // bestämmer stäng eller ej.
+	private String longName; 
+	private File valdFil;
+	
 	
 	private JMenuBar menu = new JMenuBar();
 	private JMenu archive = new JMenu("Archive"); // new Map, Load Places, Save, Exit
-	private JMenuItem newMap = new JMenuItem("New Map");
-	private JFileChooser jfc = new JFileChooser();
+	JMenuItem newMap = new JMenuItem("New Map");
+	
+	private JFileChooser jfc = new JFileChooser("."); // startar filsökning från aktuell mapp
+	
 	
 	private JPanel northPanel = new JPanel();
 	private JPanel eastPanel = new JPanel();
 	private JPanel centerPanel = new JPanel();
+	
+	
 	
 	private JLabel newPlaceLabel = new JLabel("New:");
 	
@@ -48,6 +54,7 @@ public class ProgramTest extends JFrame{
 		this.addWindowListener(exitWindow);
 		setJMenuBar(menu);
 		menu.add(archive);
+		
 		
 		newMap.addActionListener(new NewMapLyss());
 		archive.add(newMap);
@@ -79,11 +86,14 @@ public class ProgramTest extends JFrame{
 		hideCategoryButton.setAlignmentX(LEFT_ALIGNMENT); //Alignment
 		eastPanel.add(hideCategoryButton); 
 		
-		add(centerPanel, BorderLayout.CENTER);	//SE BILD
-		centerPanel.add(imageLabel);			//SE BILD
+		centerPanel.setLayout(new FlowLayout());			//GRID LR BOXLAYOUT FIXAR STORLEKEN PÅ BILDEN MEN VAD MED SCROLLPANE?
+		
+		add(centerPanel, BorderLayout.CENTER);	//SE BILD    --------------------> om centerPanel byts till imgaeLabel syns kartan... vad fel? om centerPanel.setLayout != null syns bilden alltid.
+		//SE BILD --------------------------> lägg till objekt av ImageLabel classen
 		
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-		setSize(650, 220);
+		setSize(650, 650);
+		setResizable(false);
 		setLocationRelativeTo(null);
 		setVisible(true);
 		
@@ -107,7 +117,17 @@ public class ProgramTest extends JFrame{
 	
 	class NewMapLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave){
-			jfc.showOpenDialog(newMap);
+			int ok = jfc.APPROVE_OPTION;
+			int jfcSvar = jfc.showOpenDialog(newMap);	// för att kunna ladda filer
+			if (jfcSvar == ok){
+				valdFil = jfc.getSelectedFile();
+				longName = valdFil.getAbsolutePath();
+				System.out.println(longName);
+				centerPanel.add(new ImageLabel(longName));
+				centerPanel.validate();
+				centerPanel.repaint();
+			}
+						
 		}
 	}
 	
@@ -130,13 +150,38 @@ public class ProgramTest extends JFrame{
 		}
 	}
 	
-	public class Exit extends WindowAdapter{
+	class Exit extends WindowAdapter{
 		@Override
 		public void windowClosing(WindowEvent wev){
 			avsluta();
 		}
 	}
 	
+	
+	class ImageLabel extends JPanel{
+		
+		private ImageIcon bakgrundsbild;
+		
+		public ImageLabel(String longName){
+			setLayout(null);
+			ProgramTest.this.longName = longName;
+			bakgrundsbild = new ImageIcon(longName);				// absolut sökväg!? kan skriva "jarvafaltet.png" varför funkar inte longName---> pekar på null
+			System.out.println("" + longName);
+			centerPanel.add(mapScrollbar);
+			centerPanel.validate();
+			centerPanel.repaint();
+			
+		}												// skulle kunna göra en ny konstruktor som bugger upp fönstret igen fast med bild denna gång....
+		
+		
+		
+		protected void paintComponent(Graphics g){
+			super.paintComponent(g);
+			g.drawImage(bakgrundsbild.getImage(), 0, 0,  this);			// ta bort getwidth + getHeight för bildensnaturliga storlek
+		}
+	}
+	
+
 	
 	public static void main(String []args){
 		ProgramTest program = new ProgramTest();
