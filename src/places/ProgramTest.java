@@ -19,7 +19,7 @@ public class ProgramTest extends JFrame{
 	JMenuItem newMap = new JMenuItem("New Map");
 	
 	private JFileChooser jfc = new JFileChooser("."); // startar filsökning från aktuell mapp
-	
+	JScrollPane mapScrollbar;
 	
 	private JPanel northPanel = new JPanel();
 	private JPanel eastPanel = new JPanel();
@@ -87,7 +87,6 @@ public class ProgramTest extends JFrame{
 		eastPanel.add(hideCategoryButton); 
 		
 		centerPanel.setLayout(new BorderLayout());			//GRID LR BOXLAYOUT FIXAR STORLEKEN PÅ BILDEN MEN VAD MED SCROLLPANE?   -----BorderLayout lägger i mitten och alla över varandra.
-		
 		add(centerPanel, BorderLayout.CENTER);	
 		
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -116,8 +115,8 @@ public class ProgramTest extends JFrame{
 	
 	class NewMapLyss implements ActionListener{
 		
-		JScrollPane mapScrollbar;
-		ImageLabel imageLabel;
+		
+		ImageIcon imageLabel;
 		
 		public void actionPerformed(ActionEvent ave){
 			int ok = JFileChooser.APPROVE_OPTION;
@@ -131,11 +130,15 @@ public class ProgramTest extends JFrame{
 			valdFil = jfc.getSelectedFile();
 			longName = valdFil.getAbsolutePath();
 			
-			imageLabel = new ImageLabel(longName);
-			mapScrollbar = new JScrollPane(imageLabel);
-			centerPanel.add(mapScrollbar);		
+			imageLabel = new ImageIcon(longName);
+			mapScrollbar = new JScrollPane(new JLabel(imageLabel));		// OK, nu funkar det
+			centerPanel.add(mapScrollbar);								//Men vad har jag gjort? :/		
 			centerPanel.validate();
 			mapScrollbar.validate();
+			
+			
+//			getContentPane().add(mapScrollbar);
+//			getContentPane().validate();		---> FUNKAR LIKA DÅLIGT.. 
 			}			
 		}
 	}
@@ -167,7 +170,7 @@ public class ProgramTest extends JFrame{
 	}
 	
 	
-	class ImageLabel extends JPanel{
+	class ImageLabel extends JPanel{			// påverkar ingenting om den extendar JPanel, JLabel lr JComponent
 		
 		private ImageIcon bakgrundsbild;
 		
