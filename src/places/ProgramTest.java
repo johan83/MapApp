@@ -132,7 +132,7 @@ public class ProgramTest extends JFrame{
 			
 			imageLabel = new ImageIcon(longName);
 			mapScrollbar = new JScrollPane(new JLabel(imageLabel));		// OK, nu funkar det
-			centerPanel.add(mapScrollbar);								//Men vad har jag gjort? :/		
+			centerPanel.add(mapScrollbar);								//Men vad har jag gjort? :/		----> ImageLabel, klassen behövs inte alls nu!
 			centerPanel.validate();
 			mapScrollbar.validate();
 			
@@ -170,26 +170,26 @@ public class ProgramTest extends JFrame{
 	}
 	
 	
-	class ImageLabel extends JPanel{			// påverkar ingenting om den extendar JPanel, JLabel lr JComponent
-		
-		private ImageIcon bakgrundsbild;
-		
-		public ImageLabel(String longName){
-			
-			setLayout(null);
-			ProgramTest.this.longName = longName;
-			bakgrundsbild = new ImageIcon(longName);				
-			System.out.println(longName);
-			//super.setBounds(getX(), getY(), bakgrundsbild.getIconWidth(),bakgrundsbild.getIconHeight());			// funkar inte utan vidare implementering..
-		}												
-		
-		
-		
-		protected void paintComponent(Graphics g){
-			super.paintComponent(g);
-			g.drawImage(bakgrundsbild.getImage(), 0, 0, this);			// ta bort getwidth + getHeight för bildensnaturliga storlek
-		}
-	}
+//	class ImageLabel extends JPanel{			// påverkar ingenting om den extendar JPanel, JLabel lr JComponent
+//		
+//		private ImageIcon bakgrundsbild;
+//		
+//		public ImageLabel(String longName){
+//			
+//			setLayout(null);
+//			ProgramTest.this.longName = longName;
+//			bakgrundsbild = new ImageIcon(longName);				
+//			System.out.println(longName);
+//			//super.setBounds(getX(), getY(), bakgrundsbild.getIconWidth(),bakgrundsbild.getIconHeight());			// funkar inte utan vidare implementering..
+//		}												
+//		
+//		
+//		
+//		protected void paintComponent(Graphics g){
+//			super.paintComponent(g);
+//			g.drawImage(bakgrundsbild.getImage(), 0, 0, this);			// ta bort getwidth + getHeight för bildensnaturliga storlek
+//		}
+//	}
 	
 
 	
