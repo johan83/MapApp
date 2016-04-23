@@ -46,7 +46,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import places.Category.CategoryType;
 import places.Place.PlaceType;
 
 /*
@@ -90,11 +89,12 @@ public class MapApp extends JFrame {
 		this.pack();
 		this.centerFrameOnDefaultMonitor();
 	}
+	
 	private void createCategories(){
-		Category.createCategory(CategoryType.Buss, Color.RED);
-		Category.createCategory(CategoryType.Tunnelbana, Color.BLUE);
-		Category.createCategory(CategoryType.Tåg, Color.GREEN);
-		Category.createCategory(CategoryType.None, Color.BLACK);
+		Category.createCategory("Buss", Color.RED);
+		Category.createCategory("Tunnelbana", Color.BLUE);
+		Category.createCategory("Tåg", Color.GREEN);
+		Category.createCategory("None", Color.BLACK);
 	}
 
 	private void centerFrameOnDefaultMonitor() {
@@ -163,7 +163,7 @@ public class MapApp extends JFrame {
 			if(mapSize.width < pos.getX() || mapSize.height < pos.getY())
 				return;
 			
-			Category cat = Category.getCategoryInstance(CategoryType.None);
+			Category cat = Category.getCategoryInstance("None");
 			if(list.getSelectedValue() != null)
 				cat = list.getSelectedValue();
 			
@@ -376,7 +376,7 @@ public class MapApp extends JFrame {
 		}
 	}
 	private void populateListWithCategories(SortedList list){
-		for(Entry<CategoryType, Category> c : Category.getCurrentTypes())
+		for(Entry<String, Category> c : Category.getCurrentTypes())
 			 list.addSorted(c.getValue());
 	}
 	class HideCategoryListener implements ActionListener{
@@ -510,7 +510,7 @@ public class MapApp extends JFrame {
 				String name = placeValues[4];
 				Position pos = Position.createPosition(Integer.parseInt(placeValues[2]), Integer.parseInt(placeValues[3]));
 				Category cat;
-				cat = Category.getCategoryInstance(CategoryType.valueOf(placeValues[1]));
+				cat = Category.getCategoryInstance(placeValues[1]);
 				
 				Place place = null;
 				switch (placeValues[0]) {
