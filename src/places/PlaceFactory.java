@@ -11,11 +11,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import places.Place.PlaceType;
-import places.Place.TravelCategory;
 
 public class PlaceFactory implements PlaceFactoryImp{
 	
-	public NamedPlace createSafeNamedPlace(String name, Position pos, TravelCategory cat){
+	public NamedPlace createSafeNamedPlace(String name, Position pos, Category cat){
 		NamedPlace place = null;
 		
 		try{
@@ -29,7 +28,7 @@ public class PlaceFactory implements PlaceFactoryImp{
 		return place;
 	}
 	
-	public DescribedPlace createSafeDescribedPlace(String name, Position pos, TravelCategory cat, String desc){
+	public DescribedPlace createSafeDescribedPlace(String name, Position pos, Category cat, String desc){
 		DescribedPlace place = null;
 		
 		try{
@@ -42,7 +41,7 @@ public class PlaceFactory implements PlaceFactoryImp{
 		
 		return place;
 	}
-	public Place createQueriedPlace(PlaceType type, Component parent, Position pos, TravelCategory cat){
+	public Place createQueriedPlace(PlaceType type, Component parent, Position pos, Category cat){
 		switch(type){
 		case Named:
 			return createQueriedNamedPlace(parent,pos,cat);
@@ -53,7 +52,7 @@ public class PlaceFactory implements PlaceFactoryImp{
 		}
 		
 	}
-	private static NamedPlace createQueriedNamedPlace(Component parent, Position pos, TravelCategory cat){
+	private static NamedPlace createQueriedNamedPlace(Component parent, Position pos, Category cat){
 		NamedPlace place = null;
 		try{			
 			ArrayList<JLabel> labels = getStandardLabels();
@@ -70,7 +69,7 @@ public class PlaceFactory implements PlaceFactoryImp{
 		}
 		return place;		
 	}
-	private static DescribedPlace createQueriedDescribedPlace(Component parent, Position pos, TravelCategory cat){
+	private static DescribedPlace createQueriedDescribedPlace(Component parent, Position pos, Category cat){
 		DescribedPlace place = null;
 		try{			
 			ArrayList<JLabel> labels = getStandardLabels();

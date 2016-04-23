@@ -1,6 +1,7 @@
 package places;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -21,6 +22,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Map.Entry;
 import java.util.Scanner;
 
 import javax.swing.BoxLayout;
@@ -44,13 +46,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import places.Category.CategoryType;
 import places.Place.PlaceType;
-import places.Place.TravelCategory;
 
 /*
  * TODO:
- * add places rendering
- * add new places logic
  * make category object so less conversions and interpretations need to be done
  */
 
@@ -66,7 +66,7 @@ public class MapApp extends JFrame {
 	private SortedList sortedList;
 	private Map map;
 	private JScrollPane mapPane;
-	private JList<TravelCategory> list;
+	private JList<Category> list;
 	
 	private WhatIsHereListener WISListener;
 	private NewPlaceListener comboListener;
@@ -82,12 +82,19 @@ public class MapApp extends JFrame {
 	public MapApp() {
 		super(title);
 		placeFactory = new PlaceFactory();
+		this.createCategories();
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new WindowHandler());
 		this.setJMenuBar(populateMenuBar(new JMenuBar()));
 		this.add(populateMainView(new JPanel()));
 		this.pack();
 		this.centerFrameOnDefaultMonitor();
+	}
+	private void createCategories(){
+		Category.createCategory(CategoryType.Buss, Color.RED);
+		Category.createCategory(CategoryType.Tunnelbana, Color.BLUE);
+		Category.createCategory(CategoryType.Tåg, Color.GREEN);
+		Category.createCategory(CategoryType.None, Color.BLACK);
 	}
 
 	private void centerFrameOnDefaultMonitor() {
@@ -156,7 +163,7 @@ public class MapApp extends JFrame {
 			if(mapSize.width < pos.getX() || mapSize.height < pos.getY())
 				return;
 			
-			TravelCategory cat = TravelCategory.None;
+			Category cat = Category.getCategoryInstance(CategoryType.None);
 			if(list.getSelectedValue() != null)
 				cat = list.getSelectedValue();
 			
@@ -364,20 +371,20 @@ public class MapApp extends JFrame {
 			if(lse.getValueIsAdjusting() != false)
 				return;
 			
-			for(TravelCategory s : ((JList<TravelCategory>)lse.getSource()).getSelectedValuesList())
+			for(Category s : ((JList<Category>)lse.getSource()).getSelectedValuesList())
 				places.setVisibleByCategory(s, true);	
 		}
 	}
 	private void populateListWithCategories(SortedList list){
-		for(TravelCategory c : TravelCategory.values())
-			 list.addSorted(c);
+		for(Entry<CategoryType, Category> c : Category.getCurrentTypes())
+			 list.addSorted(c.getValue());
 	}
 	class HideCategoryListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			if(places == null)
 				return;
-			for(TravelCategory cat : list.getSelectedValuesList())
+			for(Category cat : list.getSelectedValuesList())
 				places.setVisibleByCategory(cat, false);					
 		}
 	}
@@ -502,8 +509,8 @@ public class MapApp extends JFrame {
 				
 				String name = placeValues[4];
 				Position pos = Position.createPosition(Integer.parseInt(placeValues[2]), Integer.parseInt(placeValues[3]));
-				TravelCategory cat;
-				cat = TravelCategory.valueOf(placeValues[1]);
+				Category cat;
+				cat = Category.getCategoryInstance(CategoryType.valueOf(placeValues[1]));
 				
 				Place place = null;
 				switch (placeValues[0]) {
@@ -527,8 +534,8 @@ public class MapApp extends JFrame {
 		}
 	}
 
-	class SortedList extends DefaultListModel<TravelCategory> {
-		public void addSorted(TravelCategory cat) {
+	class SortedList extends DefaultListModel<Category> {
+		public void addSorted(Category cat) {
 			int pos = 0;			
 			while (pos < getSize() && cat.toString().compareToIgnoreCase(get(pos).toString()) > 0)
 				pos++;

@@ -5,16 +5,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import places.Place.TravelCategory;
-
 public class Places {
 	
 	private HashMap<Position,Place> placesByPosition;
 	private HashMap<String,ArrayList<Place>> placesByName;
-	private HashMap<TravelCategory,ArrayList<Place>> placesByCategory;
+	private HashMap<Category,ArrayList<Place>> placesByCategory;
 	private HashSet<Place> markedPlaces;
 	
-	private Places(HashMap<Position, Place> placesByPosition, HashMap<String,ArrayList<Place>> placesByName, HashMap<TravelCategory,ArrayList<Place>> placesByCategory, HashSet<Place> markedPlaces){
+	private Places(HashMap<Position, Place> placesByPosition, HashMap<String,ArrayList<Place>> placesByName, HashMap<Category,ArrayList<Place>> placesByCategory, HashSet<Place> markedPlaces){
 		this.placesByPosition = placesByPosition;
 		this.placesByName = placesByName;
 		this.placesByCategory = placesByCategory;
@@ -28,7 +26,7 @@ public class Places {
 		place.setPlaces(this);
 		Position pos = place.getPosition();
 		String name = place.getName();
-		TravelCategory cat = place.getColor();
+		Category cat = place.getCategory();
 		
 		ArrayList<Place> names = placesByName.get(name);
 		if(names == null)
@@ -49,7 +47,7 @@ public class Places {
 	public void remove(Place place){
 		Position pos = place.getPosition();
 		String name = place.getName();
-		TravelCategory cat = place.getColor();
+		Category cat = place.getCategory();
 		
 		placesByPosition.remove(pos);
 		ArrayList<Place> names = placesByName.get(name);
@@ -65,7 +63,7 @@ public class Places {
 			Place place = i.next();
 			Position pos = place.getPosition();
 			String name = place.getName();
-			TravelCategory cat = place.getColor();
+			Category cat = place.getCategory();
 			
 			placesByPosition.remove(pos);
 			ArrayList<Place> names = placesByName.get(name);
@@ -79,7 +77,7 @@ public class Places {
 	public HashMap<Position,Place> getAllPlaces(){
 		return placesByPosition;
 	}
-	public void setVisibleByCategory(TravelCategory cat, boolean visible){
+	public void setVisibleByCategory(Category cat, boolean visible){
 		ArrayList<Place> places = placesByCategory.get(cat);
 		if(places != null){
 			for(Place p : places){

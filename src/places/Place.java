@@ -17,18 +17,17 @@ import javax.swing.JLayeredPane;
 
 @SuppressWarnings("serial")
 public abstract class Place extends JComponent{
-	public enum TravelCategory {Buss,Tåg,Tunnelbana,None};
-	public enum PlaceType{Named,Described};
+	public enum PlaceType{ Named, Described };
 
 	private PlaceType type;
 	private String name;
 	private Position position;
-	private TravelCategory category;
+	private Category category;
 	private boolean showInfo, marked;
 	private int sizeX, sizeY;
 	private Places places;
 
-	public Place(String name, Position position, TravelCategory category,PlaceType type) {
+	public Place(String name, Position position, Category category, PlaceType type) {
 		sizeX = 25;
 		sizeY = 30;
 		this.name = name;
@@ -83,7 +82,7 @@ public abstract class Place extends JComponent{
 		return position;
 	}
 
-	public TravelCategory getColor() {
+	public Category getCategory() {
 		return category;
 	}
 
@@ -103,25 +102,6 @@ public abstract class Place extends JComponent{
 		return name + " " + position + " " + category + " " + getSpecialText();
 	}
 
-	private Color getCategoryColor() { // bad? should category be object(String category, Color c)?
-		Color c;
-		switch (category) {
-		case Buss:
-			c = Color.RED;
-			break;
-		case Tåg:
-			c = Color.GREEN;
-			break;
-		case Tunnelbana:
-			c = Color.BLUE;
-			break;
-		default:
-			c = Color.BLACK;
-			break;
-		}
-		return c;
-	}
-
 	private Polygon getPolygon() {
 		// points of the polygon in order: top left, tip, top right
 		int[] xpoints = { 0, sizeX / 2, sizeX };
@@ -136,7 +116,7 @@ public abstract class Place extends JComponent{
 
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2d.setColor(getCategoryColor());
+		g2d.setColor(category.getColor());
 		g2d.fillPolygon(getPolygon());
 
 		if (marked) {
