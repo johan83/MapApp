@@ -13,7 +13,12 @@ import javax.swing.JTextField;
 import places.Place.PlaceType;
 
 public class PlaceFactory implements PlaceFactoryImp{
+	private PlaceFactory(){
+	}
 	
+	public static PlaceFactory createFactory(){
+		return new PlaceFactory();
+	}
 	public NamedPlace createSafeNamedPlace(String name, Position pos, Category cat){
 		NamedPlace place = null;
 		

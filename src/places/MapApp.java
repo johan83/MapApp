@@ -81,7 +81,7 @@ public class MapApp extends JFrame {
 
 	public MapApp() {
 		super(title);
-		placeFactory = new PlaceFactory();
+		placeFactory = PlaceFactory.createFactory();
 		this.createCategories();
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new WindowHandler());
