@@ -56,8 +56,7 @@ import places.Place.PlaceType;
 public class MapApp extends JFrame {
 	public static final String title = "MapApp";
 	private static final int WHAT_IS_HERE_GRID_SIZE = 21;
-	
-	PlaceFactoryImp placeFactory;
+	private static final PlaceFactoryImp placeFactory = PlaceFactory.createFactory();	
 
 	private JComboBox<PlaceType> newPlaceChooser;
 	private JTextField searchInput;
@@ -79,11 +78,9 @@ public class MapApp extends JFrame {
 
 	public MapApp() {
 		super(title);
-		placeFactory = PlaceFactory.createFactory();
 		this.createCategories();
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new WindowHandler());
-		
 		this.setJMenuBar(populateMenuBar(new JMenuBar()));
 		this.add(populateMainView(new JPanel()));
 		this.pack();
