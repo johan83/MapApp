@@ -13,11 +13,6 @@ public class MapGUI extends JFrame
 	private JMenuItem save = new JMenuItem("Save");
 	private JMenuItem exit = new JMenuItem("Exit");
 	
-	public static void main(String[] args)
-	{
-		new MapGUI();
-	}
-	
 	public MapGUI()
 	{
 		super("Inlup2");

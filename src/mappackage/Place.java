@@ -23,5 +23,8 @@ public abstract class Place extends JComponent
 		this.category = category;
 	}
 	
-	
+	public String getPlaceName()
+	{
+		return placeName;
+	}
 }
