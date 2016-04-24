@@ -9,12 +9,14 @@ import javax.swing.JLayeredPane;
 @SuppressWarnings("serial")
 class Map extends JLayeredPane {
 	private ImageIcon map;
+	private MapApp parent;
 	
-	private Map(){
+	private Map(MapApp parent){
+		this.parent = parent;
 		setLayout(null);
 	}
-	public static Map createMap(){
-		return new Map();
+	public static Map createMap(MapApp parent){
+		return new Map(parent);
 	}
 	public Map(ImageIcon img) {
 		setImage(img);

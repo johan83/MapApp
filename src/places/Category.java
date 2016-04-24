@@ -6,9 +6,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 public class Category {
-	private static HashMap<String,Category> currentCategories = new HashMap<>();
+	private static HashMap<String,Category> currentCategories;
 	
-	private final String type;
+	private final String type; //String to facilitate user creating additional categories. If that is not wanted, change to enum
 	private final Color color;
 	
 	private Category(String type, Color color){
@@ -16,8 +16,10 @@ public class Category {
 		this.color = color;
 	}
 	//Factory method
-	public static Category createCategory(String type, Color color){
+	public static Category createCategoryInstance(String type, Color color){
 		Category cat = new Category(type,color);
+		if(currentCategories == null)
+			currentCategories = new HashMap<>();
 		currentCategories.put(type, cat);
 		return cat;
 	}

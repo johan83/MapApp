@@ -17,6 +17,7 @@ import javax.swing.JLayeredPane;
 
 @SuppressWarnings("serial")
 public abstract class Place extends JComponent{
+	//Allowed types of places, if place is extended the class must be in here
 	public enum PlaceType{ Named, Described };
 	
 

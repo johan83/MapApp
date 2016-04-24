@@ -47,7 +47,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import places.Place.PlaceType;
-
 /*
  * TODO:
  * make category object so less conversions and interpretations need to be done
@@ -84,6 +83,7 @@ public class MapApp extends JFrame {
 		this.createCategories();
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new WindowHandler());
+		
 		this.setJMenuBar(populateMenuBar(new JMenuBar()));
 		this.add(populateMainView(new JPanel()));
 		this.pack();
@@ -91,10 +91,11 @@ public class MapApp extends JFrame {
 	}
 	
 	private void createCategories(){
-		Category.createCategory("Buss", Color.RED);
-		Category.createCategory("Tunnelbana", Color.BLUE);
-		Category.createCategory("Tåg", Color.GREEN);
-		Category.createCategory("None", Color.BLACK);
+		//Default categories
+		Category.createCategoryInstance("Buss", Color.RED);
+		Category.createCategoryInstance("Tunnelbana", Color.BLUE);
+		Category.createCategoryInstance("Tåg", Color.GREEN);
+		Category.createCategoryInstance("None", Color.BLACK);
 	}
 
 	private void centerFrameOnDefaultMonitor() {
@@ -134,7 +135,7 @@ public class MapApp extends JFrame {
 
 		mainView.add(populateUpperBar(new JPanel()), BorderLayout.NORTH);
 
-		map = Map.createMap();
+		map = Map.createMap(this);
 		map.addMouseListener(new WhatIsHereMapListener());
 		map.addMouseListener(new NewPlaceMapListener());
 		
@@ -189,7 +190,7 @@ public class MapApp extends JFrame {
 			if(places == null)
 				return;
 			
-			//this will search for pixels outside of the map border but nothing _should_ be there anyway
+			//this will search for pixels outside of the map border but nothing >should< be there anyway
 			int gridsize = WHAT_IS_HERE_GRID_SIZE;
 			int startX = (int) (e.getX() - Math.ceil(gridsize/2));
 			int endX = startX + gridsize;
