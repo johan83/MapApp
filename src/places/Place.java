@@ -29,7 +29,7 @@ public abstract class Place extends JComponent{
 	private int sizeX, sizeY;
 	private Places places;
 
-	public Place(String name, Position position, Category category, PlaceType type) {
+	protected Place(String name, Position position, Category category, PlaceType type) {
 		sizeX = 25;
 		sizeY = 30;
 		this.name = name;
