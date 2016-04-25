@@ -7,16 +7,16 @@ import javax.swing.ImageIcon;
 import javax.swing.JLayeredPane;
 
 @SuppressWarnings("serial")
-class Map extends JLayeredPane {
+class BackgroundMap extends JLayeredPane {
 	private ImageIcon map;
 	
-	private Map(){
+	private BackgroundMap(){
 		setLayout(null);
 	}
-	public static Map createMap(){
-		return new Map();
+	public static BackgroundMap createMap(){
+		return new BackgroundMap();
 	}
-	public Map(ImageIcon img) {
+	public BackgroundMap(ImageIcon img) {
 		setImage(img);
 		setLayout(null);
 	}

@@ -65,7 +65,7 @@ public class MapApp extends JFrame {
 	private JComboBox<PlaceType> newPlaceChooser;
 	private JTextField searchInput;
 	private SortedList sortedList;
-	private Map map;
+	private BackgroundMap map;
 	private JScrollPane mapPane;
 	private JList<Category> list;
 	
@@ -133,7 +133,7 @@ public class MapApp extends JFrame {
 
 		mainView.add(populateUpperBar(new JPanel()), BorderLayout.NORTH);
 
-		map = Map.createMap();
+		map = BackgroundMap.createMap();
 		map.addMouseListener(new WhatIsHereMapListener());
 		map.addMouseListener(new NewPlaceMapListener());
 		
