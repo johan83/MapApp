@@ -14,6 +14,7 @@ public class ProgramTest extends JFrame{
 	private File valdFil;
 	
 	
+	
 	private JMenuBar menu = new JMenuBar();
 	private JMenu archive = new JMenu("Archive"); // new Map, Load Places, Save, Exit
 	JMenuItem newMap = new JMenuItem("New Map");
@@ -47,6 +48,9 @@ public class ProgramTest extends JFrame{
 	private JButton hideCategoryButton = new JButton("Hide category");
 
 	
+	/*------------------------------------------------------------------ CONSTRUCTOR ----------------------------------------------------------------------*/
+	
+	
 	public ProgramTest(){
 		//JFrame program = new JFrame("Inlupp 2");
 		super("Inlupp 2");
@@ -70,7 +74,11 @@ public class ProgramTest extends JFrame{
 		
 		setLayout(new BorderLayout());
 		northPanel.add(newPlaceLabel);
+		choosePlaceType.addActionListener(new ChoosePlaceTypeLyss());
 		northPanel.add(choosePlaceType);
+		
+		
+		
 		northPanel.add(searchField);
 		northPanel.add(searchButton);
 		northPanel.add(hideButton);
@@ -81,8 +89,10 @@ public class ProgramTest extends JFrame{
 		eastPanel.setLayout(new BoxLayout(eastPanel,BoxLayout.Y_AXIS));
 		eastPanel.add(categoriesLabel);
 		categoryList.setAlignmentX(LEFT_ALIGNMENT); //Alignement (verkar bugga -> vänster blir höger) 
-		eastPanel.add(categoryList);
 		categoryList.setFixedCellWidth(150);
+		categoryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);			// Om jag vill kunna deselecta en kategori måste jag till föra en klass där jag implementerat detta.
+		eastPanel.add(categoryList);
+		
 		hideCategoryButton.setAlignmentX(LEFT_ALIGNMENT); //Alignment
 		eastPanel.add(hideCategoryButton); 
 		
@@ -97,6 +107,8 @@ public class ProgramTest extends JFrame{
 		
 		
 	}
+	
+	/*------------------------------------------------------------- METHODS -----------------------------------------------------------------------------------*/
 	
 	private void avsluta(){
 		int ok = JOptionPane.OK_OPTION;
@@ -113,6 +125,107 @@ public class ProgramTest extends JFrame{
 	}
 	
 	
+	/*--------------------------------------------------------------- CLASSES ----------------------------------------------------------------------------------*/
+	
+	class MouseLyss extends MouseAdapter{
+		private Position nyPlatsPosition;
+		
+		
+		public void mouseClicked(MouseEvent mev){
+		nyPlatsPosition = new Position(mev.getX(), mev.getY());
+		
+		// STÄLLA TILLBAKA MUSPEKAREN!?
+		}
+		
+		public Position getNyPlatsPosition(){
+			return nyPlatsPosition;
+		}
+	}
+	
+	class ChoosePlaceTypeLyss implements ActionListener{
+		
+		TravelCategory colorToUse;
+		Place nyPlats;
+		MouseLyss mouseLyss = new MouseLyss();
+		
+		public void actionPerformed(ActionEvent ave){
+			//ÄNDRA TILL CROSSHAIR Vid click på kartan, get position och använd i skapandet av en plats.
+			
+			setCursor(Cursor.CROSSHAIR_CURSOR);
+			mapScrollbar.addMouseListener(mouseLyss);			//SKA DEN ADDAS TILL MAPSCROLLBAR ELLER TILL BILDEN?		--> Ger Nullpointer om man inte laddat en bild först. fixa?!
+			
+			Position nyPlatsPosition = mouseLyss.getNyPlatsPosition();	// Position ska ändras till där användaren markerar på kartan.
+			
+			
+			/* ----------------------------------------NEDAN FUNKAR SO FAR--------------------------------------*/
+			
+			JPanel namedPlacePanel= new JPanel();
+			JPanel describedPlacePanel = new JPanel();
+	
+			JPanel rad1= new JPanel();
+			JPanel rad2 = new JPanel();
+			
+			JTextField textField = new JTextField(10);
+			JTextField describeField = new JTextField(10);
+			
+			rad1.add(new JLabel("Platsens namn:"));
+			rad1.add(textField);
+			
+			rad2.add(new JLabel("Description:"));
+			rad2.add(describeField);
+			
+			String name = textField.getText();
+			String description = describeField.getText();
+			
+			
+			if(choosePlaceType.getSelectedItem().equals(("NamedPlace"))){	
+				namedPlacePanel.setLayout(new BoxLayout(namedPlacePanel, BoxLayout.Y_AXIS));
+				namedPlacePanel.add(rad1);
+				
+				String ifyllt = JOptionPane.showInputDialog(null, namedPlacePanel,  "New Named Place", JOptionPane.QUESTION_MESSAGE);			// den här ska bli frågeformuläret
+				
+				if(ifyllt != null){
+				nyPlats = new NamedPlace(name , nyPlatsPosition);			// Denna måste sparas i en samling.	
+				System.out.println((String)choosePlaceType.getSelectedItem());			//För att visa att det går!
+				}else{
+					return;
+				}
+					
+
+				
+				
+			}else if(choosePlaceType.getSelectedItem().equals("DescribedPlace")){
+				
+				describedPlacePanel.setLayout(new BoxLayout(describedPlacePanel, BoxLayout.Y_AXIS));
+				describedPlacePanel.add(rad1);
+				describedPlacePanel.add(rad2);
+				
+				JOptionPane.showMessageDialog(null, describedPlacePanel , "New Described Place", JOptionPane.QUESTION_MESSAGE);			//Frågeformuläret
+				
+				
+				
+				nyPlats = new DescribedPlace(name, nyPlatsPosition, description);
+				
+				System.out.println((String)choosePlaceType.getSelectedItem());			////För att visa att det går!
+			}
+			
+			if(!(categoryList.isSelectionEmpty())){
+				String color = (String)categoryList.getSelectedValue();
+				
+				for(TravelCategory c : TravelCategory.values()){
+					
+					if(color.equalsIgnoreCase(c.name())){				
+						colorToUse = c;
+						nyPlats.setCategory(colorToUse);
+						System.out.println("DEN NYA PLATSEN HAR NU FÅTT EN KATEGORI!!!");
+					}
+				}
+			}
+		}
+	}
+	
+	
+
 	class NewMapLyss implements ActionListener{
 		
 		
@@ -195,7 +308,6 @@ public class ProgramTest extends JFrame{
 	
 	public static void main(String []args){
 		ProgramTest program = new ProgramTest();
-
 		
 	}
 }

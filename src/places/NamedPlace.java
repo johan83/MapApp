@@ -6,7 +6,7 @@ public class NamedPlace extends Place{
 		super(name, position);
 		
 	}
-	public NamedPlace(String name, Position position, TravelCategory color){
+	public NamedPlace(String name, Position position, TravelCategory color){			// Om vi ska sätta kategori via Place, behövs inte denna konstruktor..!?
 		super(name, position, color);
 		
 	}

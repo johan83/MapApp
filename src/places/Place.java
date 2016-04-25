@@ -1,13 +1,14 @@
 package places;
-import javax.swing.JComponent; // kanske ladda allt? alltså -> * 
+import javax.swing.JComponent; // kanske ladda allt? alltsÃ¥ -> * 
+//import java.awt.event.*; Place skulle kunna ---> implements ActionListener----> prÃ¶var att addera detta till program klassen istÃ¤llet.
 
 public abstract class Place extends JComponent {
 
 	private String name;
 	private Position position;
-	private TravelCategory color = TravelCategory.NO_CATEGORY;// kategori - buss, tåg, t-bana
+	private TravelCategory color;// kategori - buss, tÃ¥g, t-bana
 	private boolean showInfo;
-	//private boolean visible; // behövs ej? JComponent -> setVisible()
+	//private boolean visible; // behÃ¶vs ej? JComponent -> setVisible()
 	private boolean marked;
 	
 	public Place(String name, Position position){
@@ -24,8 +25,8 @@ public abstract class Place extends JComponent {
 	
 	public String getName(){
 		return name;
-	} // dessa getMetoder borde inte behövas då den ärever från JComponent och alltså
-	//ska representeras grafiskt som en trekant på kartan.
+	} // dessa getMetoder borde inte behÃ¶vas dÃ¥ den Ã¤rver frÃ¥n JComponent och alltsÃ¥
+	//ska representeras grafiskt som en trekant pÃ¥ kartan.
 	
 	public Position getPosition(){
 		return position;
@@ -35,6 +36,11 @@ public abstract class Place extends JComponent {
 		return color;
 	}
 	
+	public void setCategory(TravelCategory color){
+		this.color = color;
+	}
+	
+	
 	public boolean getShowInfo(){
 		return showInfo;
 	}
@@ -42,6 +48,10 @@ public abstract class Place extends JComponent {
 		return marked;
 	}
 	
+	public String toString(){
+		//if ()										// kolla child
+		return color.toString() + position + name ;			// fÃ¶rst + PLATSTYP +  sist + BESKRIVNING
+	}
 	
 	
 }

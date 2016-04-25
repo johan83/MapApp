@@ -10,7 +10,7 @@ public class DescribedPlace extends Place{
 		
 	}
 
-	public DescribedPlace(String name, Position position, TravelCategory color, String description){
+	public DescribedPlace(String name, Position position, TravelCategory color, String description){		// Om vi ska sätta kategori via Place, behövs inte denna konstruktor..!?
 		super(name, position, color);
 		this.description = description;
 		
