@@ -4,28 +4,28 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 public class Places {
 	
-	private Map<Position,Place> placesByPosition;
 	private Map<String,List<Place>> placesByName;
 	private Map<Category,List<Place>> placesByCategory;
 	private Set<Place> markedPlaces;
 	
-	private Places(Map<Position, Place> placesByPosition, Map<String,List<Place>> placesByName, Map<Category,List<Place>> placesByCategory, Set<Place> markedPlaces){
-		this.placesByPosition = placesByPosition;
+	private Places(Map<String,List<Place>> placesByName, Map<Category,List<Place>> placesByCategory, Set<Place> markedPlaces){
 		this.placesByName = placesByName;
 		this.placesByCategory = placesByCategory;
 		this.markedPlaces = markedPlaces;
 	}
 	public static Places createPlaces(){
-		return new Places(new HashMap<>(),new HashMap<>(),new HashMap<>(),new HashSet<>());
+		return new Places(new HashMap<>(),new HashMap<>(),new HashSet<>());
 	}
 	
-	public Place add(Place place){
+	public void add(Place place){
 		place.setPlaces(this);
 		Position pos = place.getPosition();
 		String name = place.getName();
@@ -44,15 +44,11 @@ public class Places {
 		if(!cats.contains(place))
 			cats.add(place);
 		placesByCategory.put(cat, cats);
-				
-		return placesByPosition.put(pos, place);
 	}
 	public void remove(Place place){
-		Position pos = place.getPosition();
 		String name = place.getName();
 		Category cat = place.getCategory();
 		
-		placesByPosition.remove(pos);
 		List<Place> names = placesByName.get(name);
 		names.remove(place);		
 		List<Place> cats = placesByCategory.get(cat);
@@ -63,11 +59,9 @@ public class Places {
 		Place[] toReturn = markedPlaces.toArray(new Place[markedPlaces.size()]);
 		for(Iterator<Place> i = markedPlaces.iterator(); i.hasNext();){
 			Place place = i.next();
-			Position pos = place.getPosition();
 			String name = place.getName();
 			Category cat = place.getCategory();
 			
-			placesByPosition.remove(pos);
 			List<Place> names = placesByName.get(name);
 			names.remove(place);		
 			List<Place> cats = placesByCategory.get(cat);
@@ -77,8 +71,15 @@ public class Places {
 		}
 		return toReturn;
 	}
-	public Map<Position,Place> getAllPlaces(){
-		return placesByPosition;
+	public Place[] getAllPlaces(){
+		List<Place> tempPlaces = new ArrayList<Place>();
+		for(Entry<String, List<Place>> entry : placesByName.entrySet()){
+			for(Place p : entry.getValue()){				
+				if(!tempPlaces.contains(p))
+					tempPlaces.add(p);								
+			}
+		}
+		return tempPlaces.toArray(new Place[tempPlaces.size()]);
 	}
 	public void setVisibleByCategory(Category cat, boolean visible){
 		List<Place> places = placesByCategory.get(cat);
@@ -118,14 +119,6 @@ public class Places {
 	}
 	public void setVisibilityByPlace(Place p,boolean visible){
 		p.setVisible(visible);
-	}
-	public void setVisibilityByPosition(Position pos){
-		Place place = getPlaceByPosition(pos);
-		if(place != null)
-			place.setVisible(true);
-	}
-	public Place getPlaceByPosition(Position p){
-		return placesByPosition.get(p);
 	}
 	public List<Place> getPlacesByName(String s){
 		return placesByName.get(s);		

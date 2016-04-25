@@ -21,7 +21,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Scanner;
@@ -398,7 +397,7 @@ public class MapApp extends JFrame {
 	
 	private void savePlaces(File file){		
 		try(PrintWriter pw = new PrintWriter(new FileWriter(file,false))){
-			FileHandler.writePlacesToFile(places.getAllPlaces().entrySet(), pw);
+			FileHandler.writePlacesToFile(places.getAllPlaces(), pw);
 			changed = false;
 		} catch (IOException e) {
 			System.out.println("Error writing to file\n" + e.getMessage());
@@ -495,7 +494,7 @@ public class MapApp extends JFrame {
 		map.removeAll();
 	}
 
-	private void addPlacesFromArray(ArrayList<String> fromFile) {
+	private void addPlacesFromArray(List<String> fromFile) {
 		for (String s : fromFile) {
 			try{
 				String[] placeValues = s.split(",");
