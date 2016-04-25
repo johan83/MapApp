@@ -70,6 +70,7 @@ public class PlaceFactory{
 		}
 		return place;		
 	}
+	//Allows change of standard input for places
 	private static List<JLabel> getStandardLabels(){
 		List<JLabel> labels = new ArrayList<>();
 		labels.add(new JLabel("Name:"));		
