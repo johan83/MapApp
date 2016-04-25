@@ -42,7 +42,9 @@ public abstract class Place extends JComponent{
 		this.addMouseListener(new PlaceMarker());
 		setVisible(true);
 	}
-
+	public void removeFromParent(){
+		this.getParent().remove(this);
+	}
 	private void moveToFront() {
 		JLayeredPane parent = (JLayeredPane) this.getParent();
 		parent.moveToFront(this);

@@ -22,6 +22,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
@@ -196,7 +197,7 @@ public class MapApp extends JFrame {
 			
 			for(int x = startX; x<=endX;x++){
 				for(int y = startY; y<=endY;y++)
-					places.setVisibilityByPosition(Position.createPosition(x,y));				
+					map.getComponentAt(x, y).setVisible(true);			
 			}
 		}
 	}
@@ -277,7 +278,7 @@ public class MapApp extends JFrame {
 				return;
 			
 			places.unMarkAll();
-			ArrayList<Place> placesByName = places.getPlacesByName(searchInput.getText());
+			List<Place> placesByName = places.getPlacesByName(searchInput.getText());
 			if(placesByName == null)
 				return;
 			
@@ -312,14 +313,10 @@ public class MapApp extends JFrame {
 	class RemoveListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Place[] toRemove = removeMarked();
-			if(toRemove == null)
-				return;
-			for(Place p : toRemove)
-				map.remove(p);
-			
+			if(removeMarked() == null)
+				return;		
 			map.repaint();
-			changed = true;
+			changed = true;	
 		}
 	}
 	private void clearMarked(){
@@ -397,15 +394,13 @@ public class MapApp extends JFrame {
 				savePlaces(fileChooser.getSelectedFile());		
 		}
 	}
-	private void savePlaces(File file){ 
-		if(file.exists())
-			file.delete();
-		
-		try(PrintWriter pw = new PrintWriter(new FileWriter(file,true))){
+	
+	private void savePlaces(File file){		
+		try(PrintWriter pw = new PrintWriter(new FileWriter(file,false))){
 			FileHandler.writePlacesToFile(places.getAllPlaces().entrySet(), pw);
 			changed = false;
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Error writing to file\n" + e.getMessage());
 		}
 	}
 
@@ -422,9 +417,8 @@ public class MapApp extends JFrame {
 
 	private void queryChangedExit() {
 		int choice = showMessage("Unsaved changes, exit anyway?","Exit");
-		if (choice == JOptionPane.OK_OPTION) {
-			exitWithoutSaving();
-		}
+		if (choice == JOptionPane.OK_OPTION)
+			exitWithoutSaving();		
 	}
 
 	private void checkedStop() {
