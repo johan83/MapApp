@@ -45,6 +45,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import places.Place.PlaceType;
@@ -58,8 +59,10 @@ public class MapApp extends JFrame {
 	public static final String title = "MapApp";
 	private static final int WHAT_IS_HERE_GRID_SIZE = 21;
 	
+	//for convenience
 	private static FileNameExtensionFilter pictureFilter = new FileNameExtensionFilter("Pictures", "png", "jpg", "jpeg");
 	private static FileNameExtensionFilter placeFilter = new FileNameExtensionFilter("Places", "places");
+	private JFileChooser fileChooser;
 
 	private JComboBox<PlaceType> newPlaceChooser;
 	private JTextField searchInput;
@@ -71,7 +74,6 @@ public class MapApp extends JFrame {
 	private WhatIsHereListener WISListener;
 	private NewPlaceListener comboListener;
 
-	private JFileChooser fileChooser;
 	private Places places;
 
 	private boolean changed;
