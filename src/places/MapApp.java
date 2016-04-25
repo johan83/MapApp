@@ -45,13 +45,12 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import places.Place.PlaceType;
 /*
  * TODO:
- * make category object so less conversions and interpretations need to be done
+ * 
  */
 
 @SuppressWarnings("serial")
@@ -162,21 +161,22 @@ public class MapApp extends JFrame {
 			Dimension mapSize = map.getPreferredSize();
 			if(mapSize.width < pos.getX() || mapSize.height < pos.getY())
 				return;
-			
 			Category cat = Category.getCategoryInstance("None");
 			if(list.getSelectedValue() != null)
 				cat = list.getSelectedValue();
-			
+			PlaceData data = PlaceData.createPlaceData(places)
+					.category(cat)
+					.position(pos);			
 			PlaceType type = (PlaceType) newPlaceChooser.getSelectedItem();
-			Place place = PlaceFactory.createQueriedPlace(type, MapApp.this, pos, cat);
 			
+			Place place = PlaceFactory.createQueriedPlace(type, MapApp.this, data);
 			addPlace(place);
 			changed = true;
 			
 			map.repaint();
 		}
 	}
-	private void addPlace(Place p){
+	private void addPlace(Place p){		
 		places.add(p);
 		map.add(p);
 	}
@@ -505,16 +505,12 @@ public class MapApp extends JFrame {
 				Category cat;
 				cat = Category.getCategoryInstance(placeValues[1]);
 				
-				Place place = null;
-				switch (placeValues[0]) {
-				case "Named":
-					place = PlaceFactory.createSafeNamedPlace(name, pos, cat);
-					break;
-				case "Described":
-					String description = placeValues[5];
-					place = PlaceFactory.createSafeDescribedPlace(name, pos, cat, description);			
-					break;
-				}
+				PlaceData data = PlaceData.createPlaceData(places)
+						.name(name)
+						.position(pos)
+						.category(cat);
+				
+				Place place = PlaceFactory.createSafePlace(PlaceType.valueOf(placeValues[0]), data);
 				if(place != null)
 					addPlace(place);
 			}catch(NumberFormatException nfe){

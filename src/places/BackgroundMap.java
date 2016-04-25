@@ -13,6 +13,7 @@ class BackgroundMap extends JLayeredPane {
 	private BackgroundMap(){
 		setLayout(null);
 	}
+	//Factory method
 	public static BackgroundMap createMap(){
 		return new BackgroundMap();
 	}

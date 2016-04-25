@@ -11,9 +11,23 @@ public class DescribedPlace extends Place{
 
 	private String description;
 
-	public DescribedPlace(String name, Position position, Category color, String description){
+	private DescribedPlace(String name, Position position, Category color, String description){
 		super(name, position, color, PlaceType.Described);
 		this.description = description;
+	}
+	
+	public static DescribedPlace createSafeDescribedPlace(String name, Position pos, Category cat, String desc){
+		DescribedPlace place = null;
+		
+		try{
+			place = new DescribedPlace(name,pos,cat,desc);
+		}catch(IllegalArgumentException e){
+			System.out.println("Wrong arguments supplied\n" + e.getMessage());			
+		}catch(NullPointerException e){
+			System.out.println("Null argument\n" + e.getMessage());				
+		}
+		
+		return place;
 	}
 
 	@Override

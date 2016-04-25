@@ -6,8 +6,21 @@ import java.awt.Rectangle;
 @SuppressWarnings("serial")
 public class NamedPlace extends Place{
 	
-	public NamedPlace(String name, Position position, Category color){
+	private NamedPlace(String name, Position position, Category color){
 		super(name, position, color,PlaceType.Named);
+	}
+	public static NamedPlace createSafeNamedPlace(String name, Position pos, Category cat){
+		NamedPlace place = null;
+		
+		try{
+			place = new NamedPlace(name,pos,cat);
+		}catch(IllegalArgumentException e){
+			e.printStackTrace();			
+		}catch(NullPointerException e){
+			e.printStackTrace();			
+		}
+		
+		return place;
 	}
 
 	@Override
