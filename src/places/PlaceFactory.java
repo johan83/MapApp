@@ -12,14 +12,12 @@ import javax.swing.JTextField;
 
 import places.Place.PlaceType;
 
-public class PlaceFactory implements PlaceFactoryImp{
-	private PlaceFactory(){
-	}
+public class PlaceFactory{
 	
 	public static PlaceFactory createFactory(){
 		return new PlaceFactory();
 	}
-	public NamedPlace createSafeNamedPlace(String name, Position pos, Category cat){
+	public static NamedPlace createSafeNamedPlace(String name, Position pos, Category cat){
 		NamedPlace place = null;
 		
 		try{
@@ -33,7 +31,7 @@ public class PlaceFactory implements PlaceFactoryImp{
 		return place;
 	}
 	
-	public DescribedPlace createSafeDescribedPlace(String name, Position pos, Category cat, String desc){
+	public static DescribedPlace createSafeDescribedPlace(String name, Position pos, Category cat, String desc){
 		DescribedPlace place = null;
 		
 		try{
@@ -46,7 +44,7 @@ public class PlaceFactory implements PlaceFactoryImp{
 		
 		return place;
 	}
-	public Place createQueriedPlace(PlaceType type, Component parent, Position pos, Category cat){
+	public static Place createQueriedPlace(PlaceType type, Component parent, Position pos, Category cat){
 		switch(type){
 		case Named:
 			return createQueriedNamedPlace(parent,pos,cat);

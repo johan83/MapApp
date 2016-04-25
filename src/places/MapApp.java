@@ -57,7 +57,6 @@ import places.Place.PlaceType;
 public class MapApp extends JFrame {
 	public static final String title = "MapApp";
 	private static final int WHAT_IS_HERE_GRID_SIZE = 21;
-	private static final PlaceFactoryImp placeFactory = PlaceFactory.createFactory();	
 	
 	private static FileNameExtensionFilter pictureFilter = new FileNameExtensionFilter("Pictures", "png", "jpg", "jpeg");
 	private static FileNameExtensionFilter placeFilter = new FileNameExtensionFilter("Places", "places");
@@ -167,7 +166,7 @@ public class MapApp extends JFrame {
 				cat = list.getSelectedValue();
 			
 			PlaceType type = (PlaceType) newPlaceChooser.getSelectedItem();
-			Place place = placeFactory.createQueriedPlace(type, MapApp.this, pos, cat);
+			Place place = PlaceFactory.createQueriedPlace(type, MapApp.this, pos, cat);
 			
 			addPlace(place);
 			changed = true;
@@ -507,11 +506,11 @@ public class MapApp extends JFrame {
 				Place place = null;
 				switch (placeValues[0]) {
 				case "Named":
-					place = placeFactory.createSafeNamedPlace(name, pos, cat);
+					place = PlaceFactory.createSafeNamedPlace(name, pos, cat);
 					break;
 				case "Described":
 					String description = placeValues[5];
-					place = placeFactory.createSafeDescribedPlace(name, pos, cat, description);			
+					place = PlaceFactory.createSafeDescribedPlace(name, pos, cat, description);			
 					break;
 				}
 				if(place != null)
