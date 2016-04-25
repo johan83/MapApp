@@ -57,6 +57,9 @@ public class MapApp extends JFrame {
 	public static final String title = "MapApp";
 	private static final int WHAT_IS_HERE_GRID_SIZE = 21;
 	private static final PlaceFactoryImp placeFactory = PlaceFactory.createFactory();	
+	
+	private static FileNameExtensionFilter pictureFilter = new FileNameExtensionFilter("Pictures", "png", "jpg", "jpeg");
+	private static FileNameExtensionFilter placeFilter = new FileNameExtensionFilter("Places", "places");
 
 	private JComboBox<PlaceType> newPlaceChooser;
 	private JTextField searchInput;
@@ -67,9 +70,6 @@ public class MapApp extends JFrame {
 	
 	private WhatIsHereListener WISListener;
 	private NewPlaceListener comboListener;
-	
-	private FileNameExtensionFilter pictureFilter = new FileNameExtensionFilter("Pictures", "png", "jpg", "jpeg");
-	private FileNameExtensionFilter placeFilter = new FileNameExtensionFilter("Places", "places");
 
 	private JFileChooser fileChooser;
 	private Places places;
@@ -132,7 +132,7 @@ public class MapApp extends JFrame {
 
 		mainView.add(populateUpperBar(new JPanel()), BorderLayout.NORTH);
 
-		map = Map.createMap(this);
+		map = Map.createMap();
 		map.addMouseListener(new WhatIsHereMapListener());
 		map.addMouseListener(new NewPlaceMapListener());
 		
@@ -167,10 +167,10 @@ public class MapApp extends JFrame {
 			
 			PlaceType type = (PlaceType) newPlaceChooser.getSelectedItem();
 			Place place = placeFactory.createQueriedPlace(type, MapApp.this, pos, cat);
-			if(place != null){
-				addPlace(place);
-				changed = true;
-			}
+			
+			addPlace(place);
+			changed = true;
+			
 			map.repaint();
 		}
 	}

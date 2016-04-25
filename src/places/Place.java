@@ -58,9 +58,9 @@ public abstract class Place extends JComponent{
 				places.setMarked(Place.this,!marked);
 				break;
 			case MouseEvent.BUTTON3:
-				if(showInfo)
-					Place.this.setBounds(position.getX() - sizeX / 2, position.getY() - sizeY, sizeX, sizeY);				
 				showInfo = !showInfo;
+				if(!showInfo)
+					Place.this.setBounds(position.getX() - sizeX / 2, position.getY() - sizeY, sizeX, sizeY);				
 				break;
 			}
 			moveToFront();
@@ -131,23 +131,23 @@ public abstract class Place extends JComponent{
 			int totalWidth = maxStringWidth + sizeX;
 			int fontHeight = g2d.getFontMetrics().getHeight();
 			
-			if (sizeY > fontHeight) {
+			if (sizeY > fontHeight)
 				this.setBounds(getX(), getY(), totalWidth, sizeY);
-			} else {
+			else 
 				this.setBounds(getX(), getY(), totalWidth, fontHeight);
-			}
+			
 			g2d.setColor(Color.WHITE);
 			Rectangle nameRect = new Rectangle(sizeX, 0, totalWidth, fontHeight);
 			g2d.fill(nameRect);
 
-			g2d.setColor(Color.BLACK);
-			// draw the text to the right of the polygon
-			g2d.drawString(name, sizeX, fontHeight);	
+			g2d.setColor(category.getColor());
+			g2d.drawString(name, sizeX, fontHeight);
 			
-			drawSpecial(g,nameRect);
+			drawSpecial(g,nameRect); 
 		}
 	}
-	abstract protected void drawSpecial(Graphics g,Rectangle nameRect);
+	
+	abstract protected void drawSpecial(Graphics g,Rectangle nameRect); //gives the name rectangle so that any subclass drawings can get location to draw from
 
 	@Override
 	public Dimension getMinimumSize() {
@@ -162,14 +162,16 @@ public abstract class Place extends JComponent{
 	public String toDb() {
 		String delim = ",";
 		String toDB = type +delim+ category +delim+ position.toDb() +delim+ name;
+		
 		String[] specials = getSpecialsToDb();
-		if(specials!=null){
-			for(String s : specials){
-				toDB += delim+ s;
-			}
-		}
+		if(specials == null || specials.length == 0)
+			return toDB;
+		for(String s : specials)
+			toDB += delim+ s;			
+		
 		return toDB;
 	}
+	
 	abstract String[] getSpecialsToDb();
 		
 	
