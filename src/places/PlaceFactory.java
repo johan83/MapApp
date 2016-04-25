@@ -20,8 +20,9 @@ public class PlaceFactory{
 			return NamedPlace.createSafeNamedPlace(data.getName(), data.getPosition(), data.getCat());
 		case Described:
 			return DescribedPlace.createSafeDescribedPlace(data.getName(), data.getPosition(), data.getCat(), data.getDescription());
+		default:
+			return null;
 		}
-		return null;
 	}
 	public static Place createQueriedPlace(PlaceType type, Component parent, PlaceData data){
 		switch(type){

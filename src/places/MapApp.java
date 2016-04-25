@@ -260,6 +260,8 @@ public class MapApp extends JFrame {
 		boolean active;
 		@Override
 		public void actionPerformed(ActionEvent ae) {
+			if(!map.hasImage())
+				return;
 			active = true;
 			MapApp.this.map.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 		}
@@ -280,7 +282,7 @@ public class MapApp extends JFrame {
 			places.unMarkAll();
 			List<Place> placesByName = places.getPlacesByName(searchInput.getText());
 			if(placesByName == null)
-				return;
+				return;	
 			
 			for(Place p : placesByName){
 				places.setMarked(p,true);
