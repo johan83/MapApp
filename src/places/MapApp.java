@@ -1,6 +1,5 @@
 package places;
 
-import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -21,12 +20,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -293,8 +288,9 @@ public class MapApp extends JFrame {
 			Dimension dim = kit.getBestCursorSize(squareSize, squareSize);
 			GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 			BufferedImage buffered = config.createCompatibleImage(dim.width,dim.height,Transparency.TRANSLUCENT);
-			Shape rectangle = new Rectangle(squareSize,squareSize);
 			Graphics2D g = buffered.createGraphics();
+			
+			Shape rectangle = new Rectangle(squareSize,squareSize);
 			g.setColor(Color.BLACK);
 			g.draw(rectangle);			
 			g.dispose();
