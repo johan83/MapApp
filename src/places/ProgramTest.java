@@ -135,12 +135,26 @@ public class ProgramTest extends JFrame{
 		nyPlatsPosition = new Position(mev.getX(), mev.getY());
 		
 		// STÄLLA TILLBAKA MUSPEKAREN!?
-		}
-		
+		}	
 		public Position getNyPlatsPosition(){
 			return nyPlatsPosition;
 		}
+		
+		private boolean mouse = false;
+		int hoverX;
+		int hoverY;
+		
+		
+		public void mouseEntered(MouseEvent mev){
+			hoverX = mev.getX();
+			hoverY = mev.getY();
+			Cursor c = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
+			
+			if(mapScrollbar.contains(hoverX,hoverY))
+			mapScrollbar.setCursor(c);
+		}
 	}
+	
 	
 	class ChoosePlaceTypeLyss implements ActionListener{
 		
@@ -151,9 +165,9 @@ public class ProgramTest extends JFrame{
 		public void actionPerformed(ActionEvent ave){
 			//ÄNDRA TILL CROSSHAIR Vid click på kartan, get position och använd i skapandet av en plats.
 			
-			setCursor(Cursor.CROSSHAIR_CURSOR);
-			mapScrollbar.addMouseListener(mouseLyss);			//SKA DEN ADDAS TILL MAPSCROLLBAR ELLER TILL BILDEN?		--> Ger Nullpointer om man inte laddat en bild först. fixa?!
 			
+			mapScrollbar.addMouseListener(mouseLyss);			//SKA DEN ADDAS TILL MAPSCROLLBAR ELLER TILL BILDEN?		--> Ger Nullpointer om man inte laddat en bild först. fixa?!
+			mapScrollbar.addMouseMotionListener(mouseLyss);
 			Position nyPlatsPosition = mouseLyss.getNyPlatsPosition();	// Position ska ändras till där användaren markerar på kartan.
 			
 			
