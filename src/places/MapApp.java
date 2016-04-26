@@ -278,7 +278,7 @@ public class MapApp extends JFrame {
 			if(places == null)
 				return;
 			active = true;
-			setCustomMouse();
+			setCustomSquareCursor(WHAT_IS_HERE_GRID_SIZE);
 //			MapApp.this.map.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 		}
 		public boolean isActive(){
@@ -288,18 +288,18 @@ public class MapApp extends JFrame {
 			active = false;
 			MapApp.this.map.setCursor(Cursor.getDefaultCursor());
 		}
-		private void setCustomMouse(){
+		private void setCustomSquareCursor(int squareSize){
 			Toolkit kit = Toolkit.getDefaultToolkit();
-			Dimension dim = kit.getBestCursorSize(WHAT_IS_HERE_GRID_SIZE, WHAT_IS_HERE_GRID_SIZE);
+			Dimension dim = kit.getBestCursorSize(squareSize, squareSize);
 			GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 			BufferedImage buffered = config.createCompatibleImage(dim.width,dim.height,Transparency.TRANSLUCENT);
-			Shape rectangle = new Rectangle(WHAT_IS_HERE_GRID_SIZE,WHAT_IS_HERE_GRID_SIZE);
+			Shape rectangle = new Rectangle(squareSize,squareSize);
 			Graphics2D g = buffered.createGraphics();
 			g.setColor(Color.BLACK);
 			g.draw(rectangle);			
 			g.dispose();
-			int center = WHAT_IS_HERE_GRID_SIZE /2;
-			if(WHAT_IS_HERE_GRID_SIZE > dim.width)
+			int center = squareSize /2;
+			if(squareSize > dim.width)
 				center = dim.height/2;
 			Cursor cursor = kit.createCustomCursor(buffered, new Point(center,center), "custom");
 			MapApp.this.map.setCursor(cursor);			
