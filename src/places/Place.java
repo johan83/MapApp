@@ -17,13 +17,13 @@ import javax.swing.JLayeredPane;
 
 @SuppressWarnings("serial")
 public abstract class Place extends JComponent{
-	//Allowed types of places, if place is extended the class must be in here
+	//Allowed types of places, if place is extended, the desired name must be in here and passed in super()
 	public enum PlaceType{ Named, Described };
 	
 
-	private PlaceType type;
+	private final PlaceType type;
 	private String name;
-	private Position position;
+	private final Position position;
 	private Category category;
 	private boolean showInfo, marked;
 	private int sizeX, sizeY;

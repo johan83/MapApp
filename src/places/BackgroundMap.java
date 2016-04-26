@@ -32,8 +32,7 @@ class BackgroundMap extends JLayeredPane {
 
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		if (map != null){
-			g.drawImage(map.getImage(), 0, 0, map.getIconWidth(), map.getIconHeight(), this);
-		}
+		if (map != null)
+			g.drawImage(map.getImage(), 0, 0, map.getIconWidth(), map.getIconHeight(), this);		
 	}
 }

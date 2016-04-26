@@ -37,11 +37,11 @@ public class DescribedPlace extends Place{
 	}
 
 	@Override
-	protected void drawSpecial(Graphics g, Rectangle nameRect) {
+	protected void drawSpecial(Graphics g, Rectangle nameRect) { //FIXME move calculations out of the method
 		Graphics2D g2d = (Graphics2D) g;
 		String[] textToDisplay = description.split("\n");
 
-		int maxStringWidth = 0; // width = the rendered width of the text _NOT_ length
+		int maxStringWidth = 0; // = the rendered width of the text _NOT_ length
 		for (String s : textToDisplay) {
 			Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(s, g2d);
 			int thisStringWidth = (int) bounds.getWidth();
@@ -50,7 +50,7 @@ public class DescribedPlace extends Place{
 		}
 		int totalWidth = maxStringWidth + getSizeX();
 		int fontHeight = g2d.getFontMetrics().getHeight();
-		int textHeight = fontHeight * textToDisplay.length; //height of all rows
+		int textHeight = fontHeight * textToDisplay.length; 
 		int totalHeight = textHeight + nameRect.height;
 		
 		int maxBoundsWidth = nameRect.width;
