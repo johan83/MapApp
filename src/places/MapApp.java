@@ -1,20 +1,33 @@
 package places;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.Toolkit;
+import java.awt.Transparency;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -262,8 +275,11 @@ public class MapApp extends JFrame {
 		public void actionPerformed(ActionEvent ae) {
 			if(!map.hasImage())
 				return;
+			if(places == null)
+				return;
 			active = true;
-			MapApp.this.map.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+			setCustomMouse();
+//			MapApp.this.map.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 		}
 		public boolean isActive(){
 			return active;
@@ -271,6 +287,22 @@ public class MapApp extends JFrame {
 		public void deActivate(){
 			active = false;
 			MapApp.this.map.setCursor(Cursor.getDefaultCursor());
+		}
+		private void setCustomMouse(){
+			Toolkit kit = Toolkit.getDefaultToolkit();
+			Dimension dim = kit.getBestCursorSize(WHAT_IS_HERE_GRID_SIZE, WHAT_IS_HERE_GRID_SIZE);
+			GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+			BufferedImage buffered = config.createCompatibleImage(dim.width,dim.height,Transparency.TRANSLUCENT);
+			Shape rectangle = new Rectangle(WHAT_IS_HERE_GRID_SIZE,WHAT_IS_HERE_GRID_SIZE);
+			Graphics2D g = buffered.createGraphics();
+			g.setColor(Color.BLACK);
+			g.draw(rectangle);			
+			g.dispose();
+			int center = WHAT_IS_HERE_GRID_SIZE /2;
+			if(WHAT_IS_HERE_GRID_SIZE > dim.width)
+				center = dim.height/2;
+			Cursor cursor = kit.createCustomCursor(buffered, new Point(center,center), "custom");
+			MapApp.this.map.setCursor(cursor);			
 		}
 	}
 	class SearchPlaceListener implements ActionListener{
