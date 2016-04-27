@@ -14,6 +14,8 @@ public abstract class Place extends JComponent {
 	private TravelCategory color;// kategori - buss, tåg, t-bana
 	private boolean showInfo = false;
 	private boolean marked = false;
+	private int[] xLed = {0,100,100};
+	private int[] yLed = {0,0,100};
 	
 	public Place(String name, Position position){
 		this.name = name;
@@ -78,7 +80,11 @@ public abstract class Place extends JComponent {
 	private void paintPlace(Graphics g) {
 		super.paintComponent(g);
 		g.setColor(Color.BLACK);
-		g.fillRect(position.getX(),position.getY(),250,250);				// EX målning... ska sen bli en polygon --> trekant.
+//		g.fillRect(position.getX(),position.getY(),250,250);	Denna gör rektangel.	// EX målning... ska sen bli en polygon --> trekant.
+		g.drawPolygon(xLed, yLed, 3);
+//		int[] xLed = {position.getX() - 25,position.getX() + 25,position.getX()};
+//		int[] yLed = {position.getY() -25 ,position.getY() -25 ,position.getY()}; ----> Experiment!
+//		g.drawPolygon(xLed, yLed, 3);
 		
 		
 	}
