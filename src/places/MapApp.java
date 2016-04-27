@@ -67,7 +67,7 @@ public class MapApp extends JFrame {
 	private static final String title = "MapApp";
 	private static final int 
 			WHAT_IS_HERE_DEFAULT_GRID_SIZE = 21,
-			WHAT_IS_HERE_MIN_GRID_SIZE = 11,
+			WHAT_IS_HERE_MIN_GRID_SIZE = 5,
 			WHAT_IS_HERE_MAX_GRID_SIZE = 32;
 	private static Integer cursorSize; 
 	
@@ -165,7 +165,7 @@ public class MapApp extends JFrame {
 		public void mouseWheelMoved(MouseWheelEvent mwe) {
 			if(!whatIsHereListener.isActive())
 				return;			
-			whatIsHereListener.updateCustomCursorSize(mwe.getWheelRotation());			
+			whatIsHereListener.increaseCustomCursorSize(mwe.getWheelRotation());			
 		}
 		
 	}
@@ -258,11 +258,12 @@ public class MapApp extends JFrame {
 		JButton whatIsHereButton = new JButton("What is here?");
 		whatIsHereListener = new WhatIsHereListener();
 		whatIsHereButton.addActionListener(whatIsHereListener);		
-		whatIsHereButton.setToolTipText("<html>"+
-				"Default area is "+WHAT_IS_HERE_DEFAULT_GRID_SIZE+"px<br/>"
-				+ "Scroll to grow and shrink<br/>"
-				+ "Min 10px, max 32px"
-				+"</html>");
+		whatIsHereButton.setToolTipText(
+				"<html>"+
+				"Default area is "+WHAT_IS_HERE_DEFAULT_GRID_SIZE+"px<br/>"+
+				"Scroll to grow and shrink<br/>"+
+				"Min "+WHAT_IS_HERE_MIN_GRID_SIZE+"px "+"max "+WHAT_IS_HERE_MAX_GRID_SIZE+" px"+
+				"</html>");
 		upperBar.add(whatIsHereButton);
 
 		return upperBar;
@@ -308,7 +309,6 @@ public class MapApp extends JFrame {
 		private void setCustomSquareCursor(int squareSize){
 			Toolkit kit = Toolkit.getDefaultToolkit();
 			Dimension dim = kit.getBestCursorSize(squareSize, squareSize);
-			System.out.println(dim);
 			GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 			BufferedImage buffered = config.createCompatibleImage(dim.width,dim.height,Transparency.TRANSLUCENT);
 			Graphics2D g = buffered.createGraphics();
@@ -321,11 +321,11 @@ public class MapApp extends JFrame {
 			Cursor cursor = kit.createCustomCursor(buffered, new Point(center,center), "custom");
 			MapApp.this.map.setCursor(cursor);			
 		}
-		public void updateCustomCursorSize(int newSize){
+		public void increaseCustomCursorSize(int newSize){
 			int tempNewSize = cursorSize+newSize;
 			if(!(tempNewSize > WHAT_IS_HERE_MIN_GRID_SIZE && tempNewSize < WHAT_IS_HERE_MAX_GRID_SIZE))
 				return;
-			cursorSize +=newSize;
+			cursorSize += newSize;
 			setCustomSquareCursor(cursorSize);
 		}
 	}
