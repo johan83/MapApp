@@ -257,7 +257,12 @@ public class MapApp extends JFrame {
 
 		JButton whatIsHereButton = new JButton("What is here?");
 		whatIsHereListener = new WhatIsHereListener();
-		whatIsHereButton.addActionListener(whatIsHereListener);
+		whatIsHereButton.addActionListener(whatIsHereListener);		
+		whatIsHereButton.setToolTipText("<html>"+
+				"Default area is "+WHAT_IS_HERE_DEFAULT_GRID_SIZE+"px<br/>"
+				+ "Scroll to grow and shrink<br/>"
+				+ "Min 10px, max 32px"
+				+"</html>");
 		upperBar.add(whatIsHereButton);
 
 		return upperBar;
