@@ -13,8 +13,10 @@ public class ProgramTest extends JFrame{
 	private String longName; 
 	private File valdFil;
 	public MouseLyss mouseLyss;
-	private ImageIcon image;
 	private ImageArea imageArea;
+	private ImageIcon image;
+	private String name;
+	private String description;
 	
 	private Registry register = new Registry();
 
@@ -113,6 +115,67 @@ public class ProgramTest extends JFrame{
 	}
 	
 	/*------------------------------------------------------------- METHODS -----------------------------------------------------------------------------------*/
+	private TravelCategory choosePlaceCategory(){
+		
+		if(!(categoryList.isSelectionEmpty())){
+			String color = (String)categoryList.getSelectedValue();
+			
+			for(TravelCategory c : TravelCategory.values()){
+				if(color.equalsIgnoreCase(c.name())){				
+				return c;	
+				}
+			}
+		}
+		return null;
+	}
+	
+	private String createNamedPlace(){
+		JPanel namedPlacePanel= new JPanel();
+		
+		namedPlacePanel.setLayout(new BoxLayout(namedPlacePanel, BoxLayout.Y_AXIS));
+		namedPlacePanel.add(new JLabel("Platsens namn:"));
+		
+		
+		String ifyllt = JOptionPane.showInputDialog(null, namedPlacePanel,  "New Named Place", JOptionPane.QUESTION_MESSAGE);
+		if(ifyllt.length()> 0){
+			return ifyllt;
+		}
+		return null;
+	}
+	
+	private String[] createDescribedPlace(){
+		JPanel describedPlacePanel = new JPanel();
+		
+		JPanel rad1= new JPanel();
+		JPanel rad2 = new JPanel();
+		
+		JTextField nameField = new JTextField(10);
+		JTextField describeField = new JTextField(10);
+		
+		rad1.add(new JLabel("Platsens namn:"));
+		rad1.add(nameField);
+		
+		rad2.add(new JLabel("Description:"));
+		rad2.add(describeField);
+		
+		describedPlacePanel.setLayout(new BoxLayout(describedPlacePanel, BoxLayout.Y_AXIS));
+		describedPlacePanel.add(rad1);
+		describedPlacePanel.add(rad2);
+		
+		if(JOptionPane.showConfirmDialog(null, describedPlacePanel,  "New Described Place", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION){
+			
+			
+			String name = nameField.getText();
+			String description = describeField.getText();
+			
+			if(name.length()>0 && description.length()>0){
+				String[] nameAndDescription = {name, description};
+				return nameAndDescription;
+			}
+		}
+		return null;
+	}
+	
 	
 	private void avsluta(){
 		int ok = JOptionPane.OK_OPTION;
@@ -133,8 +196,6 @@ public class ProgramTest extends JFrame{
 	
 	class ImageArea extends JPanel{
 		
-		
-		
 		ImageArea(){
 			image = new ImageIcon(longName); 
 			setLayout(null);
@@ -143,142 +204,83 @@ public class ProgramTest extends JFrame{
 		protected void paintComponent(Graphics g){
 			super.paintComponent(g);
 			g.drawImage(image.getImage(), 0, 0, this);
-			
 		}
 	}
 	
 	
-	class MouseClicked extends MouseAdapter{
-		private Position nyPlatsPosition;
-		private int X;
-		private int Y;
-		
-		public void mouseClicked(MouseEvent mev){
-		nyPlatsPosition = new Position(mev.getX(), mev.getY());
-		X= mev.getX();
-		Y= mev.getY();
-		// STÄLLA TILLBAKA MUSPEKAREN!?
-		}	
-		
-		public Position getNyPlatsPosition(){
-			return nyPlatsPosition;
-		}
-		public int getX(){
-			return X;
-		}
-		public int getY(){
-			return Y;
-		}
-	}
+
 	
 	class MouseLyss extends MouseAdapter{
-	
-		
-		int hoverX;
-		int hoverY;
-		
+		int clickX;
+		int clickY;
+		Position pos;
+		Cursor c;
 		
 		public void mouseEntered(MouseEvent mev){
-			hoverX = mev.getX();
-			hoverY = mev.getY();
-			Cursor c = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
-			
-			if(mapScrollbar.contains(hoverX,hoverY)){
+			c = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
 			mapScrollbar.setCursor(c);
 			
+		}
+		
+		public void mouseClicked(MouseEvent mev){
+			Place nyPlats;
+			
+			if(name != null){
+				System.out.println(name);
+				
+				clickX = mev.getX();
+				clickY = mev.getY();
+				Position nyPlatsPosition = new Position(clickX, clickY);		
+				System.out.println(mev.getX());
+				
+				
+				if(nyPlatsPosition != null){
+					nyPlats = new NamedPlace(name , nyPlatsPosition);			
+					register.addPlace(nyPlats);				
+					imageArea.add(nyPlats, imageArea);
+					
+					System.out.println(nyPlats);
+					System.out.println((String)choosePlaceType.getSelectedItem());			//För att visa att det går!
+				}
+			}else{
+				System.out.println("Tom sträng"); // TEST ---> Funkar
+				return;
 			}
+		}
+		
+		public void mouseExited(MouseEvent mev){
+			c = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
+			mapScrollbar.setCursor(c);
+		}
+		
+		public Position getClick(){
+			pos = new Position (clickX, clickY);
+			return pos;
 		}
 	}
 	
 	
 	class ChoosePlaceTypeLyss implements ActionListener{
 		
-		Place nyPlats;
-		
 		public void actionPerformed(ActionEvent ave){
 			TravelCategory colorToUse;
 			mouseLyss = new MouseLyss();
-			MouseClicked posLyss = new MouseClicked();
-			mapScrollbar.addMouseListener(mouseLyss);			//SKA DEN ADDAS TILL MAPSCROLLBAR ELLER TILL BILDEN?		--> Ger Nullpointer om man inte laddat en bild först. fixa?!
-			//Position nyPlatsPosition = mouseLyss.getNyPlatsPosition();	// Position ska ändras till där användaren markerar på kartan.
-			
-			
-			
+			imageArea.addMouseListener(mouseLyss);			
 			/* ----------------------------------------NEDAN FUNKAR SO FAR--------------------------------------*/
-			
-			JPanel namedPlacePanel= new JPanel();
-			JPanel describedPlacePanel = new JPanel();
-	
-			JPanel rad1= new JPanel();
-			JPanel rad2 = new JPanel();
-			
-			JTextField textField = new JTextField(10);
-			JTextField describeField = new JTextField(10);
-			
-			rad1.add(new JLabel("Platsens namn:"));
-			
-			rad2.add(new JLabel("Description:"));
-			rad2.add(describeField);
-			
-			String name = textField.getText();
-			String description = describeField.getText();
 			
 			
 			if(choosePlaceType.getSelectedItem().equals(("NamedPlace"))){	
-				namedPlacePanel.setLayout(new BoxLayout(namedPlacePanel, BoxLayout.Y_AXIS));
-				namedPlacePanel.add(rad1);
-				
-				String ifyllt = JOptionPane.showInputDialog(null, namedPlacePanel,  "New Named Place", JOptionPane.QUESTION_MESSAGE);			// den här ska bli frågeformuläret
-				
-				if(ifyllt != null && ifyllt.length()>0){
-					System.out.println(ifyllt);	//TEST ---> funkar
-					mapScrollbar.addMouseListener(posLyss);		// spelar ingen roll om den sätts på mapScrollbar eller imageArea.. får inte till det.
-					
-					Position nyPlatsPosition = new Position(posLyss.getX(), posLyss.getY());		// börjar bli förvirrad, men borde läsa av att jag klickar innan plats skapas!
-					
-					System.out.println(nyPlatsPosition.getX());		// ---> NULL
-					System.out.println(posLyss.getNyPlatsPosition());		// ---> NULL
-					
-					if(nyPlatsPosition != null){
-						nyPlats = new NamedPlace(name , nyPlatsPosition);			// Denna måste sparas i en samling.	
-						register.addPlace(nyPlats);				// VÄNTA NU, DEN ADDERAR PLATSEN INNAN JAG HAR KLICKAT!
-						
-						
-						System.out.println((String)choosePlaceType.getSelectedItem());			//För att visa att det går!
-					}
-				}else{
-					System.out.println("Tom sträng"); // TEST ---> Funkar
-					return;
-				}
-					
-
-				
-				
-			}else if(choosePlaceType.getSelectedItem().equals("DescribedPlace")){
-				Position nyPlatsPosition = posLyss.getNyPlatsPosition();
-				describedPlacePanel.setLayout(new BoxLayout(describedPlacePanel, BoxLayout.Y_AXIS));
-				describedPlacePanel.add(rad1);
-				describedPlacePanel.add(rad2);
-				
-				JOptionPane.showMessageDialog(null, describedPlacePanel , "New Described Place", JOptionPane.QUESTION_MESSAGE);			//Frågeformuläret
-				
-				
-				
-				nyPlats = new DescribedPlace(name, nyPlatsPosition, description);
-				
-				System.out.println((String)choosePlaceType.getSelectedItem());			////För att visa att det går!
+				name = createNamedPlace();				
 			}
-			
-			if(!(categoryList.isSelectionEmpty())){
-				String color = (String)categoryList.getSelectedValue();
-				
-				for(TravelCategory c : TravelCategory.values()){
+			else if(choosePlaceType.getSelectedItem().equals("DescribedPlace")){
+				String[] nameAndDescription = createDescribedPlace();
+				if(nameAndDescription != null && nameAndDescription.length>0){
+					name = nameAndDescription[0];
+					description = nameAndDescription[1];
 					
-					if(color.equalsIgnoreCase(c.name())){				
-						colorToUse = c;
-						nyPlats.setCategory(colorToUse);
-						System.out.println("DEN NYA PLATSEN HAR NU FÅTT EN KATEGORI!!!");
-					}
+					System.out.println((String)choosePlaceType.getSelectedItem());			////För att visa att det går!
+					System.out.println(name);
+					System.out.println(description);
 				}
 			}
 		}
@@ -300,12 +302,11 @@ public class ProgramTest extends JFrame{
 			valdFil = jfc.getSelectedFile();
 			longName = valdFil.getAbsolutePath();
 			imageArea = new ImageArea();
-			mapScrollbar = new JScrollPane(new JLabel(image));//------------------------------- Har lyft ut ImageArea till instansvariabel för att kunna lägga PlaceGUI på den.	
-			// nu syns inte/ funkar inte scrollbaren... det gör den på JLabel varianten av en bild.
-			
+			imageArea.setSize(image.getIconWidth(),image.getIconHeight());
+			imageArea.setPreferredSize(new Dimension(image.getIconWidth(),image.getIconHeight())); //kan skapa platser utanför bilden.. :( 
+			mapScrollbar = new JScrollPane(imageArea);
 			centerPanel.add(mapScrollbar);								
-			centerPanel.validate();			// Nödvändig?
-			mapScrollbar.validate();		// Nödvändig?
+			centerPanel.validate();			
 			}			
 		}
 	}

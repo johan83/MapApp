@@ -14,7 +14,7 @@ public abstract class Place extends JComponent {
 	private TravelCategory color;// kategori - buss, tåg, t-bana
 	private boolean showInfo = false;
 	//private boolean visible; // behövs ej? JComponent -> setVisible()
-	private boolean marked;
+	private boolean marked = false;
 	
 	public Place(String name, Position position){
 		this.name = name;
@@ -42,7 +42,11 @@ public abstract class Place extends JComponent {
 	}
 	
 	public void setCategory(TravelCategory color){
+		try{
 		this.color = color;
+		}catch(NullPointerException e){
+			// Inget problem, då Place kan va kategorilös!
+		}
 	}
 	
 	
@@ -55,26 +59,23 @@ public abstract class Place extends JComponent {
 	
 	public String toString(){
 		//if ()										// kolla child
-		return color.toString() + position + name ;			// först + PLATSTYP +  sist + BESKRIVNING
+		return position + name ;			// först + PLATSTYP +  sist + BESKRIVNING
 	}
 	
 	@Override
 	protected void paintComponent(Graphics g){
-		super.paintComponent(g);
-		
-		g.fillRect(250,250,250,250);				// EX målning... ska sen bli en polygon --> trekant.
-		g.setColor(Color.BLACK);
-//		if(showInfo){
-//			paintPlaceInfo(g);
-//		}else{
-//			paintPlace(g);
-//		}
+		if(showInfo){
+			paintPlaceInfo(g);
+		}else{
+			paintPlace(g);
+		}
 	}
 	
 	private void paintPlace(Graphics g) {
-		g.fillRect(250,250,250,250);				// EX målning... ska sen bli en polygon --> trekant.
-		g.setColor(Color.BLACK);
+		super.paintComponent(g);
 		
+		g.fillRect(position.getX(),position.getY(),250,250);				// EX målning... ska sen bli en polygon --> trekant.
+		g.setColor(Color.BLACK);
 	}
 	protected abstract void paintPlaceInfo(Graphics g);
 		// OBS!  måste va abstract och definieras i varje given Place-child 

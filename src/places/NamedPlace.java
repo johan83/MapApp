@@ -1,5 +1,6 @@
 package places;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 public class NamedPlace extends Place{
@@ -13,7 +14,15 @@ public class NamedPlace extends Place{
 		
 	}
 	
-	protected void paintPlaceInfo(Graphics g){
+//	private void paintPlace(Graphics g) {
+//		super.paintComponent(g);
+//		
+//
+//		
+//	}
+	@Override
+	protected void paintPlaceInfo(Graphics g) {
+		// TODO Auto-generated method stub
 		
 	}
 }
