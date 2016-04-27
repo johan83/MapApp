@@ -357,7 +357,7 @@ public class MapApp extends JFrame {
 		@Override
 		public void focusLost(FocusEvent fe) {
 			String currentText = ((JTextField)fe.getComponent()).getText();
-			if(currentText == null || currentText.isEmpty())	
+			if(currentText == null || currentText.trim().isEmpty())	
 				((JTextField)fe.getComponent()).setText("Search");				
 		}
 	}
