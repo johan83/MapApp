@@ -83,7 +83,7 @@ public class MapApp extends JFrame {
 	private JScrollPane mapPane;
 	private JList<Category> list;
 	
-	private WhatIsHereListener WISListener;
+	private WhatIsHereListener whatIsHereListener;
 	private NewPlaceListener comboListener;
 
 	private Places places;
@@ -149,7 +149,7 @@ public class MapApp extends JFrame {
 		map = BackgroundMap.createMap();
 		map.addMouseListener(new WhatIsHereMapListener());
 		map.addMouseListener(new NewPlaceMapListener());
-		map.addMouseWheelListener(new newPlaceCustomCursorSizeListener());
+		map.addMouseWheelListener(new WhatIsHereSearchSizeListener());
 		
 		mapPane = new JScrollPane(map, 
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -160,12 +160,12 @@ public class MapApp extends JFrame {
 
 		return mainView;
 	}
-	class newPlaceCustomCursorSizeListener implements MouseWheelListener{
+	class WhatIsHereSearchSizeListener implements MouseWheelListener{
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent mwe) {
-			if(!WISListener.isActive())
+			if(!whatIsHereListener.isActive())
 				return;			
-			WISListener.updateCustomCursorSize(mwe.getWheelRotation());			
+			whatIsHereListener.updateCustomCursorSize(mwe.getWheelRotation());			
 		}
 		
 	}
@@ -206,9 +206,9 @@ public class MapApp extends JFrame {
 	class WhatIsHereMapListener extends MouseAdapter{
 		@Override
 		public void mouseClicked(MouseEvent e){
-			if(!WISListener.isActive())
+			if(!whatIsHereListener.isActive())
 				return;
-			WISListener.deActivate();
+			whatIsHereListener.deActivate();
 			if(places == null)
 				return;
 			
@@ -256,8 +256,8 @@ public class MapApp extends JFrame {
 		upperBar.add(removeButton);
 
 		JButton whatIsHereButton = new JButton("What is here?");
-		WISListener = new WhatIsHereListener();
-		whatIsHereButton.addActionListener(WISListener);
+		whatIsHereListener = new WhatIsHereListener();
+		whatIsHereButton.addActionListener(whatIsHereListener);
 		upperBar.add(whatIsHereButton);
 
 		return upperBar;
