@@ -20,6 +20,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -62,8 +64,12 @@ import places.Place.PlaceType;
 
 @SuppressWarnings("serial")
 public class MapApp extends JFrame {
-	public static final String title = "MapApp";
-	private static final int WHAT_IS_HERE_GRID_SIZE = 21;
+	private static final String title = "MapApp";
+	private static final int 
+			WHAT_IS_HERE_DEFAULT_GRID_SIZE = 21,
+			WHAT_IS_HERE_MIN_GRID_SIZE = 11,
+			WHAT_IS_HERE_MAX_GRID_SIZE = 32;
+	private static Integer cursorSize; 
 	
 	//for convenience
 	private static FileNameExtensionFilter pictureFilter = new FileNameExtensionFilter("Pictures", "png", "jpg", "jpeg");
@@ -143,6 +149,7 @@ public class MapApp extends JFrame {
 		map = BackgroundMap.createMap();
 		map.addMouseListener(new WhatIsHereMapListener());
 		map.addMouseListener(new NewPlaceMapListener());
+		map.addMouseWheelListener(new newPlaceCustomCursorSizeListener());
 		
 		mapPane = new JScrollPane(map, 
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -152,6 +159,15 @@ public class MapApp extends JFrame {
 		mainView.add(populatePlaceCategoryChooser(new JPanel()), BorderLayout.EAST);
 
 		return mainView;
+	}
+	class newPlaceCustomCursorSizeListener implements MouseWheelListener{
+		@Override
+		public void mouseWheelMoved(MouseWheelEvent mwe) {
+			if(!WISListener.isActive())
+				return;			
+			WISListener.updateCustomCursorSize(mwe.getWheelRotation());			
+		}
+		
 	}
 	class NewPlaceMapListener extends MouseAdapter{
 		@Override
@@ -197,7 +213,7 @@ public class MapApp extends JFrame {
 				return;
 			
 			//this will search for pixels outside of the map border but nothing >should< be there anyway
-			int gridsize = WHAT_IS_HERE_GRID_SIZE;
+			int gridsize = cursorSize;
 			int startX = (int) (e.getX() - Math.ceil(gridsize/2));
 			int endX = startX + gridsize;
 			int startY = (int) (e.getY() - Math.ceil(gridsize/2));
@@ -273,7 +289,8 @@ public class MapApp extends JFrame {
 			if(places == null)
 				return;
 			active = true;
-			setCustomSquareCursor(WHAT_IS_HERE_GRID_SIZE);
+			cursorSize = WHAT_IS_HERE_DEFAULT_GRID_SIZE;
+			setCustomSquareCursor(WHAT_IS_HERE_DEFAULT_GRID_SIZE);
 //			MapApp.this.map.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 		}
 		public boolean isActive(){
@@ -286,6 +303,7 @@ public class MapApp extends JFrame {
 		private void setCustomSquareCursor(int squareSize){
 			Toolkit kit = Toolkit.getDefaultToolkit();
 			Dimension dim = kit.getBestCursorSize(squareSize, squareSize);
+			System.out.println(dim);
 			GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 			BufferedImage buffered = config.createCompatibleImage(dim.width,dim.height,Transparency.TRANSLUCENT);
 			Graphics2D g = buffered.createGraphics();
@@ -295,10 +313,15 @@ public class MapApp extends JFrame {
 			g.draw(rectangle);			
 			g.dispose();
 			int center = squareSize /2;
-			if(squareSize > dim.width)
-				center = dim.height/2;
 			Cursor cursor = kit.createCustomCursor(buffered, new Point(center,center), "custom");
 			MapApp.this.map.setCursor(cursor);			
+		}
+		public void updateCustomCursorSize(int newSize){
+			int tempNewSize = cursorSize+newSize;
+			if(!(tempNewSize > WHAT_IS_HERE_MIN_GRID_SIZE && tempNewSize < WHAT_IS_HERE_MAX_GRID_SIZE))
+				return;
+			cursorSize +=newSize;
+			setCustomSquareCursor(cursorSize);
 		}
 	}
 	class SearchPlaceListener implements ActionListener{
