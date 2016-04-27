@@ -14,8 +14,8 @@ public abstract class Place extends JComponent {
 	private TravelCategory color;// kategori - buss, tåg, t-bana
 	private boolean showInfo = false;
 	private boolean marked = false;
-	private int[] xLed = {0,100,100};
-	private int[] yLed = {0,0,100};
+	private int[] xLed = {0,50,100};
+	private int[] yLed = {0,100,0};
 	
 	public Place(String name, Position position){
 		this.name = name;
