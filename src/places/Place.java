@@ -13,20 +13,24 @@ public abstract class Place extends JComponent {
 	private Position position;
 	private TravelCategory color;// kategori - buss, tåg, t-bana
 	private boolean showInfo = false;
-	//private boolean visible; // behövs ej? JComponent -> setVisible()
 	private boolean marked = false;
 	
 	public Place(String name, Position position){
 		this.name = name;
 		this.position = position;
 		setVisible(true);
+		setBounds(position.getX(), position.getY(), 250, 250);
+		setPreferredSize (new Dimension(250,250));
+		setMaximumSize (new Dimension(250,250));
+		setMinimumSize (new Dimension(250,250));
 		
 	}
-	public Place(String name, Position position, TravelCategory color){
-		this(name, position);
-		this.color = color;
-		setVisible(true);
-	}
+//	public Place(String name, Position position, TravelCategory color){
+//		this(name, position);
+//		this.color = color;
+//		setVisible(true);
+//
+//	}
 	
 	public String getName(){
 		return name;
@@ -73,9 +77,10 @@ public abstract class Place extends JComponent {
 	
 	private void paintPlace(Graphics g) {
 		super.paintComponent(g);
-		
-		g.fillRect(position.getX(),position.getY(),250,250);				// EX målning... ska sen bli en polygon --> trekant.
 		g.setColor(Color.BLACK);
+		g.fillRect(position.getX(),position.getY(),250,250);				// EX målning... ska sen bli en polygon --> trekant.
+		
+		
 	}
 	protected abstract void paintPlaceInfo(Graphics g);
 		// OBS!  måste va abstract och definieras i varje given Place-child 

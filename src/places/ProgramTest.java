@@ -237,7 +237,11 @@ public class ProgramTest extends JFrame{
 				if(nyPlatsPosition != null){
 					nyPlats = new NamedPlace(name , nyPlatsPosition);			
 					register.addPlace(nyPlats);				
-					imageArea.add(nyPlats, imageArea);
+					imageArea.add(nyPlats);		//Kanske till mapScrollbar?
+					
+//					nyPlats.repaint();
+//					imageArea.validate();
+//					nyPlats.validate();
 					
 					System.out.println(nyPlats);
 					System.out.println((String)choosePlaceType.getSelectedItem());			//För att visa att det går!
