@@ -14,14 +14,14 @@ public abstract class Place extends JComponent {
 	private TravelCategory color;// kategori - buss, tåg, t-bana
 	private boolean showInfo = false;
 	private boolean marked = false;
-	private int[] xLed = {0,10,21};
-	private int[] yLed = {0,21,0};
+	private int[] xLed = {0,10,20};
+	private int[] yLed = {0,10,0};
 	
 	public Place(String name, Position position){
 		this.name = name;
 		this.position = position;
 		setVisible(true);
-		setBounds(position.getX(), position.getY(), 250, 250);
+		setBounds(position.getX(),position.getY(), 250, 250);
 		setPreferredSize (new Dimension(250,250));
 		setMaximumSize (new Dimension(250,250));
 		setMinimumSize (new Dimension(250,250));
@@ -34,14 +34,6 @@ public abstract class Place extends JComponent {
 //
 //	}
 	
-	private void calculatePolygon(Position pos){		//Ska användas för slutgiltiga polygonen...
-		int posX = pos.getX();
-		int posY = pos.getY();
-		int[] xAxis = {posX -10, posX, posX +10};
-		int[] yAxis ={posY -10, posY, posY +10};
-		
-	}
-	
 	public String getName(){
 		return name;
 	} // dessa getMetoder borde inte behövas då den ärver från JComponent och alltså
@@ -49,6 +41,12 @@ public abstract class Place extends JComponent {
 	
 	public Position getPosition(){
 		return position;
+	}
+	public int getPositionX(){
+		return position.getX();
+	}
+	public int getPositionY(){
+		return position.getY();
 	}
 	
 	public TravelCategory getColor(){
@@ -87,9 +85,13 @@ public abstract class Place extends JComponent {
 	
 	private void paintPlace(Graphics g) {
 		super.paintComponent(g);
+		int[] xLed = {position.getX(),position.getX() +10,position.getX()+20};
+		int[] yLed = {position.getY(),position.getY()+10,position.getY()};
 		g.setColor(Color.BLACK);
-//		g.fillRect(position.getX(),position.getY(),250,250);	Denna gör rektangel.	// EX målning... ska sen bli en polygon --> trekant.
-		g.fillPolygon(xLed, yLed, 3);
+		
+		g.fillRect(position.getX(),position.getY(),250,250);	//Denna gör rektangel.	// EX målning... ska sen bli en polygon --> trekant.
+		
+//		g.drawPolygon(xLed, yLed, 3);
 //		int[] xLed = {position.getX() - 25,position.getX() + 25,position.getX()};
 //		int[] yLed = {position.getY() -25 ,position.getY() -25 ,position.getY()}; ----> Experiment!
 //		g.drawPolygon(xLed, yLed, 3);

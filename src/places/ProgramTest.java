@@ -239,9 +239,11 @@ public class ProgramTest extends JFrame{
 					register.addPlace(nyPlats);				
 					imageArea.add(nyPlats);		//Kanske till mapScrollbar?
 					
-//					nyPlats.repaint();
-//					imageArea.validate();
-//					nyPlats.validate();
+					nyPlats.setBounds(50, 300, 250, 250);
+					nyPlats.validate();
+					nyPlats.repaint();
+					imageArea.validate();
+					
 					
 					System.out.println(nyPlats);
 					System.out.println((String)choosePlaceType.getSelectedItem());			//För att visa att det går!
