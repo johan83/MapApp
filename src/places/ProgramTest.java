@@ -191,6 +191,7 @@ public class ProgramTest extends JFrame{
 	
 	/*--------------------------------------------------------------- CLASSES ----------------------------------------------------------------------------------*/
 	
+	
 	class ImageArea extends JPanel{
 		
 		ImageArea(){
@@ -228,7 +229,7 @@ public class ProgramTest extends JFrame{
 //-----------------------------------Bestäm huruvida du ska göra NamedPlace lr DescribedPlace-----------------------------------------------------------------
 					
 					if(choosePlaceType.getSelectedItem().equals(("NamedPlace"))){	
-						nyPlats = new NamedPlace(name , nyPlatsPosition);	
+						nyPlats = new NamedPlace(name , nyPlatsPosition);
 						nyPlats.setCategory(choosePlaceCategory());	
 						
 						register.addPlace(nyPlats);				
@@ -241,7 +242,8 @@ public class ProgramTest extends JFrame{
 						
 					}
 					else if(choosePlaceType.getSelectedItem().equals("DescribedPlace")){
-						nyPlats = new DescribedPlace(name , nyPlatsPosition, description);	
+						nyPlats = new DescribedPlace(name , nyPlatsPosition, description);
+//						nyPlats.addMouseListener(new MarkLyss());
 						nyPlats.setCategory(choosePlaceCategory());
 						
 						
@@ -272,7 +274,6 @@ public class ProgramTest extends JFrame{
 		}
 	}
 	
-	
 	class ChoosePlaceTypeLyss implements ActionListener{
 		
 		public void actionPerformed(ActionEvent ave){
@@ -292,7 +293,6 @@ public class ProgramTest extends JFrame{
 			}
 		}
 	}
-	
 	
 
 	class NewMapLyss implements ActionListener{

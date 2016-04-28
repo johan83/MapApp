@@ -3,6 +3,8 @@ import javax.swing.*; // kanske ladda allt? alltså -> *
 
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public abstract class Place extends JComponent {
 
@@ -16,8 +18,9 @@ public abstract class Place extends JComponent {
 	public Place(String name, Position position){
 		this.name = name;
 		this.position = position;
+		this.addMouseListener(new MarkLyss());
 		
-		this.setBounds(position.getX()-20,position.getY()-25,40,25);
+		this.setBounds(position.getX()-15,position.getY()-25,30,25);
 		this.setPreferredSize (new Dimension(100,100));
 		this.setMaximumSize (new Dimension(100,100));
 		this.setMinimumSize (new Dimension(100,100));
@@ -77,7 +80,7 @@ public abstract class Place extends JComponent {
 	private void paintPlace(Graphics g) {
 		super.paintComponent(g);
 		g.setColor(Color.BLACK);
-		int[] xLed = {0,20,40};
+		int[] xLed = {0,15,30};
 		int[] yLed = {0,25,0};
 		
 		if(color != null){
@@ -99,9 +102,67 @@ public abstract class Place extends JComponent {
 		}
 		
 		g.fillPolygon(xLed, yLed, 3);	
+		
+		if(marked){
+			g.setColor(Color.RED);
+			g.drawRect(0, 0,getBounds().width-1, getBounds().height -1);
+		}
 	}
-	protected abstract void paintPlaceInfo(Graphics g);
-		// OBS!  måste va abstract och definieras i varje given Place-child 
+	protected abstract void paintPlaceInfo(Graphics g);			// Utseende och Info definieras i varje given Place-child 
 	
-	
+	class MarkLyss implements MouseListener{
+		
+		
+		public void mouseClicked(MouseEvent mev){
+			switch(mev.getButton()){
+			
+				case MouseEvent.BUTTON1:
+					System.out.println("VÄNSTER");
+					if(marked)
+						marked = false;
+					else
+						marked = true;
+					repaint();
+					break;
+					
+				case MouseEvent.BUTTON3:
+					System.out.println("HÖGER");
+					if(showInfo)
+						showInfo = false;
+					else
+						showInfo = true;
+					repaint();
+					break;
+					
+				default:
+					return;	
+			}
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
 }
+
+
