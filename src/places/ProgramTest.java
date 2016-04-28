@@ -82,9 +82,6 @@ public class ProgramTest extends JFrame{
 		northPanel.add(newPlaceLabel);
 		choosePlaceType.addActionListener(new ChoosePlaceTypeLyss());
 		northPanel.add(choosePlaceType);
-		
-		
-		
 		northPanel.add(searchField);
 		northPanel.add(searchButton);
 		northPanel.add(hideButton);
@@ -207,9 +204,6 @@ public class ProgramTest extends JFrame{
 		}
 	}
 	
-	
-
-	
 	class MouseLyss extends MouseAdapter{
 		int clickX;
 		int clickY;
@@ -226,29 +220,42 @@ public class ProgramTest extends JFrame{
 			Place nyPlats;
 			
 			if(name != null){
-				System.out.println(name);
-				
-				clickX = mev.getX();
-				clickY = mev.getY();
-				Position nyPlatsPosition = new Position(clickX, clickY);		
+				Position nyPlatsPosition = new Position(mev.getX(),  mev.getY());	
 				System.out.println(mev.getX());
 				
-				
 				if(nyPlatsPosition != null){
-					nyPlats = new NamedPlace(name , nyPlatsPosition);			
-					register.addPlace(nyPlats);				
-					imageArea.add(nyPlats);		//Kanske till mapScrollbar?
+					System.out.println(nyPlatsPosition.getX());
+//-----------------------------------Bestäm huruvida du ska göra NamedPlace lr DescribedPlace-----------------------------------------------------------------
 					
-					nyPlats.setBounds(50, 300, 250, 250);
-					nyPlats.validate();
-					nyPlats.repaint();
-					imageArea.validate();
-					
-					
-					System.out.println(nyPlats);
-					System.out.println((String)choosePlaceType.getSelectedItem());			//För att visa att det går!
+					if(choosePlaceType.getSelectedItem().equals(("NamedPlace"))){	
+						nyPlats = new NamedPlace(name , nyPlatsPosition);	
+						nyPlats.setCategory(choosePlaceCategory());	
+						
+						register.addPlace(nyPlats);				
+						imageArea.add(nyPlats);		
+						
+						nyPlats.repaint();
+
+						System.out.println(nyPlats);
+						System.out.println((String)choosePlaceType.getSelectedItem());			//För att visa att det går!
+						
+					}
+					else if(choosePlaceType.getSelectedItem().equals("DescribedPlace")){
+						nyPlats = new DescribedPlace(name , nyPlatsPosition, description);	
+						nyPlats.setCategory(choosePlaceCategory());
+						
+						
+						register.addPlace(nyPlats);				
+						imageArea.add(nyPlats);		
+						
+						nyPlats.repaint();
+
+						System.out.println(nyPlats);
+						System.out.println((String)choosePlaceType.getSelectedItem());			//För att visa att det går!
+					}
 				}
-			}else{
+			}
+			else{
 				System.out.println("Tom sträng"); // TEST ---> Funkar
 				return;
 			}
@@ -269,10 +276,8 @@ public class ProgramTest extends JFrame{
 	class ChoosePlaceTypeLyss implements ActionListener{
 		
 		public void actionPerformed(ActionEvent ave){
-			TravelCategory colorToUse;
 			mouseLyss = new MouseLyss();
 			imageArea.addMouseListener(mouseLyss);			
-			/* ----------------------------------------NEDAN FUNKAR SO FAR--------------------------------------*/
 			
 			
 			if(choosePlaceType.getSelectedItem().equals(("NamedPlace"))){	
@@ -283,10 +288,6 @@ public class ProgramTest extends JFrame{
 				if(nameAndDescription != null && nameAndDescription.length>0){
 					name = nameAndDescription[0];
 					description = nameAndDescription[1];
-					
-					System.out.println((String)choosePlaceType.getSelectedItem());			////För att visa att det går!
-					System.out.println(name);
-					System.out.println(description);
 				}
 			}
 		}
