@@ -1,8 +1,8 @@
 package places;
 import javax.swing.*; // kanske ladda allt? alltså -> * 
 
-import places.ProgramTest.ImageArea;
-import places.ProgramTest.MouseLyss;
+//import places.ProgramTest.ImageArea;
+//import places.ProgramTest.MouseLyss;
 
 //import java.awt.event.*; Place skulle kunna ---> implements ActionListener----> prövar att addera detta till program klassen istället.
 import java.awt.*;
@@ -14,8 +14,8 @@ public abstract class Place extends JComponent {
 	private TravelCategory color;// kategori - buss, tåg, t-bana
 	private boolean showInfo = false;
 	private boolean marked = false;
-	private int[] xLed = {0,50,100};
-	private int[] yLed = {0,100,0};
+	private int[] xLed = {0,10,21};
+	private int[] yLed = {0,21,0};
 	
 	public Place(String name, Position position){
 		this.name = name;
@@ -33,6 +33,14 @@ public abstract class Place extends JComponent {
 //		setVisible(true);
 //
 //	}
+	
+	private void calculatePolygon(Position pos){		//Ska användas för slutgiltiga polygonen...
+		int posX = pos.getX();
+		int posY = pos.getY();
+		int[] xAxis = {posX -10, posX, posX +10};
+		int[] yAxis ={posY -10, posY, posY +10};
+		
+	}
 	
 	public String getName(){
 		return name;
@@ -81,7 +89,7 @@ public abstract class Place extends JComponent {
 		super.paintComponent(g);
 		g.setColor(Color.BLACK);
 //		g.fillRect(position.getX(),position.getY(),250,250);	Denna gör rektangel.	// EX målning... ska sen bli en polygon --> trekant.
-		g.drawPolygon(xLed, yLed, 3);
+		g.fillPolygon(xLed, yLed, 3);
 //		int[] xLed = {position.getX() - 25,position.getX() + 25,position.getX()};
 //		int[] yLed = {position.getY() -25 ,position.getY() -25 ,position.getY()}; ----> Experiment!
 //		g.drawPolygon(xLed, yLed, 3);
