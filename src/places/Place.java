@@ -51,6 +51,10 @@ public abstract class Place extends JComponent {
 		return sizeY;
 	}
 	
+	void setDontShowInfo(){
+		showInfo = false;
+	}
+	
 	public TravelCategory getColor(){
 		return color;
 	}
@@ -136,10 +140,16 @@ public abstract class Place extends JComponent {
 			
 				case MouseEvent.BUTTON1:
 					System.out.println("VÄNSTER");
-					if(marked)
+					if(marked){
 						marked = false;
-					else
+						Registry.MARKED_PLACE.remove(Place.this);
+					//TA BORT UR MARKED LIST
+					}
+					else{
 						marked = true;
+						Registry.MARKED_PLACE.add(Place.this);
+					// LÄGG TILL I MARKEDLIST
+					}
 					repaint();
 					break;
 					

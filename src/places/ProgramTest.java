@@ -84,6 +84,7 @@ public class ProgramTest extends JFrame{
 		northPanel.add(choosePlaceType);
 		northPanel.add(searchField);
 		northPanel.add(searchButton);
+		hideButton.addActionListener(new HideLyss());
 		northPanel.add(hideButton);
 		northPanel.add(removeButton);
 		northPanel.add(whatIsHereButton);
@@ -246,6 +247,8 @@ public class ProgramTest extends JFrame{
 						
 					}
 					else if(choosePlaceType.getSelectedItem().equals("DescribedPlace")){
+												
+						if(description != null){
 						nyPlats = new DescribedPlace(name , nyPlatsPosition, description);
 //						nyPlats.addMouseListener(new MarkLyss());
 						nyPlats.setCategory(choosePlaceCategory());
@@ -258,11 +261,15 @@ public class ProgramTest extends JFrame{
 
 						System.out.println(nyPlats);
 						System.out.println((String)choosePlaceType.getSelectedItem());			//För att visa att det går!
+						}
 					}
 				}
 			}
 			else{
-				System.out.println("Tom sträng"); // TEST ---> Funkar
+				System.out.println("Tom sträng"); // TEST ---> Funkar INFÖR EN POP-UP!
+				imageArea.removeMouseListener(this);
+				c = Cursor.getDefaultCursor();
+				mapScrollbar.setCursor(c);
 				return;
 			}
 		}
@@ -294,6 +301,16 @@ public class ProgramTest extends JFrame{
 					name = nameAndDescription[0];
 					description = nameAndDescription[1];
 				}
+			}
+		}
+	}
+	
+	class HideLyss implements ActionListener{
+		
+		public void actionPerformed(ActionEvent ave){
+			for(Place p : Registry.MARKED_PLACE){
+				p.setDontShowInfo();
+				p.setVisible(false);
 			}
 		}
 	}
