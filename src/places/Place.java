@@ -88,7 +88,9 @@ public abstract class Place extends JComponent {
 		if(showInfo){
 			paintPlaceInfo(g);
 		}else{
-			paintPlace(g);
+			paintPlace(g);			
+			// denna if-sats skulle kunna ligga utanför paintComponent 
+			//och i så fall kunde describedPlace representeras av en pålagd panel med en textArea. hade nog varit snyggare...
 		}
 	}
 	
