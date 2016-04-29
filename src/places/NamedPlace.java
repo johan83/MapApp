@@ -28,4 +28,10 @@ public class NamedPlace extends Place{
 		
 		drawIfMarked(g);
 	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "Named" +","+ getColor() +","+ getPosition().getX() +","+ getPosition().getY() +","+ getName();
+	}
 }

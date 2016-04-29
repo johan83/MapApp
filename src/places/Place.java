@@ -85,9 +85,8 @@ public abstract class Place extends JComponent {
 		return marked;
 	}
 	
-	public String toString(){				// kolla child
-		return position + name ;			// först + PLATSTYP +  sist + BESKRIVNING
-	}
+	public abstract String toString();				// kolla child
+					// först + PLATSTYP +  sist + BESKRIVNING
 	
 	public void drawIfMarked(Graphics g){
 		if(marked){

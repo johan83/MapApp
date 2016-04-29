@@ -33,4 +33,10 @@ public class DescribedPlace extends Place{
 		
 		drawIfMarked(g);
 	}
+
+	@Override
+	public String toString() {
+		
+		return "Described" +","+ getColor() +","+ getPosition().getX() +","+ getPosition().getY() +","+ getName() +","+ description;
+	}
 }

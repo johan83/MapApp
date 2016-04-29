@@ -64,6 +64,7 @@ public class ProgramTest extends JFrame{
 		loadPlaces.addActionListener(new LoadPlacesLyss());
 		archive.add(loadPlaces);
 		JMenuItem save = new JMenuItem("Save");
+		save.addActionListener(new SaveLyss());
 		archive.add(save);
 		
 		JMenuItem exit = new JMenuItem("Exit");
@@ -504,12 +505,35 @@ public class ProgramTest extends JFrame{
 					imageArea.add(p);
 				}
 			}
+			imageArea.repaint();
 		}
 	}
 	
 	class SaveLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave){
-			// save
+			
+			int ok = JFileChooser.APPROVE_OPTION;
+			int jfcSvar = jfc.showSaveDialog(ProgramTest.this);
+			if(jfcSvar == ok){
+				try
+		        {
+		            FileWriter file = new FileWriter(longName);
+		            PrintWriter out = new PrintWriter(file);
+		            
+		            
+		            
+		            for(Place place : register.getPositionPlaceCollection().values())
+		            {
+		                out.println(place.toString());
+		                out.close();
+		            }
+		            
+		        }
+		        catch(IOException e)
+		        {
+		            System.out.println("IOException");
+	            }
+	        }
 		}
 	}
 	
