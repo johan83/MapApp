@@ -7,12 +7,13 @@ public class DescribedPlace extends Place{
 
 	private String description;
 	
-	public DescribedPlace(String name, Position position, String description){
-		super(name, position);
+/*-------------------------------------------------CONSTRUCTOR--------------------------------------------------------*/	
+	public DescribedPlace(String name, Position position, Registry register, String description){
+		super(name, position, register);
 		this.description = description;
-		
 	}
 	
+/*---------------------------------------------------METHODS----------------------------------------------------------*/	
 	protected void paintPlaceInfo(Graphics g){
 		
 		int newX = getSizeX() *3;			// EXPERIMENT
@@ -30,8 +31,6 @@ public class DescribedPlace extends Place{
 		g.drawString(getName(), 0, 0 + (getBounds().height - getSizeY()));
 		g.drawString(description, 0, 0 + (getBounds().height -1));
 		
-		
 		drawIfMarked(g);
-		
 	}
 }

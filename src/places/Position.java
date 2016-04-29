@@ -4,12 +4,14 @@ public class Position {
 
 	private int positionX;
 	private int positionY;
-	
+
+/*-----------------------------------------------------CONSTRUCTOR------------------------------------------------------*/
 	public Position(int x, int y){
 		positionX =  x;
 		positionY = y;
 	}
 	
+/*-------------------------------------------------------METHODS--------------------------------------------------------*/	
 	public int getX(){
 		return positionX;
 	}

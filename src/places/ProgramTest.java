@@ -17,12 +17,10 @@ public class ProgramTest extends JFrame{
 	private ImageIcon image;
 	private String name;
 	private String description;
-	
 	private Registry register = new Registry();
-
-		
+	
 	private JMenuBar menu = new JMenuBar();
-	private JMenu archive = new JMenu("Archive"); // new Map, Load Places, Save, Exit
+	private JMenu archive = new JMenu("Archive"); 
 	JMenuItem newMap = new JMenuItem("New Map");
 	
 	private JFileChooser jfc = new JFileChooser("."); // startar filsökning från aktuell mapp
@@ -31,8 +29,6 @@ public class ProgramTest extends JFrame{
 	private JPanel northPanel = new JPanel();
 	private JPanel eastPanel = new JPanel();
 	private JPanel centerPanel = new JPanel();
-	
-	
 	
 	private JLabel newPlaceLabel = new JLabel("New:");
 	
@@ -46,19 +42,14 @@ public class ProgramTest extends JFrame{
 	private JButton removeButton = new JButton("Remove");
 	private JButton whatIsHereButton = new JButton("What is here?");
 	
-	
-	
 	private JLabel categoriesLabel = new JLabel("Categories");
 	private String[] categories = {"Bus", "Train", "Subway"} ;
 	private JList<String> categoryList = new JList<String>(categories);
 	private JButton hideCategoryButton = new JButton("Hide category");
 
-	
 	/*------------------------------------------------------------------ CONSTRUCTOR ----------------------------------------------------------------------*/
 	
-	
 	public ProgramTest(){
-		//JFrame program = new JFrame("Inlupp 2");
 		super("Inlupp 2");
 		Exit exitWindow = new Exit();
 		this.addWindowListener(exitWindow);
@@ -70,6 +61,7 @@ public class ProgramTest extends JFrame{
 		archive.add(newMap);
 		
 		JMenuItem loadPlaces = new JMenuItem("Load Places");
+		loadPlaces.addActionListener(new LoadPlacesLyss());
 		archive.add(loadPlaces);
 		JMenuItem save = new JMenuItem("Save");
 		archive.add(save);
@@ -87,6 +79,7 @@ public class ProgramTest extends JFrame{
 		northPanel.add(searchButton);
 		hideButton.addActionListener(new HideLyss());
 		northPanel.add(hideButton);
+		removeButton.addActionListener(new RemoveLyss());
 		northPanel.add(removeButton);
 		whatIsHereButton.addActionListener(new WhatIsHereLyss());
 		northPanel.add(whatIsHereButton);
@@ -94,17 +87,17 @@ public class ProgramTest extends JFrame{
 		add(eastPanel, BorderLayout.EAST);
 		eastPanel.setLayout(new BoxLayout(eastPanel,BoxLayout.Y_AXIS));
 		eastPanel.add(categoriesLabel);
-		categoryList.setAlignmentX(LEFT_ALIGNMENT); //Alignement (verkar bugga -> vänster blir höger) 
+		categoryList.setAlignmentX(LEFT_ALIGNMENT);  
 		categoryList.setFixedCellWidth(150);
 		categoryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		categoryList.addListSelectionListener(new ShowCategoryLyss());
 		eastPanel.add(categoryList);
 		
-		hideCategoryButton.setAlignmentX(LEFT_ALIGNMENT); //Alignment
+		hideCategoryButton.setAlignmentX(LEFT_ALIGNMENT); 
 		hideCategoryButton.addActionListener(new HideCategoryLyss());
 		eastPanel.add(hideCategoryButton); 
 		
-		centerPanel.setLayout(new BorderLayout());			//GRID LR BOXLAYOUT FIXAR STORLEKEN PÅ BILDEN MEN VAD MED SCROLLPANE?   -----BorderLayout lägger i mitten och alla över varandra.
+		centerPanel.setLayout(new BorderLayout());
 		add(centerPanel, BorderLayout.CENTER);	
 		
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -112,8 +105,6 @@ public class ProgramTest extends JFrame{
 		//setResizable(false);
 		setLocationRelativeTo(null);
 		setVisible(true);
-		
-		
 	}
 	
 	/*------------------------------------------------------------- METHODS -----------------------------------------------------------------------------------*/
@@ -164,8 +155,8 @@ public class ProgramTest extends JFrame{
 		describedPlacePanel.add(rad1);
 		describedPlacePanel.add(rad2);
 		
-		if(JOptionPane.showConfirmDialog(null, describedPlacePanel,  "New Described Place", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION){
-			
+		if(JOptionPane.showConfirmDialog
+				(null, describedPlacePanel,  "New Described Place", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION){
 			
 			String name = nameField.getText();
 			String description = describeField.getText();
@@ -224,8 +215,8 @@ public class ProgramTest extends JFrame{
 				for(int j = 0; j<21; j ++){
 					Position p = new Position(xAxis +j,yAxis +i);			
 					
-					if(register.positionPlaceCollection.containsKey(p)){
-						Place place = register.positionPlaceCollection.get(p);
+					if(register.getPositionPlaceCollection().containsKey(p)){
+						Place place = register.getPositionPlaceCollection().get(p);
 						place.setVisible(true);
 						System.out.println(place.getName());
 						imageArea.removeMouseListener(this);
@@ -288,11 +279,11 @@ public class ProgramTest extends JFrame{
 //-----------------------------------Bestäm huruvida du ska göra NamedPlace lr DescribedPlace-----------------------------------------------------------------
 					
 					if(choosePlaceType.getSelectedItem().equals(("NamedPlace"))){	
-						nyPlats = new NamedPlace(name , nyPlatsPosition);
+						nyPlats = new NamedPlace(name , nyPlatsPosition, register);
 						nyPlats.setCategory(choosePlaceCategory());	
 						
 						register.addPlace(nyPlats);				
-						imageArea.add(nyPlats);		
+						imageArea.add(nyPlats);				//VADÅ FÖR LISTA?
 						
 						nyPlats.repaint();
 
@@ -303,13 +294,11 @@ public class ProgramTest extends JFrame{
 					else if(choosePlaceType.getSelectedItem().equals("DescribedPlace")){
 												
 						if(description != null){
-						nyPlats = new DescribedPlace(name , nyPlatsPosition, description);
-//						nyPlats.addMouseListener(new MarkLyss());
+						nyPlats = new DescribedPlace(name , nyPlatsPosition, register, description);
 						nyPlats.setCategory(choosePlaceCategory());
 						
-						
 						register.addPlace(nyPlats);				
-						imageArea.add(nyPlats);		
+						imageArea.add(nyPlats);				//VADÅ FÖR LISTA?
 						
 						nyPlats.repaint();
 
@@ -370,10 +359,24 @@ public class ProgramTest extends JFrame{
 	class HideLyss implements ActionListener{
 		
 		public void actionPerformed(ActionEvent ave){
-			for(Place p : Registry.MARKED_PLACE){
+			for(Place p : register.getMarkedPlace()){
 				p.setDontShowInfo();
 				p.setVisible(false);
 			}
+		}
+	}
+	
+	class RemoveLyss implements ActionListener{
+		
+		public void actionPerformed(ActionEvent ave){
+			
+			for(Place p :register.getMarkedPlace()){
+				imageArea.remove(p);
+				System.out.println("Tar bort " + p.getName());
+			}
+			
+			register.removeMarkedPlaces();
+			imageArea.repaint();
 		}
 	}
 	
@@ -394,7 +397,7 @@ public class ProgramTest extends JFrame{
 			if(categoryList.getSelectedValue()!= null){
 				switch(toCheck){
 					case "Bus":
-						for(Place p : register.busPlace){
+						for(Place p : register.getBusPlace()){
 							System.out.print("Bus");
 							p.setVisible(true);
 						}
@@ -402,14 +405,14 @@ public class ProgramTest extends JFrame{
 						
 						
 					case "Train":
-						for(Place p : register.trainPlace){
+						for(Place p : register.getTrainPlace()){
 							System.out.print("tåg");
 							p.setVisible(true);
 							}
 						break;
 						
 					case "Subway":
-						for(Place p : register.subwayPlace){
+						for(Place p : register.getSubwayPlace()){
 							System.out.print("t-bana");
 							p.setVisible(true);
 						}
@@ -428,7 +431,7 @@ public class ProgramTest extends JFrame{
 			if(categoryList.getSelectedValue()!= null){
 				switch(toCheck){
 					case "Bus":
-						for(Place p : register.busPlace){
+						for(Place p : register.getBusPlace()){
 							System.out.print("Bus");
 							p.setNotMarked();
 							p.setDontShowInfo();
@@ -438,7 +441,7 @@ public class ProgramTest extends JFrame{
 						
 						
 					case "Train":
-						for(Place p : register.trainPlace){
+						for(Place p : register.getTrainPlace()){
 							System.out.print("tåg");
 							p.setNotMarked();
 							p.setDontShowInfo();
@@ -447,7 +450,7 @@ public class ProgramTest extends JFrame{
 						break;
 						
 					case "Subway":
-						for(Place p : register.subwayPlace){
+						for(Place p : register.getSubwayPlace()){
 							System.out.print("t-bana");
 							p.setNotMarked();
 							p.setDontShowInfo();
@@ -484,10 +487,23 @@ public class ProgramTest extends JFrame{
 		}
 	}
 	
-
 	class LoadPlacesLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave){
-			// load
+	
+			int ok = JFileChooser.APPROVE_OPTION;
+			int jfcSvar = jfc.showOpenDialog(ProgramTest.this);	// för att kunna ladda filer
+			if (jfcSvar == ok){
+				
+				if(imageArea.getComponents() != null){
+					imageArea.removeAll();
+				}
+				valdFil = jfc.getSelectedFile();
+				longName = valdFil.getAbsolutePath();
+				
+				for(Place p :register.loadFile(longName)){
+					imageArea.add(p);
+				}
+			}
 		}
 	}
 	

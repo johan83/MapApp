@@ -1,7 +1,5 @@
 package places;
-import javax.swing.*; // kanske ladda allt? alltså -> * 
-
-
+import javax.swing.*; 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -10,16 +8,18 @@ public abstract class Place extends JComponent {
 
 	private String name;
 	private Position position;
-	private TravelCategory color;// kategori - buss, tåg, t-bana
+	private TravelCategory color;
 	private boolean showInfo = false;
 	private boolean marked = false;
 	private int sizeX = 30;
 	private int sizeY = 25;
+	Registry register;
 
-	
-	public Place(String name, Position position){
+/*------------------------------------------------CONSTRUCTOR---------------------------------------------------------------*/
+	public Place(String name, Position position, Registry register){
 		this.name = name;
 		this.position = position;
+		this.register = register;
 		this.addMouseListener(new MarkLyss());
 		
 		this.setBounds(position.getX()-15,position.getY()-25,sizeX,sizeY);
@@ -27,13 +27,12 @@ public abstract class Place extends JComponent {
 		this.setMaximumSize (new Dimension(100,100));
 		this.setMinimumSize (new Dimension(100,100));
 		setVisible(true);
-		
 	}
 	
+/*-------------------------------------------------METHODS-------------------------------------------------------------------*/	
 	public String getName(){
 		return name;
-	} // dessa getMetoder borde inte behövas då den ärver från JComponent och alltså
-	//ska representeras grafiskt som en trekant på kartan.
+	} 
 	
 	public Position getPosition(){
 		return position;
@@ -86,8 +85,7 @@ public abstract class Place extends JComponent {
 		return marked;
 	}
 	
-	public String toString(){
-		//if ()										// kolla child
+	public String toString(){				// kolla child
 		return position + name ;			// först + PLATSTYP +  sist + BESKRIVNING
 	}
 	
@@ -105,7 +103,7 @@ public abstract class Place extends JComponent {
 		}else{
 			paintPlace(g);			
 			// denna if-sats skulle kunna ligga utanför paintComponent 
-			//och i så fall kunde describedPlace representeras av en pålagd panel med en textArea. hade nog varit snyggare...
+			//och i så fall kunde describedPlace istället representeras av en pålagd panel med en textArea.
 		}
 	}
 	
@@ -143,6 +141,7 @@ public abstract class Place extends JComponent {
 	}
 	protected abstract void paintPlaceInfo(Graphics g);			// Utseende och Info definieras i varje given Place-child 
 	
+/*----------------------------------------------------------CLASSES---------------------------------------------------------*/	
 	class MarkLyss implements MouseListener{
 		
 		
@@ -153,12 +152,12 @@ public abstract class Place extends JComponent {
 					System.out.println("VÄNSTER");
 					if(marked){
 						marked = false;
-						Registry.MARKED_PLACE.remove(Place.this);
+						register.getMarkedPlace().remove(Place.this);
 					//TA BORT UR MARKED LIST
 					}
 					else{
 						marked = true;
-						Registry.MARKED_PLACE.add(Place.this);
+						register.getMarkedPlace().add(Place.this);
 					// LÄGG TILL I MARKEDLIST
 					}
 					repaint();

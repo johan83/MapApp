@@ -5,11 +5,12 @@ import java.awt.Graphics;
 
 public class NamedPlace extends Place{
 	
-	public NamedPlace(String name, Position position){
-		super(name, position);
-		
+/*----------------------------------------------------CONSTRUCTOR--------------------------------------------------*/	
+	public NamedPlace(String name, Position position, Registry register){
+		super(name, position, register);	
 	}
 	
+/*------------------------------------------------------METHODS----------------------------------------------------*/	
 	@Override
 	protected void paintPlaceInfo(Graphics g) {
 		
@@ -26,6 +27,5 @@ public class NamedPlace extends Place{
 		g.drawString(getName(), 0, 0 + (getBounds().height -1));
 		
 		drawIfMarked(g);
-
 	}
 }
