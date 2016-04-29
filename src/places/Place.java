@@ -51,6 +51,10 @@ public abstract class Place extends JComponent {
 		return sizeY;
 	}
 	
+	void setNotMarked(){
+		marked = false;
+	}
+	
 	void setDontShowInfo(){
 		showInfo = false;
 	}

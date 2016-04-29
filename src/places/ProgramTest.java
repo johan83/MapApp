@@ -99,6 +99,7 @@ public class ProgramTest extends JFrame{
 		eastPanel.add(categoryList);
 		
 		hideCategoryButton.setAlignmentX(LEFT_ALIGNMENT); //Alignment
+		hideCategoryButton.addActionListener(new HideCategoryLyss());
 		eastPanel.add(hideCategoryButton); 
 		
 		centerPanel.setLayout(new BorderLayout());			//GRID LR BOXLAYOUT FIXAR STORLEKEN PÅ BILDEN MEN VAD MED SCROLLPANE?   -----BorderLayout lägger i mitten och alla över varandra.
@@ -375,6 +376,46 @@ public class ProgramTest extends JFrame{
 		}
 	}
 	
+	class HideCategoryLyss implements ActionListener{
+		
+		public void actionPerformed(ActionEvent ave){
+			String toCheck = categoryList.getSelectedValue();
+			if(categoryList.getSelectedValue()!= null){
+				switch(toCheck){
+					case "Bus":
+						for(Place p : register.busPlace){
+							System.out.print("Bus");
+							p.setNotMarked();
+							p.setDontShowInfo();
+							p.setVisible(false);
+						}
+						break;
+						
+						
+					case "Train":
+						for(Place p : register.trainPlace){
+							System.out.print("tåg");
+							p.setNotMarked();
+							p.setDontShowInfo();
+							p.setVisible(false);
+							}
+						break;
+						
+					case "Subway":
+						for(Place p : register.subwayPlace){
+							System.out.print("t-bana");
+							p.setNotMarked();
+							p.setDontShowInfo();
+							p.setVisible(false);
+						}
+						break;
+						
+						
+					default:
+				}
+			}
+		}	
+	}
 
 	class NewMapLyss implements ActionListener{
 		
