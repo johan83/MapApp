@@ -83,6 +83,7 @@ public class ProgramTest extends JFrame{
 		choosePlaceType.addActionListener(new ChoosePlaceTypeLyss());
 		northPanel.add(choosePlaceType);
 		northPanel.add(searchField);
+		searchButton.addActionListener(new SearchLyss());
 		northPanel.add(searchButton);
 		hideButton.addActionListener(new HideLyss());
 		northPanel.add(hideButton);
@@ -95,7 +96,8 @@ public class ProgramTest extends JFrame{
 		eastPanel.add(categoriesLabel);
 		categoryList.setAlignmentX(LEFT_ALIGNMENT); //Alignement (verkar bugga -> vänster blir höger) 
 		categoryList.setFixedCellWidth(150);
-		categoryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);			// Om jag vill kunna deselecta en kategori måste jag till föra en klass där jag implementerat detta.
+		categoryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		categoryList.addListSelectionListener(new ShowCategoryLyss());
 		eastPanel.add(categoryList);
 		
 		hideCategoryButton.setAlignmentX(LEFT_ALIGNMENT); //Alignment
@@ -357,6 +359,14 @@ public class ProgramTest extends JFrame{
 		}
 	}
 	
+	class SearchLyss implements ActionListener{
+		
+		public void actionPerformed(ActionEvent ave){
+			String searchName = searchField.getText();
+			register.searchByName(searchName);
+		}
+	}
+	
 	class HideLyss implements ActionListener{
 		
 		public void actionPerformed(ActionEvent ave){
@@ -373,6 +383,41 @@ public class ProgramTest extends JFrame{
 			MapClick mapClick = new MapClick();
 			imageArea.addMouseListener(mapClick);
 			
+		}
+	}
+	
+	class ShowCategoryLyss implements ListSelectionListener{
+		
+		public void valueChanged(ListSelectionEvent lev){
+			String toCheck = categoryList.getSelectedValue();
+			
+			if(categoryList.getSelectedValue()!= null){
+				switch(toCheck){
+					case "Bus":
+						for(Place p : register.busPlace){
+							System.out.print("Bus");
+							p.setVisible(true);
+						}
+						break;
+						
+						
+					case "Train":
+						for(Place p : register.trainPlace){
+							System.out.print("tåg");
+							p.setVisible(true);
+							}
+						break;
+						
+					case "Subway":
+						for(Place p : register.subwayPlace){
+							System.out.print("t-bana");
+							p.setVisible(true);
+						}
+						break;
+						
+					default:
+				}
+			}
 		}
 	}
 	
@@ -409,7 +454,6 @@ public class ProgramTest extends JFrame{
 							p.setVisible(false);
 						}
 						break;
-						
 						
 					default:
 				}

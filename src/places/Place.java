@@ -51,12 +51,19 @@ public abstract class Place extends JComponent {
 		return sizeY;
 	}
 	
+	void setMarked(){
+		marked = true;
+		repaint();
+	}
+	
 	void setNotMarked(){
 		marked = false;
+		repaint();
 	}
 	
 	void setDontShowInfo(){
 		showInfo = false;
+		repaint();
 	}
 	
 	public TravelCategory getColor(){
