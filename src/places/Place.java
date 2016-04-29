@@ -13,6 +13,8 @@ public abstract class Place extends JComponent {
 	private TravelCategory color;// kategori - buss, tåg, t-bana
 	private boolean showInfo = false;
 	private boolean marked = false;
+	private int sizeX = 30;
+	private int sizeY = 25;
 
 	
 	public Place(String name, Position position){
@@ -20,7 +22,7 @@ public abstract class Place extends JComponent {
 		this.position = position;
 		this.addMouseListener(new MarkLyss());
 		
-		this.setBounds(position.getX()-15,position.getY()-25,30,25);
+		this.setBounds(position.getX()-15,position.getY()-25,sizeX,sizeY);
 		this.setPreferredSize (new Dimension(100,100));
 		this.setMaximumSize (new Dimension(100,100));
 		this.setMinimumSize (new Dimension(100,100));
@@ -41,6 +43,12 @@ public abstract class Place extends JComponent {
 	}
 	public int getPositionY(){
 		return position.getY();
+	}
+	public int getSizeX(){
+		return sizeX;
+	}
+	public int getSizeY(){
+		return sizeY;
 	}
 	
 	public TravelCategory getColor(){
@@ -68,6 +76,13 @@ public abstract class Place extends JComponent {
 		return position + name ;			// först + PLATSTYP +  sist + BESKRIVNING
 	}
 	
+	public void drawIfMarked(Graphics g){
+		if(marked){
+			g.setColor(Color.RED);
+			g.drawRect(0, 0,getBounds().width-1, getBounds().height -1);
+		}
+	}
+	
 	@Override
 	protected void paintComponent(Graphics g){
 		if(showInfo){
@@ -79,6 +94,9 @@ public abstract class Place extends JComponent {
 	
 	private void paintPlace(Graphics g) {
 		super.paintComponent(g);
+		
+		this.setBounds(getPositionX()-15,getPositionY()-25, sizeX ,sizeY);
+		
 		g.setColor(Color.BLACK);
 		int[] xLed = {0,15,30};
 		int[] yLed = {0,25,0};
@@ -103,10 +121,8 @@ public abstract class Place extends JComponent {
 		
 		g.fillPolygon(xLed, yLed, 3);	
 		
-		if(marked){
-			g.setColor(Color.RED);
-			g.drawRect(0, 0,getBounds().width-1, getBounds().height -1);
-		}
+		drawIfMarked(g);
+
 	}
 	protected abstract void paintPlaceInfo(Graphics g);			// Utseende och Info definieras i varje given Place-child 
 	
