@@ -87,6 +87,7 @@ public class ProgramTest extends JFrame{
 		hideButton.addActionListener(new HideLyss());
 		northPanel.add(hideButton);
 		northPanel.add(removeButton);
+		whatIsHereButton.addActionListener(new WhatIsHereLyss());
 		northPanel.add(whatIsHereButton);
 		add(northPanel, BorderLayout.NORTH);
 		add(eastPanel, BorderLayout.EAST);
@@ -206,6 +207,56 @@ public class ProgramTest extends JFrame{
 		}
 	}
 	
+	class MapClick implements MouseListener{		// visar allt inom arean...
+		int xAxis;
+		int yAxis;
+		
+		@Override
+		public void mouseClicked(MouseEvent mev){
+			xAxis = mev.getX() -10;
+			yAxis = mev.getY() -10;
+			
+			
+			for(int i = 0; i<21; i++){
+				for(int j = 0; j<21; j ++){
+					Position p = new Position(xAxis +j,yAxis +i);			
+					
+					if(register.positionPlaceCollection.containsKey(p)){
+						Place place = register.positionPlaceCollection.get(p);
+						place.setVisible(true);
+						System.out.println(place.getName());
+						imageArea.removeMouseListener(this);
+					}
+				}
+			}
+		}
+
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
+	
 	class MouseLyss extends MouseAdapter{
 		int clickX;
 		int clickY;
@@ -312,6 +363,15 @@ public class ProgramTest extends JFrame{
 				p.setDontShowInfo();
 				p.setVisible(false);
 			}
+		}
+	}
+	
+	class WhatIsHereLyss implements ActionListener{
+		
+		public void actionPerformed(ActionEvent ave){
+			MapClick mapClick = new MapClick();
+			imageArea.addMouseListener(mapClick);
+			
 		}
 	}
 	
