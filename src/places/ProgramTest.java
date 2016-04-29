@@ -223,6 +223,10 @@ public class ProgramTest extends JFrame{
 			if(name != null){
 				Position nyPlatsPosition = new Position(mev.getX(),  mev.getY());	
 				System.out.println(mev.getX());
+				imageArea.removeMouseListener(this);
+				c = Cursor.getDefaultCursor();
+				mapScrollbar.setCursor(c);
+				//TA BORT CROSSHAIR?
 				
 				if(nyPlatsPosition != null){
 					System.out.println(nyPlatsPosition.getX());
