@@ -4,6 +4,6 @@ public enum TravelCategory {
 	BUS,
 	TRAIN, 
 	SUBWAY;	
-	//NO_CATEGORY
+	//NO_CATEGORY ----------------->Category = NONE
 }
 

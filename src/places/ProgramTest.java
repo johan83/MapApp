@@ -1,16 +1,15 @@
 package places;
+
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 
-
-
-public class ProgramTest extends JFrame{
+public class ProgramTest extends JFrame {
 
 	private boolean nyInfo = true; // bestämmer stäng eller ej.
-	private String longName; 
+	private String longName;
 	private File valdFil;
 	public MouseLyss mouseLyss;
 	private ImageArea imageArea;
@@ -18,59 +17,59 @@ public class ProgramTest extends JFrame{
 	private String name;
 	private String description;
 	private Registry register = new Registry();
-	
+
 	private JMenuBar menu = new JMenuBar();
-	private JMenu archive = new JMenu("Archive"); 
+	private JMenu archive = new JMenu("Archive");
 	JMenuItem newMap = new JMenuItem("New Map");
-	
-	private JFileChooser jfc = new JFileChooser("."); // startar filsökning från aktuell mapp
+
+	private JFileChooser jfc = new JFileChooser("."); // startar filsökning från
+														// aktuell mapp
 	JScrollPane mapScrollbar;
-	
+
 	private JPanel northPanel = new JPanel();
 	private JPanel eastPanel = new JPanel();
 	private JPanel centerPanel = new JPanel();
-	
+
 	private JLabel newPlaceLabel = new JLabel("New:");
-	
-	String[] JComboAlternativ = {"NamedPlace", "DescribedPlace"};
+
+	String[] JComboAlternativ = { "NamedPlace", "DescribedPlace" };
 	private JComboBox<String> choosePlaceType = new JComboBox<String>(JComboAlternativ);
-	
+
 	private JTextField searchField = new JTextField("Search", 10);
-	
+
 	private JButton searchButton = new JButton("Search");
 	private JButton hideButton = new JButton("Hide");
 	private JButton removeButton = new JButton("Remove");
 	private JButton whatIsHereButton = new JButton("What is here?");
-	
+
 	private JLabel categoriesLabel = new JLabel("Categories");
-	private String[] categories = {"Bus", "Train", "Subway"} ;
+	private String[] categories = { "Bus", "Train", "Subway" };
 	private JList<String> categoryList = new JList<String>(categories);
 	private JButton hideCategoryButton = new JButton("Hide category");
 
 	/*------------------------------------------------------------------ CONSTRUCTOR ----------------------------------------------------------------------*/
-	
-	public ProgramTest(){
+
+	public ProgramTest() {
 		super("Inlupp 2");
 		Exit exitWindow = new Exit();
 		this.addWindowListener(exitWindow);
 		setJMenuBar(menu);
 		menu.add(archive);
-		
-		
+
 		newMap.addActionListener(new NewMapLyss());
 		archive.add(newMap);
-		
+
 		JMenuItem loadPlaces = new JMenuItem("Load Places");
 		loadPlaces.addActionListener(new LoadPlacesLyss());
 		archive.add(loadPlaces);
 		JMenuItem save = new JMenuItem("Save");
 		save.addActionListener(new SaveLyss());
 		archive.add(save);
-		
+
 		JMenuItem exit = new JMenuItem("Exit");
 		exit.addActionListener(new ExitLyss());
 		archive.add(exit);
-		
+
 		setLayout(new BorderLayout());
 		northPanel.add(newPlaceLabel);
 		choosePlaceType.addActionListener(new ChoosePlaceTypeLyss());
@@ -86,137 +85,133 @@ public class ProgramTest extends JFrame{
 		northPanel.add(whatIsHereButton);
 		add(northPanel, BorderLayout.NORTH);
 		add(eastPanel, BorderLayout.EAST);
-		eastPanel.setLayout(new BoxLayout(eastPanel,BoxLayout.Y_AXIS));
+		eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
 		eastPanel.add(categoriesLabel);
-		categoryList.setAlignmentX(LEFT_ALIGNMENT);  
+		categoryList.setAlignmentX(LEFT_ALIGNMENT);
 		categoryList.setFixedCellWidth(150);
 		categoryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		categoryList.addListSelectionListener(new ShowCategoryLyss());
 		eastPanel.add(categoryList);
-		
-		hideCategoryButton.setAlignmentX(LEFT_ALIGNMENT); 
+
+		hideCategoryButton.setAlignmentX(LEFT_ALIGNMENT);
 		hideCategoryButton.addActionListener(new HideCategoryLyss());
-		eastPanel.add(hideCategoryButton); 
-		
+		eastPanel.add(hideCategoryButton);
+
 		centerPanel.setLayout(new BorderLayout());
-		add(centerPanel, BorderLayout.CENTER);	
-		
+		add(centerPanel, BorderLayout.CENTER);
+
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		setSize(650, 650);
-		//setResizable(false);
+		// setResizable(false);
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
-	
+
 	/*------------------------------------------------------------- METHODS -----------------------------------------------------------------------------------*/
-	private TravelCategory choosePlaceCategory(){
-		
-		if(!(categoryList.isSelectionEmpty())){
-			String color = (String)categoryList.getSelectedValue();
-			
-			for(TravelCategory c : TravelCategory.values()){
-				if(color.equalsIgnoreCase(c.name())){				
-				return c;	
+	private TravelCategory choosePlaceCategory() {
+
+		if (!(categoryList.isSelectionEmpty())) {
+			String color = (String) categoryList.getSelectedValue();
+
+			for (TravelCategory c : TravelCategory.values()) {
+				if (color.equalsIgnoreCase(c.name())) {
+					return c;
 				}
 			}
 		}
 		return null;
 	}
-	
-	private String createNamedPlace(){
-		JPanel namedPlacePanel= new JPanel();
-		
+
+	private String createNamedPlace() {
+		JPanel namedPlacePanel = new JPanel();
+
 		namedPlacePanel.setLayout(new BoxLayout(namedPlacePanel, BoxLayout.Y_AXIS));
 		namedPlacePanel.add(new JLabel("Platsens namn:"));
-		
-		
-		String ifyllt = JOptionPane.showInputDialog(null, namedPlacePanel,  "New Named Place", JOptionPane.QUESTION_MESSAGE);
-		if(ifyllt.length()> 0){
+
+		String ifyllt = JOptionPane.showInputDialog(null, namedPlacePanel, "New Named Place",
+				JOptionPane.QUESTION_MESSAGE);
+		if (ifyllt.length() > 0) {
 			return ifyllt;
 		}
 		return null;
 	}
-	
-	private String[] createDescribedPlace(){
+
+	private String[] createDescribedPlace() {
 		JPanel describedPlacePanel = new JPanel();
-		
-		JPanel rad1= new JPanel();
+
+		JPanel rad1 = new JPanel();
 		JPanel rad2 = new JPanel();
-		
+
 		JTextField nameField = new JTextField(10);
 		JTextField describeField = new JTextField(10);
-		
+
 		rad1.add(new JLabel("Platsens namn:"));
 		rad1.add(nameField);
-		
+
 		rad2.add(new JLabel("Description:"));
 		rad2.add(describeField);
-		
+
 		describedPlacePanel.setLayout(new BoxLayout(describedPlacePanel, BoxLayout.Y_AXIS));
 		describedPlacePanel.add(rad1);
 		describedPlacePanel.add(rad2);
-		
-		if(JOptionPane.showConfirmDialog
-				(null, describedPlacePanel,  "New Described Place", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION){
-			
+
+		if (JOptionPane.showConfirmDialog(null, describedPlacePanel, "New Described Place",
+				JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+
 			String name = nameField.getText();
 			String description = describeField.getText();
-			
-			if(name.length()>0 && description.length()>0){
-				String[] nameAndDescription = {name, description};
+
+			if (name.length() > 0 && description.length() > 0) {
+				String[] nameAndDescription = { name, description };
 				return nameAndDescription;
 			}
 		}
 		return null;
 	}
-	
-	
-	private void avsluta(){
+
+	private void avsluta() {
 		int ok = JOptionPane.OK_OPTION;
-		if(!nyInfo){
+		if (!nyInfo) {
 			System.exit(0);
-		}else{
-			int svar = JOptionPane.showConfirmDialog(null,"Vill du avsluta ändå?","Osparade ändringar",
+		} else {
+			int svar = JOptionPane.showConfirmDialog(null, "Vill du avsluta ändå?", "Osparade ändringar",
 					JOptionPane.OK_CANCEL_OPTION);
-			
-			if(svar == ok){
+
+			if (svar == ok) {
 				System.exit(0);
 			}
 		}
 	}
-	
-	
+
 	/*--------------------------------------------------------------- CLASSES ----------------------------------------------------------------------------------*/
-	
-	
-	class ImageArea extends JPanel{
-		
-		ImageArea(){
-			image = new ImageIcon(longName); 
+
+	class ImageArea extends JPanel {
+
+		ImageArea() {
+			image = new ImageIcon(longName);
 			setLayout(null);
 		}
-		
-		protected void paintComponent(Graphics g){
+
+		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			g.drawImage(image.getImage(), 0, 0, this);
 		}
 	}
-	
-	class MapClick implements MouseListener{		// visar allt inom arean...
+
+	class MapClick implements MouseListener { // visar allt inom arean...
 		int xAxis;
 		int yAxis;
-		
+
 		@Override
-		public void mouseClicked(MouseEvent mev){
-			xAxis = mev.getX() -10;
-			yAxis = mev.getY() -10;
-			
-			
-			for(int i = 0; i<21; i++){
-				for(int j = 0; j<21; j ++){
-					Position p = new Position(xAxis +j,yAxis +i);			
-					
-					if(register.getPositionPlaceCollection().containsKey(p)){
+		public void mouseClicked(MouseEvent mev) {
+			xAxis = mev.getX() - 10;
+			yAxis = mev.getY() - 10;
+
+			for (int i = 0; i < 21; i++) {
+				for (int j = 0; j < 21; j++) {
+					Position p = new Position(xAxis + j, yAxis + i);
+
+					if (register.getPositionPlaceCollection().containsKey(p)) {
 						Place place = register.getPositionPlaceCollection().get(p);
 						place.setVisible(true);
 						System.out.println(place.getName());
@@ -226,311 +221,317 @@ public class ProgramTest extends JFrame{
 			}
 		}
 
-
 		@Override
 		public void mouseEntered(MouseEvent arg0) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void mouseExited(MouseEvent arg0) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void mousePressed(MouseEvent arg0) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent arg0) {
 			// TODO Auto-generated method stub
-			
+
 		}
 	}
-	
-	class MouseLyss extends MouseAdapter{
+
+	class MouseLyss extends MouseAdapter {
 		int clickX;
 		int clickY;
 		Position pos;
 		Cursor c;
-		
-		public void mouseEntered(MouseEvent mev){
+
+		public void mouseEntered(MouseEvent mev) {
 			c = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
 			mapScrollbar.setCursor(c);
-			
+
 		}
-		
-		public void mouseClicked(MouseEvent mev){
+
+		public void mouseClicked(MouseEvent mev) {
 			Place nyPlats;
-			
-			if(name != null){
-				Position nyPlatsPosition = new Position(mev.getX(),  mev.getY());	
+
+			if (name != null) {
+				Position nyPlatsPosition = new Position(mev.getX(), mev.getY());
 				System.out.println(mev.getX());
 				imageArea.removeMouseListener(this);
 				c = Cursor.getDefaultCursor();
 				mapScrollbar.setCursor(c);
-				//TA BORT CROSSHAIR?
-				
-				if(nyPlatsPosition != null){
+				// TA BORT CROSSHAIR?
+
+				if (nyPlatsPosition != null) {
 					System.out.println(nyPlatsPosition.getX());
-//-----------------------------------Bestäm huruvida du ska göra NamedPlace lr DescribedPlace-----------------------------------------------------------------
-					
-					if(choosePlaceType.getSelectedItem().equals(("NamedPlace"))){	
-						nyPlats = new NamedPlace(name , nyPlatsPosition, register);
-						nyPlats.setCategory(choosePlaceCategory());	
-						
-						register.addPlace(nyPlats);				
-						imageArea.add(nyPlats);				//VADÅ FÖR LISTA?
-						
-						nyPlats.repaint();
+					// -----------------------------------Bestäm huruvida du ska
+					// göra NamedPlace lr
+					// DescribedPlace-----------------------------------------------------------------
 
-						System.out.println(nyPlats);
-						System.out.println((String)choosePlaceType.getSelectedItem());			//För att visa att det går!
-						
-					}
-					else if(choosePlaceType.getSelectedItem().equals("DescribedPlace")){
-												
-						if(description != null){
-						nyPlats = new DescribedPlace(name , nyPlatsPosition, register, description);
+					if (choosePlaceType.getSelectedItem().equals(("NamedPlace"))) {
+						nyPlats = new NamedPlace(name, nyPlatsPosition, register);
 						nyPlats.setCategory(choosePlaceCategory());
-						
-						register.addPlace(nyPlats);				
-						imageArea.add(nyPlats);				//VADÅ FÖR LISTA?
-						
+
+						register.addPlace(nyPlats);
+						imageArea.add(nyPlats); // VADÅ FÖR LISTA?
+
 						nyPlats.repaint();
 
 						System.out.println(nyPlats);
-						System.out.println((String)choosePlaceType.getSelectedItem());			//För att visa att det går!
+						System.out.println((String) choosePlaceType.getSelectedItem()); // För
+																						// att
+																						// visa
+																						// att
+																						// det
+																						// går!
+
+					} else if (choosePlaceType.getSelectedItem().equals("DescribedPlace")) {
+
+						if (description != null) {
+							nyPlats = new DescribedPlace(name, nyPlatsPosition, register, description);
+							nyPlats.setCategory(choosePlaceCategory());
+
+							register.addPlace(nyPlats);
+							imageArea.add(nyPlats); // VADÅ FÖR LISTA?
+
+							nyPlats.repaint();
+
+							System.out.println(nyPlats);
+							System.out.println((String) choosePlaceType.getSelectedItem()); // För
+																							// att
+																							// visa
+																							// att
+																							// det
+																							// går!
 						}
 					}
 				}
-			}
-			else{
-				System.out.println("Tom sträng"); // TEST ---> Funkar INFÖR EN POP-UP!
+			} else {
+				System.out.println("Tom sträng"); // TEST ---> Funkar INFÖR EN
+													// POP-UP!
 				imageArea.removeMouseListener(this);
 				c = Cursor.getDefaultCursor();
 				mapScrollbar.setCursor(c);
 				return;
 			}
 		}
-		
-		public void mouseExited(MouseEvent mev){
+
+		public void mouseExited(MouseEvent mev) {
 			c = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
 			mapScrollbar.setCursor(c);
 		}
-		
-		public Position getClick(){
-			pos = new Position (clickX, clickY);
+
+		public Position getClick() {
+			pos = new Position(clickX, clickY);
 			return pos;
 		}
 	}
-	
-	class ChoosePlaceTypeLyss implements ActionListener{
-		
-		public void actionPerformed(ActionEvent ave){
+
+	class ChoosePlaceTypeLyss implements ActionListener {
+
+		public void actionPerformed(ActionEvent ave) {
 			mouseLyss = new MouseLyss();
-			imageArea.addMouseListener(mouseLyss);			
-			
-			
-			if(choosePlaceType.getSelectedItem().equals(("NamedPlace"))){	
-				name = createNamedPlace();				
-			}
-			else if(choosePlaceType.getSelectedItem().equals("DescribedPlace")){
+			imageArea.addMouseListener(mouseLyss);
+
+			if (choosePlaceType.getSelectedItem().equals(("NamedPlace"))) {
+				name = createNamedPlace();
+			} else if (choosePlaceType.getSelectedItem().equals("DescribedPlace")) {
 				String[] nameAndDescription = createDescribedPlace();
-				if(nameAndDescription != null && nameAndDescription.length>0){
+				if (nameAndDescription != null && nameAndDescription.length > 0) {
 					name = nameAndDescription[0];
 					description = nameAndDescription[1];
 				}
 			}
 		}
 	}
-	
-	class SearchLyss implements ActionListener{
-		
-		public void actionPerformed(ActionEvent ave){
+
+	class SearchLyss implements ActionListener {
+
+		public void actionPerformed(ActionEvent ave) {
 			String searchName = searchField.getText();
 			register.searchByName(searchName);
 		}
 	}
-	
-	class HideLyss implements ActionListener{
-		
-		public void actionPerformed(ActionEvent ave){
-			for(Place p : register.getMarkedPlace()){
+
+	class HideLyss implements ActionListener {
+
+		public void actionPerformed(ActionEvent ave) {
+			for (Place p : register.getMarkedPlace()) {
 				p.setDontShowInfo();
 				p.setVisible(false);
 			}
 		}
 	}
-	
-	class RemoveLyss implements ActionListener{
-		
-		public void actionPerformed(ActionEvent ave){
-			
-			for(Place p :register.getMarkedPlace()){
+
+	class RemoveLyss implements ActionListener {
+
+		public void actionPerformed(ActionEvent ave) {
+
+			for (Place p : register.getMarkedPlace()) {
 				imageArea.remove(p);
 				System.out.println("Tar bort " + p.getName());
 			}
-			
+
 			register.removeMarkedPlaces();
 			imageArea.repaint();
 		}
 	}
-	
-	class WhatIsHereLyss implements ActionListener{
-		
-		public void actionPerformed(ActionEvent ave){
+
+	class WhatIsHereLyss implements ActionListener {
+
+		public void actionPerformed(ActionEvent ave) {
 			MapClick mapClick = new MapClick();
 			imageArea.addMouseListener(mapClick);
-			
+
 		}
-	}
-	
-	class ShowCategoryLyss implements ListSelectionListener{
-		
-		public void valueChanged(ListSelectionEvent lev){
-			String toCheck = categoryList.getSelectedValue();
-			
-			if(categoryList.getSelectedValue()!= null){
-				switch(toCheck){
-					case "Bus":
-						for(Place p : register.getBusPlace()){
-							System.out.print("Bus");
-							p.setVisible(true);
-						}
-						break;
-						
-						
-					case "Train":
-						for(Place p : register.getTrainPlace()){
-							System.out.print("tåg");
-							p.setVisible(true);
-							}
-						break;
-						
-					case "Subway":
-						for(Place p : register.getSubwayPlace()){
-							System.out.print("t-bana");
-							p.setVisible(true);
-						}
-						break;
-						
-					default:
-				}
-			}
-		}
-	}
-	
-	class HideCategoryLyss implements ActionListener{
-		
-		public void actionPerformed(ActionEvent ave){
-			String toCheck = categoryList.getSelectedValue();
-			if(categoryList.getSelectedValue()!= null){
-				switch(toCheck){
-					case "Bus":
-						for(Place p : register.getBusPlace()){
-							System.out.print("Bus");
-							p.setNotMarked();
-							p.setDontShowInfo();
-							p.setVisible(false);
-						}
-						break;
-						
-						
-					case "Train":
-						for(Place p : register.getTrainPlace()){
-							System.out.print("tåg");
-							p.setNotMarked();
-							p.setDontShowInfo();
-							p.setVisible(false);
-							}
-						break;
-						
-					case "Subway":
-						for(Place p : register.getSubwayPlace()){
-							System.out.print("t-bana");
-							p.setNotMarked();
-							p.setDontShowInfo();
-							p.setVisible(false);
-						}
-						break;
-						
-					default:
-				}
-			}
-		}	
 	}
 
-	class NewMapLyss implements ActionListener{
-		
-		public void actionPerformed(ActionEvent ave){
-			int ok = JFileChooser.APPROVE_OPTION;
-			int jfcSvar = jfc.showOpenDialog(newMap);	// för att kunna ladda filer
-			if (jfcSvar == ok){
-				
-				if(centerPanel.getComponents() != null){
-					centerPanel.removeAll();
+	class ShowCategoryLyss implements ListSelectionListener {
+
+		public void valueChanged(ListSelectionEvent lev) {
+			String toCheck = categoryList.getSelectedValue();
+
+			if (categoryList.getSelectedValue() != null) {
+				switch (toCheck) {
+				case "Bus":
+					for (Place p : register.getBusPlace()) {
+						System.out.print("Bus");
+						p.setVisible(true);
+					}
+					break;
+
+				case "Train":
+					for (Place p : register.getTrainPlace()) {
+						System.out.print("tåg");
+						p.setVisible(true);
+					}
+					break;
+
+				case "Subway":
+					for (Place p : register.getSubwayPlace()) {
+						System.out.print("t-bana");
+						p.setVisible(true);
+					}
+					break;
+
+				default:
 				}
-				
-			valdFil = jfc.getSelectedFile();
-			longName = valdFil.getAbsolutePath();
-			imageArea = new ImageArea();
-			imageArea.setSize(image.getIconWidth(),image.getIconHeight());
-			imageArea.setPreferredSize(new Dimension(image.getIconWidth(),image.getIconHeight())); //kan skapa platser utanför bilden.. :( 
-			mapScrollbar = new JScrollPane(imageArea);
-			centerPanel.add(mapScrollbar);								
-			centerPanel.validate();			
-			}			
+			}
 		}
 	}
-	
-	class LoadPlacesLyss implements ActionListener{
-		public void actionPerformed(ActionEvent ave){
-	
+
+	class HideCategoryLyss implements ActionListener {
+
+		public void actionPerformed(ActionEvent ave) {
+			String toCheck = categoryList.getSelectedValue();
+			if (categoryList.getSelectedValue() != null) {
+				switch (toCheck) {
+				case "Bus":
+					for (Place p : register.getBusPlace()) {
+						System.out.print("Bus");
+						p.setNotMarked();
+						p.setDontShowInfo();
+						p.setVisible(false);
+					}
+					break;
+
+				case "Train":
+					for (Place p : register.getTrainPlace()) {
+						System.out.print("tåg");
+						p.setNotMarked();
+						p.setDontShowInfo();
+						p.setVisible(false);
+					}
+					break;
+
+				case "Subway":
+					for (Place p : register.getSubwayPlace()) {
+						System.out.print("t-bana");
+						p.setNotMarked();
+						p.setDontShowInfo();
+						p.setVisible(false);
+					}
+					break;
+
+				default:
+				}
+			}
+		}
+	}
+
+	class NewMapLyss implements ActionListener {
+
+		public void actionPerformed(ActionEvent ave) {
 			int ok = JFileChooser.APPROVE_OPTION;
-			int jfcSvar = jfc.showOpenDialog(ProgramTest.this);	// för att kunna ladda filer
-			if (jfcSvar == ok){
-				
-				if(imageArea.getComponents() != null){
+			int jfcSvar = jfc.showOpenDialog(newMap); // för att kunna ladda
+														// filer
+			if (jfcSvar == ok) {
+
+				if (centerPanel.getComponents() != null) {
+					centerPanel.removeAll();
+				}
+
+				valdFil = jfc.getSelectedFile();
+				longName = valdFil.getAbsolutePath();
+				imageArea = new ImageArea();
+				imageArea.setSize(image.getIconWidth(), image.getIconHeight());
+				imageArea.setPreferredSize(new Dimension(image.getIconWidth(), image.getIconHeight())); // kan
+																										// skapa
+																										// platser
+																										// utanför
+																										// bilden..
+																										// :(
+				mapScrollbar = new JScrollPane(imageArea);
+				centerPanel.add(mapScrollbar);
+				centerPanel.validate();
+			}
+		}
+	}
+
+	class LoadPlacesLyss implements ActionListener {
+		public void actionPerformed(ActionEvent ave) {
+
+			int ok = JFileChooser.APPROVE_OPTION;
+			int jfcSvar = jfc.showOpenDialog(ProgramTest.this);
+			if (jfcSvar == ok) {
+
+				if (imageArea.getComponents() != null) {
 					imageArea.removeAll();
 				}
 				valdFil = jfc.getSelectedFile();
 				longName = valdFil.getAbsolutePath();
-				
-				for(Place p :register.loadFile(longName)){
+
+				for (Place p : register.loadFile(longName)) {
 					imageArea.add(p);
 				}
 			}
 			imageArea.repaint();
 		}
 	}
-	
-	class SaveLyss implements ActionListener{
+
+	class SaveLyss implements ActionListener{					// KOLLA UPP SAVE!
 		public void actionPerformed(ActionEvent ave){
 			
 			int ok = JFileChooser.APPROVE_OPTION;
 			int jfcSvar = jfc.showSaveDialog(ProgramTest.this);
 			if(jfcSvar == ok){
-				try
-		        {
-		            FileWriter file = new FileWriter(longName);
-		            PrintWriter out = new PrintWriter(file);
-		            
-		            
-		            
-		            for(Place place : register.getPositionPlaceCollection().values())
-		            {
-		                out.println(place.toString());
-		                out.close();
-		            }
-		            
+				valdFil = jfc.getSelectedFile();
+				longName = valdFil.getAbsolutePath();
+				
+				try(FileWriter file = new FileWriter(longName); PrintWriter out = new PrintWriter(file);){
+					
+		            for(Place place : register.getPositionPlaceCollection().values()){
+		                out.println(place.toString());   
+		            }  
 		        }
-		        catch(IOException e)
-		        {
+		        catch(IOException e){
 		            System.out.println("IOException");
 	            }
 	        }
@@ -555,4 +556,3 @@ public class ProgramTest extends JFrame{
 		
 	}
 }
-

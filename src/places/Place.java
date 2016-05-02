@@ -85,8 +85,7 @@ public abstract class Place extends JComponent {
 		return marked;
 	}
 	
-	public abstract String toString();				// kolla child
-					// först + PLATSTYP +  sist + BESKRIVNING
+	public abstract String toString();
 	
 	public void drawIfMarked(Graphics g){
 		if(marked){
@@ -148,7 +147,6 @@ public abstract class Place extends JComponent {
 			switch(mev.getButton()){
 			
 				case MouseEvent.BUTTON1:
-					System.out.println("VÄNSTER");
 					if(marked){
 						marked = false;
 						register.getMarkedPlace().remove(Place.this);
@@ -163,7 +161,6 @@ public abstract class Place extends JComponent {
 					break;
 					
 				case MouseEvent.BUTTON3:
-					System.out.println("HÖGER");
 					if(showInfo)
 						showInfo = false;
 					else
