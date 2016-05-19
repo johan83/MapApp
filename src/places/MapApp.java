@@ -112,21 +112,12 @@ public class MapApp extends JFrame {
 
 	public MapApp() {
 		super(title);
-		this.createCategories();
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new WindowHandler());
 		this.setJMenuBar(populateMenuBar(new JMenuBar()));
 		this.add(populateMainView(new JPanel()));
 		this.pack();
 		this.centerFrameOnDefaultMonitor();
-	}
-	
-	private void createCategories(){
-		//Default categories
-		Category.createCategoryInstance("Buss", Color.RED);
-		Category.createCategoryInstance("Tunnelbana", Color.BLUE);
-		Category.createCategoryInstance("Tåg", Color.GREEN);
-		Category.createCategoryInstance("None", Color.BLACK);
 	}
 
 	private void centerFrameOnDefaultMonitor() {
