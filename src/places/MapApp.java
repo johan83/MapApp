@@ -76,7 +76,7 @@ import places.place.Place.PlaceType;
  * 	add ^ to ParserFactory
  * 
  * To add another category:
- * 	Use Category.createCategoryInstance("Name of category", Color.Color_of_the_triangle )
+ * 	Add another category to the CategoryHolder static block in Category
  */
 @SuppressWarnings("serial")
 public class MapApp extends JFrame {
