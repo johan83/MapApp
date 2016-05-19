@@ -226,8 +226,11 @@ public class MapApp extends JFrame {
 			int endY = startY + gridsize;
 			
 			for(int x = startX; x<=endX;x++){
-				for(int y = startY; y<=endY;y++)
-					map.getComponentAt(x, y).setVisible(true);			
+				for(int y = startY; y<=endY;y++){
+					Place place = places.getPlaceByPosition(Position.createPosition(x, y));
+					if(place != null)
+						place.setVisible(true);		
+				}	
 			}
 		}
 	}

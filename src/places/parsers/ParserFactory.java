@@ -1,6 +1,5 @@
 package places.parsers;
 
-import places.place.Place;
 import places.place.Place.PlaceType;
 
 public class ParserFactory {

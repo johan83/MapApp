@@ -14,17 +14,19 @@ import java.util.Set;
 
 public class Places {
 	
+	private Map<Position,Place> placesByPosition;
 	private Map<String,List<Place>> placesByName;
 	private Map<Category,List<Place>> placesByCategory;
 	private Set<Place> markedPlaces;
 	
-	private Places(Map<String,List<Place>> placesByName, Map<Category,List<Place>> placesByCategory, Set<Place> markedPlaces){
+	private Places(Map<Position,Place> placesByPosition,Map<String,List<Place>> placesByName, Map<Category,List<Place>> placesByCategory, Set<Place> markedPlaces){
+		this.placesByPosition = placesByPosition;
 		this.placesByName = placesByName;
 		this.placesByCategory = placesByCategory;
 		this.markedPlaces = markedPlaces;
 	}
 	public static Places createPlaces(){
-		return new Places(new HashMap<>(),new HashMap<>(),new HashSet<>());
+		return new Places(new HashMap<>(),new HashMap<>(),new HashMap<>(),new HashSet<>());
 	}
 	
 	public void add(Place place){
@@ -45,16 +47,21 @@ public class Places {
 		if(!cats.contains(place))
 			cats.add(place);
 		placesByCategory.put(cat, cats);
+		
+		placesByPosition.put(place.getPosition(), place);
 	}
 	public void remove(Place place){
 		String name = place.getName();
 		Category cat = place.getCategory();
-		
+		Position pos = place.getPosition();
+				
+		placesByPosition.remove(pos);
 		List<Place> names = placesByName.get(name);
 		names.remove(place);		
 		List<Place> cats = placesByCategory.get(cat);
 		cats.remove(place);		
-		markedPlaces.remove(place);		
+		markedPlaces.remove(place);
+		place.removeFromParent();
 	}
 	public Place[] removeMarked(){
 		Place[] toReturn = markedPlaces.toArray(new Place[markedPlaces.size()]);
@@ -62,7 +69,9 @@ public class Places {
 			Place place = i.next();
 			String name = place.getName();
 			Category cat = place.getCategory();
+			Position pos = place.getPosition();
 			
+			placesByPosition.remove(pos);
 			List<Place> names = placesByName.get(name);
 			names.remove(place);		
 			List<Place> cats = placesByCategory.get(cat);
@@ -72,13 +81,15 @@ public class Places {
 		}
 		return toReturn;
 	}
+	public Place getPlaceByPosition(Position pos){
+		return placesByPosition.get(pos);
+	}
 	public Place[] getAllPlaces(){
 		List<Place> tempPlaces = new ArrayList<Place>();
-		for(Entry<String, List<Place>> entry : placesByName.entrySet()){
-			for(Place p : entry.getValue()){				
-				if(!tempPlaces.contains(p))
-					tempPlaces.add(p);								
-			}
+		for(Entry<Position, Place> entry : placesByPosition.entrySet()){
+			Place p = entry.getValue();
+			if(!tempPlaces.contains(p))
+				tempPlaces.add(p);								
 		}
 		return tempPlaces.toArray(new Place[tempPlaces.size()]);
 	}
