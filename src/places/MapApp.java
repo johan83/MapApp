@@ -71,7 +71,7 @@ import places.place.Place.PlaceType;
  * To add another place subclass:
  * 	Make the class 
  * 	add the class type name to the enum list in Place
- * 	Add the creating logic to PlaceFactory
+ * 	Add the creation logic to PlaceFactory
  * 	Make parser implementing TextPlaceParser
  * 	add ^ to ParserFactory
  * 
