@@ -78,10 +78,17 @@ import places.place.Place.PlaceType;
  * To add another category:
  * 	Add another category to the CategoryHolder static block in Category
  * 
+ * ---
+ * 
  * Singletons are used for no real reason, 
  * they are used because I wanted to understand how they worked 
  * however I now understand that they are very rarely necessary or even beneficial
  * so I will refrain from using them in the future
+ * 
+ * ---
+ * 
+ * Factories are used so as to not require any change to the logic of the this(main) class 
+ * but rather make the system a sort of "create and drop in" in terms of adding subclasses to Place
  */
 @SuppressWarnings("serial")
 public class MapApp extends JFrame {
