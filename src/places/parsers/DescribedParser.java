@@ -10,6 +10,13 @@ import places.place.PlaceFactory;
 import places.place.Place.PlaceType;
 
 public class DescribedParser implements TextPlaceParser{
+	private DescribedParser(){}
+	private static class DescribedParserHolder{
+		private static final DescribedParser INSTANCE = new DescribedParser();
+	}
+	public static DescribedParser getInstance(){
+		return DescribedParserHolder.INSTANCE;
+	}
 	@Override
 	public Place parse(String[] input, Places places) throws IllegalStringArrayFormatException {
 		if(input.length != 6)

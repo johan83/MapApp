@@ -2,22 +2,13 @@ package places.parsers;
 
 import places.place.Place.PlaceType;
 
-public class ParserFactory {
-	//Singletons
-	public static TextPlaceParser 
-		namedParser,
-		describedParser;
-	
+public class ParserFactory {	
 	public static TextPlaceParser getParserInstance(PlaceType type){
 		switch(type){
 		case Named:
-			if(namedParser == null)
-				namedParser = new NamedParser();
-			return namedParser;
+			return NamedParser.getInstance();
 		case Described:
-			if(describedParser == null)
-				describedParser = new DescribedParser();
-			return describedParser;
+			return DescribedParser.getInstance();
 		default:
 			throw new IllegalArgumentException("Invalid PlaceType: "+ type);
 		}

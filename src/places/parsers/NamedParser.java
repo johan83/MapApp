@@ -10,6 +10,13 @@ import places.place.PlaceFactory;
 import places.place.Place.PlaceType;
 
 public class NamedParser implements TextPlaceParser{
+	private NamedParser(){}
+	private static class NamedParserHolder{
+		private static final NamedParser INSTANCE = new NamedParser();
+	}
+	public static NamedParser getInstance(){
+		return NamedParserHolder.INSTANCE;
+	}
 	@Override
 	public Place parse(String[] input, Places places) throws IllegalStringArrayFormatException {
 		if(input.length != 5)
