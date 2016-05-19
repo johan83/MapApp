@@ -67,7 +67,17 @@ import places.place.Place;
 import places.place.PlaceData;
 import places.place.PlaceFactory;
 import places.place.Place.PlaceType;
-
+/*
+ * To add another place subclass:
+ * 	Make the class 
+ * 	add the class type name to the enum list in Place
+ * 	Add the creating logic to PlaceFactory
+ * 	Make parser implementing TextPlaceParser
+ * 	add ^ to ParserFactory
+ * 
+ * To add another category:
+ * 	Use Category.createCategoryInstance("Name of category", Color.Color_of_the_triangle )
+ */
 @SuppressWarnings("serial")
 public class MapApp extends JFrame {
 	private static final String title = "MapApp";
