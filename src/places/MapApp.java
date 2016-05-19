@@ -80,8 +80,9 @@ import places.place.Place.PlaceType;
  * 
  * ---
  * 
- * Singletons are used for no real reason, 
- * they are used because I wanted to understand how they worked 
+ * Singletons are used where the classes should have an instance but do their work from passing data to methods directly(parsers)
+ * and when there could otherwise be redundant instances of the class, 
+ * I also wanted to understand how they worked 
  * however I now understand that they are very rarely necessary or even beneficial
  * so I will refrain from using them in the future
  * 
