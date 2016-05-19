@@ -38,6 +38,9 @@ public class DescribedPlace extends Place{
 
 	@Override
 	protected void drawSpecial(Graphics g, Rectangle nameRect) { //FIXME move calculations out of the method
+		if(description == null)
+			return;			
+		
 		Graphics2D g2d = (Graphics2D) g;
 		String[] textToDisplay = description.split("\n");
 

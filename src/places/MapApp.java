@@ -552,20 +552,23 @@ public class MapApp extends JFrame {
 		map.removeAll();
 	}
 
-	private void addPlacesFromArray(List<String> fromFile) {
+	private void addPlacesFromArray(List<String> fromFile) { //Optimal solution to this would be to make a parser interface and parser factory
 		for (String s : fromFile) {
 			try{
 				String[] placeValues = s.split(",");
 				
 				String name = placeValues[4];
 				Position pos = Position.createPosition(Integer.parseInt(placeValues[2]), Integer.parseInt(placeValues[3]));
-				Category cat;
-				cat = Category.getCategoryInstance(placeValues[1]);
+				Category cat = Category.getCategoryInstance(placeValues[1]);
+				String desc = "";
+				if(placeValues.length==6) //Bad fix
+					desc = placeValues[5];
 				
 				PlaceData data = PlaceData.createPlaceData(places)
 						.name(name)
 						.position(pos)
-						.category(cat);
+						.category(cat)
+						.description(desc);
 				
 				Place place = PlaceFactory.createSafePlace(PlaceType.valueOf(placeValues[0]), data);
 				if(place != null)
