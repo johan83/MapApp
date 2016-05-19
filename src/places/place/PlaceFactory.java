@@ -1,4 +1,4 @@
-package places;
+package places.place;
 
 import java.awt.Component;
 import java.awt.GridBagConstraints;
@@ -11,7 +11,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import places.Place.PlaceType;
+import places.Category;
+import places.Position;
+import places.place.Place.PlaceType;
 
 public class PlaceFactory{
 	public static Place createSafePlace(PlaceType type, PlaceData data){

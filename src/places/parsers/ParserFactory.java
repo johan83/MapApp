@@ -1,6 +1,7 @@
-package places;
+package places.parsers;
 
-import places.Place.PlaceType;
+import places.place.Place;
+import places.place.Place.PlaceType;
 
 public class ParserFactory {
 	//Singletons

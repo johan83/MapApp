@@ -1,6 +1,10 @@
-package places;
+package places.place;
 
 import java.awt.Dimension;
+
+import places.Category;
+import places.Places;
+import places.Position;
 
 public class PlaceData {	
 		private String name;

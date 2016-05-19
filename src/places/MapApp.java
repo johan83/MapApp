@@ -56,11 +56,17 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import places.Place.PlaceType;
+import places.parsers.IllegalStringArrayFormatException;
 /*
  * TODO:
  * 
  */
+import places.parsers.ParserFactory;
+import places.parsers.TextPlaceParser;
+import places.place.Place;
+import places.place.PlaceData;
+import places.place.PlaceFactory;
+import places.place.Place.PlaceType;
 
 @SuppressWarnings("serial")
 public class MapApp extends JFrame {

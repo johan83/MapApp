@@ -1,7 +1,10 @@
-package places;
+package places.place;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
+
+import places.Category;
+import places.Position;
 
 @SuppressWarnings("serial")
 public class NamedPlace extends Place{

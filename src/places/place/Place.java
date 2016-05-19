@@ -1,4 +1,4 @@
-package places;
+package places.place;
 
 import java.awt.Color;
 import java.awt.Cursor;
@@ -14,6 +14,10 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
+
+import places.Category;
+import places.Places;
+import places.Position;
 
 @SuppressWarnings("serial")
 public abstract class Place extends JComponent{

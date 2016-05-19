@@ -1,6 +1,12 @@
-package places;
+package places.parsers;
 
-import places.Place.PlaceType;
+import places.Category;
+import places.Places;
+import places.Position;
+import places.place.Place;
+import places.place.PlaceData;
+import places.place.PlaceFactory;
+import places.place.Place.PlaceType;
 
 public class DescribedParser implements TextPlaceParser{
 	@Override

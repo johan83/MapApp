@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import places.place.Place;
+
 public class FileHandler {
 	
 	public static List<String> readFileContent(Scanner sc){
