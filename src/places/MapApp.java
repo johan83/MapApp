@@ -557,20 +557,9 @@ public class MapApp extends JFrame {
 			try{
 				String[] placeValues = s.split(",");
 				
-				String name = placeValues[4];
-				Position pos = Position.createPosition(Integer.parseInt(placeValues[2]), Integer.parseInt(placeValues[3]));
-				Category cat = Category.getCategoryInstance(placeValues[1]);
-				String desc = "";
-				if(placeValues.length==6) //Bad fix
-					desc = placeValues[5];
-				
-				PlaceData data = PlaceData.createPlaceData(places)
-						.name(name)
-						.position(pos)
-						.category(cat)
-						.description(desc);
-				
-				Place place = PlaceFactory.createSafePlace(PlaceType.valueOf(placeValues[0]), data);
+				PlaceType type = PlaceType.valueOf(placeValues[0]);
+				TextPlaceParser parser = ParserFactory.getParserInstance(type);
+				Place place = parser.parse(placeValues, places);
 				if(place != null)
 					addPlace(place);
 			}catch(NumberFormatException nfe){
@@ -579,6 +568,8 @@ public class MapApp extends JFrame {
 				System.out.println("Category not allowed\n" + iae.getMessage());
 			}catch(NullPointerException npe){
 				System.out.println("Category cannot be null\n" + npe.getMessage());
+			} catch (IllegalStringArrayFormatException isafe) {
+				System.out.println("Incorrectly formatted place\n" + isafe.getMessage());
 			}
 		}
 	}

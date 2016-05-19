@@ -15,7 +15,7 @@ public class ParserFactory {
 				namedParser = new NamedParser();
 			return namedParser;
 		case Described:
-			if(namedParser == null)
+			if(describedParser == null)
 				describedParser = new DescribedParser();
 			return describedParser;
 		default:

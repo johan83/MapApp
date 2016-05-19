@@ -4,9 +4,9 @@ import places.Place.PlaceType;
 
 public class DescribedParser implements TextPlaceParser{
 	@Override
-	public Place parse(String[] input, Places places) {
+	public Place parse(String[] input, Places places) throws IllegalStringArrayFormatException {
 		if(input.length != 6)
-			throw new IllegalArgumentException("Wrong number of arguments");
+			throw new IllegalStringArrayFormatException("Wrong number of arguments, expected: 6");
 		
 		Category cat = Category.getCategoryInstance(input[1]);
 		int x = Integer.parseInt(input[2]);
