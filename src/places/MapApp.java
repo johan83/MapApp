@@ -77,6 +77,11 @@ import places.place.Place.PlaceType;
  * 
  * To add another category:
  * 	Add another category to the CategoryHolder static block in Category
+ * 
+ * Singletons are used for no real reason, 
+ * they are used because I wanted to understand how they worked 
+ * however I now understand that they are very rarely necessary or even beneficial
+ * so I will refrain from using them in the future
  */
 @SuppressWarnings("serial")
 public class MapApp extends JFrame {
