@@ -75,6 +75,10 @@ public class MapApp extends JFrame {
 			WHAT_IS_HERE_DEFAULT_GRID_SIZE = 21,
 			WHAT_IS_HERE_MIN_GRID_SIZE = 5,
 			WHAT_IS_HERE_MAX_GRID_SIZE = 32;
+	/*
+	 * Windows allows max 32px for cursors, this can be circumvented by hiding the cursor 
+	 * and painting my own on the map panel but this will have to do
+	 */
 	private static Integer cursorSize; 
 	
 	//for convenience
