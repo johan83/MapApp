@@ -1,6 +1,7 @@
 package places.parsers;
 
 import places.Places;
+import places.parsers.exceptions.IllegalStringArrayFormatException;
 import places.place.Place;
 
 public interface TextPlaceParser {

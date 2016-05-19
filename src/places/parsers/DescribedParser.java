@@ -3,6 +3,7 @@ package places.parsers;
 import places.Category;
 import places.Places;
 import places.Position;
+import places.parsers.exceptions.IllegalStringArrayFormatException;
 import places.place.Place;
 import places.place.PlaceData;
 import places.place.PlaceFactory;
