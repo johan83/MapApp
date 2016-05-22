@@ -113,7 +113,7 @@ public class Places {
 			for(Place p : markedPlaces)
 				p.setMarked(false);
 			markedPlaces.clear();
-			}
+		}
 	}
 	public void hideMarked(){
 		if(markedPlaces != null && markedPlaces.size()>0){
